@@ -1,0 +1,106 @@
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lscape}
+\usepackage{caption}
+\usepackage{graphicx}
+\usepackage{rotating}
+\usepackage{setspace}
+\usepackage{amsfonts}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage[thinlines]{easytable}
+\usepackage{array}
+\usepackage{adjustbox}
+\usepackage{pbox}
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+\usepackage{pifont}
+\usepackage{tablefootnote}
+\usepackage{xspace}
+\usepackage{subcaption}
+\usepackage{scrextend}
+\usepackage{url}
+\usepackage{amssymb}
+\usepackage{multirow}
+
+
+\usepackage{listings} % Para usar código fuente
+
+
+\renewcommand{\thefigure}{\arabic{figure}}
+\renewcommand{\thesubfigure}{\arabic{subfigure}}
+ 
+
+%BibTexChicago
+\usepackage[notes,natbib,isbn=false,backend=biber]{biblatex-chicago}
+\usepackage[spanish]{babel}
+\usepackage{csquotes}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsthm}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage[font=small,labelfont=bf]{caption}
+
+
+{\doublespacing}
+
+\newtheorem{theorem}{Teorema}
+\newtheorem{definition}{Definición}
+\newtheorem*{prueba}{Demostración}
+
+\addbibresource{biblio.bib}
+
+\title{Foto-mosaicos y optimización para el arte (Opt-Art)}
+\author{  {Julio César Espinosa}
+}
+\date{Verano 2021}
+
+
+\begin{document}
+\begin{doublespace}
+
+\maketitle
+
+\section{Introducción}
+
+Históricamente, la optimización matemática ha sido una disciplina altamente recurrida para la solución de problemas en varias áreas del conocimiento (economía, informática, industria, logística, etc.) y en distintos grados de complejidad. Sin embargo, fuera de la amplia esfera de problemas técnicos o puramente científicos abordables por la optimización hay una serie planteamientos resolvibles que coincilian la optimización, particularmente del tipo lineal con problemas de carácter estético más vinculado con ramas como el arte o la composición fotográfica. La presente tesis abordará el problema de reproducir o replicar con buena similaridad una imagen mediante el empleo, ya sea de trazos continuos a lo largo de un cuadro, o mediante imágenes diversas que, posicionadas estratégicamente lograrán construir un producto que, a ojo humano, tendrá una forma fácilmente asociable con la imagen objetivo. Siendo ambos problemas de optimización lineal entera: el primero, una aplicación de problema del agente viajero (TSP por sus siglas en inglés); y el segundo, un problema lineal con variables de decisión en tres dimensiones. 
+
+\section{TSP: Agente viajero}
+
+%\subsection{Nuevo rival - Cardoso, et. al.}
+
+La teoría de grafos estudia las propiedades y relaciones de un grafo que es un par $(V,E))$ con $V$ un conjunto de vértices y $E$ conjunto de aristas que los une. Siendo la arista modelado, ya sea como un par dirigido, donde el orden de los vértices importa (digrafo) o no dirigido. Existe problemas de optimización planteados sobre esquemas de grafos que pueden ser resueltos por la vía de la programación lineal, siendo el problema del aente viajero uno de los más interesantes y populares. Este problema se esboza partiendo de un individuo (agente) que desar visitar una cantidad $n$ de ciudades partiendo de una ciudad origen y finalizando el recorrido en en dicha ciudad pero con el objetivo de minimizar la distancia total recorrida. Existe un único conjunto de parámetros necesario para definir el problema: la distancia que hay entre cada par de ciudades existente; para ello defínase $c_{i, j}$ como el valor cuantitativo de dicha la distancia que hay entre las ciudades (o vértices) $(i, j)$ para cada par $(i, j) \in \{1,...,n\} \times \{1,...,n\}$.  Explicado este problema, podemos desarrollar una intuitiva formulación matemática mediante la programación lineal entera siguiente.
+
+
+\begin{equation*}
+\begin{aligned}
+& \underset{x_{i, j}  }{\text{min}}
+& & \sum_{i=1}^{n} \sum_{j=1}^{n} c_{i, j}x_{i, j} \\
+& \text{s.a.}
+& & \sum_{i=1}^{n} x_{i, j}=1 \hspace{0.5cm}   \forall j \in \{ 1, ..., n \} \\
+& & & \sum_{j=1}^{n} x_{i, j}=1  \hspace{0.5cm}   \forall j \in \{ 1, ..., n \} \\
+& & & \sum_{i \in S}\sum_{j \in S}  x_{i, j} \leq |S|-1 \hspace{0.5cm}   \forall S \subset \{ 1, ..., n \}
+\end{aligned}
+\end{equation*}
+ 
+ Donde $S$ es el conjunto potencia generado con $\{ 1, ..., n \}$. El problema lineal esbozado arriba se conforma por componentes. Para entenderlo, defínase antes el conjunto de variables de decisión como 
+ $\{ x_{i,j} | (i, j) \in \{1, ..., n\}^{2} \}$ con dos asignaciones de valor posibles: $0$ y $1$. $1$ representa que el agente realizó un recorrido directo partiendo de la ciudad $i$ hacia la ciudad $j$ con una distancia correspondiente de $c_{i, j}$; $0$, por el contrario, representa el caso opuesto. En términos técnicos, el agente viajero ocupó el dígrafo dirigido $(i, j)$.
+ 
+ Así, la primera expresión (1) es la función objetivo: el recorrido total para arribar a las $n$ ciudades. (2) exige que de cada ciudad de parta hacia una única ciudad; (3), análogo a (2), requiere que a cada ciudad se arribe desde un único punto de partida. La factibilidad del tour generado por el agente se termina de construir en el conjunto (4) ya que sin este podrían haber tours donde a cada ciudad se lleca un única vez y cada ciudad parte hacia un único destino pero dos o más subconjuntos resultado de la partición de $ \{ 1, ..., n \}$ generen cada uno un grafo o tour cerrado. Supongamos que se generó una solución optimal con las restricciones (2) y (3) cumplidas pero que constara de tres subtours: $T_{1}, T_{2}, T_{3}$ con $T_{1} \cup T_{2}  \cup T_{3}$. Poniéndonos imaginativos, esto querría decir que el agente terminó de recorrer $T_{1}$, al terminar "se teletransportó" a $T_{2}$ sin recorrer distancia alguna, finalmente siguió haciendo lo propio de $T_{2}$ a $T_{3}$. Claramente esto no tiene sentido en el plano real; además, se viola el supuesto de que el agente parte de un punto y termina en el mismo. La restricción (4) elimina la posibilidad de subtours. Sin embargo, al tratarse de una restricción que explora a cada una de los $2^{n}$ posibles subconjuntos generables con  $\{ 1, ..., n \}$, es una restricción con una elevada complejidad computacional asociada que debe simplificarse con adecuadas restricciones alternativas (véanse restricciones de Miller, Tucker \& Zemlin,  1960). Si a eso le sumamos que el programa lineal tiene como conjunto factible los $n!$ posibles ordenamientos de $\{ 1, ..., n \}$, podemos entender que los programas que lo resuelven trabajan bajo los llamados "algoritmos de optimización combinatoria". 
+
+
+\section{Referencias}
+[1]
+
+\end{doublespace}
+\end{document}
