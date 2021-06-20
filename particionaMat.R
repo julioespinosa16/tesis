@@ -46,35 +46,29 @@ image(x0[-c((1:88), ( (dim(x0)[1]-(88-1)  )  :dim(x0)[1] )   ),], col  = gray((0
 
 # Parámetros de libertad
 libertadadPar<-40
-
-image(x0[-c((1:libertadadPar), ( (dim(x0)[1]-(libertadadPar-1)  )  :dim(x0)[1] )  ),
-         -c((1:libertadadPar), ( (dim(x0)[2]-(libertadadPar-1)  )  :dim(x0)[2] )  )
-         ], col  = gray((0:255)/255)) # plot in grayscale
-
-
-
-
-class(x)
-class(x0)
-
-
-# x0_mod<- x0[-c((1:88), ( (dim(x0)[1]-(88-1)  )  :dim(x0)[1] )   ),]
-
+# 
+# image(x0[-c((1:libertadadPar), ( (dim(x0)[1]-(libertadadPar-1)  )  :dim(x0)[1] )  ),
+#          -c((1:libertadadPar), ( (dim(x0)[2]-(libertadadPar-1)  )  :dim(x0)[2] )  )
+#          ], col  = gray((0:255)/255)) # plot in grayscale
+# 
+# 
+# 
+# 
+# class(x)
+# class(x0)
+# 
+# 
+# # x0_mod<- x0[-c((1:88), ( (dim(x0)[1]-(88-1)  )  :dim(x0)[1] )   ),]
+# 
 x0_mod<- x0[-c((1:libertadadPar), ( (dim(x0)[1]-(libertadadPar-1)  )  :dim(x0)[1] )  ),
    -c((1:libertadadPar), ( (dim(x0)[2]-(libertadadPar-1)  )  :dim(x0)[2] )  )
 ]
-dim(x0_mod)
+# dim(x0_mod)
 
 
 # parámetro 1
 analizR<- tibble( pos=1:( nrow( x0_mod )*2  ) ) %>% mutate(
   modR=pos%%dim1,  minT=  min(pos[ modR==0 & pos>=nrow( x0_mod )  ])  )%>% filter(pos==minT)
-
-# analizR<- tibble( pos=1:( nrow( x0_mod )*3  ) ) %>% mutate(
-#   modR=pos%%dim1, 
-#   minT=  min(pos[ modR==0 & pos>=nrow( x0_mod ) 
-#                   # & (nrow( x0 )- pos)%%2 ==0 
-#                   ])  )%>% filter(pos==minT)
 
 
 numR<-  nrow( x0 )-analizR$minT[1]
@@ -91,7 +85,7 @@ x0_modN<- x0[  -c((1:(numR/2) ), ( (dim(x0)[1]-(  (numR/2)  -1)  )  :dim(x0)[1] 
 
 rowN<- tibble(  pos=1:(nrow(x0_modN)) ) %>% mutate(modF=  pos%%dim1==0 ) %>%
   summarise(cual=max(pos[modF]))%>% as.numeric()
-colN<- tibble(  pos=1:(ncol(x0_modN)) ) %>% mutate(modF=  pos%%dim1==0 ) %>%
+colN<- tibble(  pos=1:(ncol(x0_modN)) ) %>% mutate(modF=  pos%%dim2==0 ) %>%
   summarise(cual=max(pos[modF]))%>% as.numeric()
 
 
@@ -99,12 +93,6 @@ x0_modN<- x0_modN[1:rowN,1:colN ]
 image(x0_modN, col  = gray((0:255)/255)) # plot in grayscale
 
 
-
-
-
-dim(x0)
-dim(x0_mod)
-dim(x0_modN)
 
 
 
@@ -168,8 +156,6 @@ coordGe<- function(num) {
   equis<- num%%dim2
   ye<-(num-equis)/dim2+1
   
-  equis
-  ye
   
   coord<- c(equis, ye)
   return(coord)
@@ -189,7 +175,7 @@ coordGe_c<- function(num) {
 }
 
 
-
+# Genera los extremos de las cuatro coordenadas del cuadrado x, y
 coordCuadr<- function(ex, yi){
   # ex<- 10
   # yi<-1
@@ -216,8 +202,7 @@ coordCuadr<- function(ex, yi){
 
 
 # Dispersión ciudades
-
-
+# Genera arreglo eficiente de ciudades en el cuadrado
 funcionDistrCd<- function(  quant, precis, extremos ){
   
 
@@ -265,22 +250,24 @@ return(centrosDisp)
 
 }
 
-# }
 
+
+# Construcción de la ciudad
 for(  k in 1:length(geij) ){
   
-  print(k)
+  print(paste('ceil', k))
   # k<-11
   # which(geij==3)
   osc<- geij[k]
+  
+  
   # cua<-coordGe(k)
   cua<-coordGe_c(k)
+  print(paste('coordenadas x, y: ', cua[1], ', ', cua[2]))
   
   cuadranteEsp<- coordCuadr(cua[1], cua[2])
   
-  
-  # print()
-  
+  # Genera dispersión de puntos sobre cuadrado
   dfCeil<- funcionDistrCd(osc, 10,cuadranteEsp)
   
   
