@@ -3,10 +3,15 @@ library(RCurl)
 library(colorspace)
 library(png)
 library(tidyr)
+library(ggplot2)
 
+# Número de cuadros-renglón
 dim1<- 10
+# Número de cuadros-columna
 dim2<- 10
 
+
+# llama función de particionar matrices en submatrices
 matsplitter<-function(M, r, c) {
   rg <- (row(M)-1)%/%r+1
   cg <- (col(M)-1)%/%c+1
@@ -41,6 +46,7 @@ image(x0[-c((1:88), ( (dim(x0)[1]-(88-1)  )  :dim(x0)[1] )   ),], col  = gray((0
 
 # Parámetros de libertad
 libertadadPar<-40
+
 image(x0[-c((1:libertadadPar), ( (dim(x0)[1]-(libertadadPar-1)  )  :dim(x0)[1] )  ),
          -c((1:libertadadPar), ( (dim(x0)[2]-(libertadadPar-1)  )  :dim(x0)[2] )  )
          ], col  = gray((0:255)/255)) # plot in grayscale
@@ -134,14 +140,14 @@ valoresExistente<-unique(unlist(x0_esc))
 valoresExistente
 
 
-
+# Extraemos las matrices disponibles en un array
 matrices<-matsplitter(x0_escN,  dim(x0_modN)[1]/dim1, dim(x0_modN)[2]/dim2)
 length(matrices)
 class(matrices)
 dim(  matrices)
 # dim(x0_esc)
 
-# Patrices
+# Matrices en lista
 listMats<- list()
 for(  ls in  1:dim(  matrices)[3] ){
   listMats[[ls]]<-   matrices[,,ls]
@@ -156,7 +162,141 @@ gamma_par<- 7
 # Ciudades a computar por cuadro
 geij<-  gamma_par  - floor( gamma_par* promediosPart/255 )
 
+# opción A: ordenado es por llenado por renglón 
+coordGe<- function(num) {
+  # num<-23
+  equis<- num%%dim2
+  ye<-(num-equis)/dim2+1
+  
+  equis
+  ye
+  
+  coord<- c(equis, ye)
+  return(coord)
+}
 
+# opción B: ordenado es por llenado por columna 
+coordGe_c<- function(num) {
+  # num<-23
+  ye<- num%%dim1
+  equis<-(num-ye)/dim1+1
+  
+  equis
+  ye
+  
+  coord<- c(equis, ye)
+  return(coord)
+}
+
+
+
+coordCuadr<- function(ex, yi){
+  # ex<- 10
+  # yi<-1
+  
+  pow_x<-match(TRUE, round(1/dim1, 1:20) == 1/dim1)
+  pow_y<-match(TRUE, round(1/dim2, 1:20) == 1/dim2)
+  
+  equisCu<- (ex-1)/dim1
+  yeCu<- 1-(yi-1)/dim2
+  
+  
+  
+  
+
+  extrTot<- list(supIzq=  c(equisCu,yeCu),supDer= c(equisCu+1/dim1,yeCu), infIzq= c(equisCu,yeCu-1/dim2), 
+                 infDer=c(equisCu+1/dim1,yeCu-1/dim2) )
+  extrTot<- sapply(extrTot, function(x)round(x,max(  pow_x, pow_y)  ) ) %>% as_tibble()
+  extrTot<- as.list(extrTot)
+  
+  return(extrTot)
+  
+}
+
+
+
+# Dispersión ciudades
+
+
+funcionDistrCd<- function(  quant, precis, extremos ){
+  
+
+
+# quant<- 5
+# extremos<- list(supIzq=  c(0,1),supDer= c(1, 1), infIzq= c(0, 0), infDer=c(1, 0)  )
+# precis<- 10
+if(floor(  quant)==quant & quant>0 ){
+  
+
+  
+grid_x<- seq(from=max(extremos$supIzq[1], extremos$infIzq[1]), 
+             to=max(extremos$supDer[1], extremos$infDer[1]) ,
+             by= ((max(extremos$supDer[1], extremos$infDer[1])- max(extremos$supIzq[1], extremos$infIzq[1]) )/precis ) )
+
+grid_y<- seq(from=max(extremos$infIzq[2], extremos$infDer[2]), 
+             to=max(extremos$supIzq[2], extremos$supDer[2]) ,
+             by= ((max(extremos$supIzq[2], extremos$supDer[2])- max(extremos$infIzq[2], extremos$infDer[2]) )/precis ) )
+
+gridDim_m<- expand.grid(grid_x,grid_y)
+gridDim<-gridDim_m%>% as.matrix()
+
+
+# for(j in 1:20){
+  
+# j<-1
+# set.seed(j)
+
+set.seed(1)
+gridPart<- kmeans(gridDim, centers = quant)
+centrosDisp<-gridPart$centers %>% as_tibble()
+names(centrosDisp)
+
+obj<- centrosDisp %>% ggplot(aes( Var1, Var2 )   )+ geom_point()  +
+  xlim( range(gridDim_m$Var1)   )+ylim( range(gridDim_m$Var1) )#+labs(title = paste0('seed: ', j)) 
+
+# print(obj)
+
+}else{
+  
+  centrosDisp<- tibble(Var1=NA, Var2=NA) %>% filter(!is.na(Var1)   )
+}
+
+return(centrosDisp)
+
+}
+
+# }
+
+for(  k in 1:length(geij) ){
+  
+  print(k)
+  # k<-11
+  # which(geij==3)
+  osc<- geij[k]
+  # cua<-coordGe(k)
+  cua<-coordGe_c(k)
+  
+  cuadranteEsp<- coordCuadr(cua[1], cua[2])
+  
+  
+  # print()
+  
+  dfCeil<- funcionDistrCd(osc, 10,cuadranteEsp)
+  
+  
+  
+  if(k ==1){
+    dfCeilF<- dfCeil
+  }else{
+    dfCeilF<-rbind(dfCeilF, dfCeil)
+  }
+  
+}
+
+
+# dfCeilF %>% group_by(Var1, Var2) %>%summarise(n()) %>% View()
+dfCeilF %>% ggplot(aes( Var1, Var2 ))+geom_point()+xlim( c(0,1)   )+ylim( c(0,1) )
+dfCeilF %>% mutate(Var2=-Var2) %>% ggplot(aes( Var1, Var2 ))+geom_point()+xlim( c(0,1)   )#+ylim(- c(0,1) )
 
 
 
