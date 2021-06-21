@@ -6,9 +6,9 @@ library(tidyr)
 library(ggplot2)
 
 # Número de cuadros-renglón
-dim1<- 10
+dim1<- 40
 # Número de cuadros-columna
-dim2<- 10
+dim2<- 30
 
 
 # llama función de particionar matrices en submatrices
@@ -23,6 +23,11 @@ matsplitter<-function(M, r, c) {
 } 
 # Then
 
+
+rotate <- function(x) t(apply(x, 2, rev))
+
+
+
 # matsplitter(mb,4,3)
 
 
@@ -34,14 +39,12 @@ dim(x)
 
 # Nuevo punto
 x0=x[,,1] # will hold the grayscale values divided by 255
-x0=t(apply(x0, 2, rev)) # otherwise the image will be rotated
+# x0=t(apply(x0, 2, rev)) # otherwise the image will be rotated
 
 
+x0_img<- rotate(x0)
+image(x0_img, col  = gray((0:255)/255)) # plot in grayscale
 
-image(x0, col  = gray((0:255)/255)) # plot in grayscale
-image(x0[-c(1:88),], col  = gray((0:255)/255)) # plot in grayscale
-image(x0[-c((1:88), (568:dim(x0)[1] )   ),], col  = gray((0:255)/255)) # plot in grayscale
-image(x0[-c((1:88), ( (dim(x0)[1]-(88-1)  )  :dim(x0)[1] )   ),], col  = gray((0:255)/255)) # plot in grayscale
 
 
 # Parámetros de libertad
@@ -60,9 +63,17 @@ libertadadPar<-40
 # 
 # # x0_mod<- x0[-c((1:88), ( (dim(x0)[1]-(88-1)  )  :dim(x0)[1] )   ),]
 # 
-x0_mod<- x0[-c((1:libertadadPar), ( (dim(x0)[1]-(libertadadPar-1)  )  :dim(x0)[1] )  ),
-   -c((1:libertadadPar), ( (dim(x0)[2]-(libertadadPar-1)  )  :dim(x0)[2] )  )
-]
+
+# 21-jun####
+if(libertadadPar>0){
+  x0_mod<- x0[-c((1:libertadadPar), ( (dim(x0)[1]-(libertadadPar-1)  )  :dim(x0)[1] )  ),
+              -c((1:libertadadPar), ( (dim(x0)[2]-(libertadadPar-1)  )  :dim(x0)[2] )  )
+  ]
+}else{
+  x0_mod<- x0
+}
+
+
 # dim(x0_mod)
 
 
@@ -77,10 +88,20 @@ analizC<- tibble( pos=1:( ncol( x0_mod )*2  ) ) %>% mutate(
   modC=pos%%dim2,  minT=  min(pos[ modC==0 & pos>=ncol( x0_mod )  ])  )%>% filter(pos==minT)
 numC<-ncol( x0 )- analizC$minT[1]
 
-
-x0_modN<- x0[  -c((1:(numR/2) ), ( (dim(x0)[1]-(  (numR/2)  -1)  )  :dim(x0)[1] )  ),
-               -c((1: (numC/2) ), ( (dim(x0)[2]-(  (numC/2) -1)  )  :dim(x0)[2] )  )
-               ]
+# 21-jun####
+if(numR>0){
+  x0_modN<- x0[  -c((1:(numR/2) ), ( (dim(x0)[1]-(  (numR/2)  -1)  )  :dim(x0)[1] )  ),
+  ]
+}else{
+  x0_modN<- x0
+}
+if(numC>0){
+  x0_modN<- x0_modN[ ,
+                     -c((1: (numC/2) ), ( (dim(x0)[2]-(  (numC/2) -1)  )  :dim(x0)[2] )  )
+  ]
+}else{
+  x0_modN<- x0_modN
+}
 
 
 rowN<- tibble(  pos=1:(nrow(x0_modN)) ) %>% mutate(modF=  pos%%dim1==0 ) %>%
@@ -90,7 +111,10 @@ colN<- tibble(  pos=1:(ncol(x0_modN)) ) %>% mutate(modF=  pos%%dim2==0 ) %>%
 
 
 x0_modN<- x0_modN[1:rowN,1:colN ]
-image(x0_modN, col  = gray((0:255)/255)) # plot in grayscale
+
+x0N_img<- rotate(x0_modN)
+
+image(x0N_img, col  = gray((0:255)/255)) # plot in grayscale
 
 
 
@@ -150,10 +174,20 @@ gamma_par<- 7
 # Ciudades a computar por cuadro
 geij<-  gamma_par  - floor( gamma_par* promediosPart/255 )
 
+
+
+# 21-jun####
 # opción A: ordenado es por llenado por renglón 
 coordGe<- function(num) {
+  
+  # num<- 28
   # num<-23
   equis<- num%%dim2
+  
+  if(equis==0){
+    equis<- dim2
+  }
+  
   ye<-(num-equis)/dim2+1
   
   
@@ -165,6 +199,11 @@ coordGe<- function(num) {
 coordGe_c<- function(num) {
   # num<-23
   ye<- num%%dim1
+  
+  if(ye==0){
+    ye<- dim1
+  }
+  
   equis<-(num-ye)/dim1+1
   
   equis
@@ -173,6 +212,7 @@ coordGe_c<- function(num) {
   coord<- c(equis, ye)
   return(coord)
 }
+
 
 
 # Genera los extremos de las cuatro coordenadas del cuadrado x, y
@@ -261,8 +301,8 @@ for(  k in 1:length(geij) ){
   osc<- geij[k]
   
   
-  # cua<-coordGe(k)
-  cua<-coordGe_c(k)
+  cua<-coordGe(k)
+  # cua<-coordGe_c(k)
   print(paste('coordenadas x, y: ', cua[1], ', ', cua[2]))
   
   cuadranteEsp<- coordCuadr(cua[1], cua[2])
@@ -282,8 +322,8 @@ for(  k in 1:length(geij) ){
 
 
 # dfCeilF %>% group_by(Var1, Var2) %>%summarise(n()) %>% View()
-dfCeilF %>% ggplot(aes( Var1, Var2 ))+geom_point()+xlim( c(0,1)   )+ylim( c(0,1) )
-dfCeilF %>% mutate(Var2=-Var2) %>% ggplot(aes( Var1, Var2 ))+geom_point()+xlim( c(0,1)   )#+ylim(- c(0,1) )
+dfCeilF %>% ggplot(aes( Var1, Var2 ))+geom_point()+xlim( range(dfCeilF$Var1)   )+ylim(  range(dfCeilF$Var2) )
+# dfCeilF %>% mutate(Var2=-Var2) %>% ggplot(aes( Var1, Var2 ))+geom_point()+xlim( c(0,1)   )#+ylim(- c(0,1) )
 
 
 
