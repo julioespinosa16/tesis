@@ -9,13 +9,6 @@ library(TSP)
 library(stringr)
 library(stringi)
 
-# Número de cuadros-renglón
-dim1<- 15
-# Número de cuadros-columna
-dim2<- 15
-
-# Máximo de ciudades a computar por cuadro
-gamma_par<- 7
 
 # llama nombres de archivos y título de fotos
 nombreTitulo<-'Twitter'

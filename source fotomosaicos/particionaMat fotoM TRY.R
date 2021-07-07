@@ -10,12 +10,9 @@ library(TSP)
 library(lpSolve)
 
 # Número de cuadros-renglón
-dim1<- 15
+dim1<- 20
 # Número de cuadros-columna
-dim2<- 15
-
-# Máximo de ciudades a computar por cuadro
-gamma_par<- 7
+dim2<- 20
 
 # llama nombres de archivos y título de fotos
 nombreTitulo<-'Twitter'
@@ -518,6 +515,8 @@ seleccionF %>% group_by(ROW, COL) %>%
   summarise(n()) #%>% View()
 
 matFin<- matrix(NA, nrow=dim1*largPix, ncol = dim2*largPix)
+matFinIm<- matrix(NA, nrow=dim1, ncol = dim2)
+
 
 for(  mm in 1:length(geij) ){
   
@@ -560,24 +559,16 @@ range(apply(matFin, 2, function(x)max(x)  ))
 matObj_img<- rotate(matObj)
 image(matObj_img, col  = gray((0:255)/255)
 ) # plot in grayscale
-image(matObj, col  = gray((0:255)/255)
-) # plot in grayscale
 
 
 
 
 matFin_img<- rotate(matFin)
-# 
-# image(matFin_img, col  = gray((0:255)/255),
-#       xlab='eje X: final plot'
-#       ) # plot in grayscale
+image(matFin_img, col  = gray((0:255)/255),
+      xlab='eje X: final plot'
+      ) # plot in grayscale
 
 
-
-
-
-print('hola')
-print('adiós')
 # matGen[1: length(finalDispDf$FIG) , ]%>% View()
 # apply(matGen, 1,  function(x)sum( is.na(x)  ))
 # apply(matGen, 1,  function(x)sum( is.na(x)  ))

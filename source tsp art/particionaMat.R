@@ -51,7 +51,7 @@ x0=x[,,1] # will hold the grayscale values divided by 255
 
 
 
-x0<- x0 %>% as_tibble() %>% mutate_all(funs(replace(., .>=0.9, 1))) %>% as.matrix()
+# x0<- x0 %>% as_tibble() %>% mutate_all(funs(replace(., .>=0.9, 1))) %>% as.matrix()
 
 # Rotación (para hacer plot en grayscales)
 x0_img<- rotate(x0)
@@ -299,6 +299,8 @@ for(  k in 1:length(geij) ){
   }
   
 }
+
+
 dfCeilF<- dfCeilF %>% mutate(rn=row_number())
 
 
