@@ -447,8 +447,11 @@ for(th in 1:length(finalBlackWhites)){
 }
 
 frameModTot %>% group_by(num) %>% summarise(n()) #%>% View()
+sumF<- selParF_sel %>% mutate(finalSel=TRUE)
+
+sumF %>% group_by(intervaloFinal) %>% summarise(n(), mean(lumP_MinFin))
 
 
 
 write.csv(frameModTot,paste0(folder, '/', 'finalInf.csv'), row.names = FALSE )
-
+write.csv(sumF,paste0(folder, '/', 'parametrosSelFin.csv'), row.names = FALSE )

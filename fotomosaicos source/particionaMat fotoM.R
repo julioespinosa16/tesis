@@ -370,9 +370,62 @@ if(dimCorr & dim(arr3)[1]*dim(arr3)[2]>dim(arr3)[3]  ){
   
   
 }
+
 sum(finalDisp)
+finalDispDf<- tibble(quant=finalDisp) %>% mutate(FIG=row_number()) %>% relocate(FIG)
+
+
+# sum(finalDisp)
 # dfCeilF<- dfCeilF %>% mutate(rn=row_number())
 
+distancias<- tibble()
+
+for(jj in 1: dim(arr3)[3]){
+  # jj<-1
+  
+  
+  # vector<- disposiciones
+  mat<- arr3[,,jj]
+  
+  for(  ll in 1:dim(mat)[1]  ){
+    
+    # ll<-1
+    renVal<- mat[ll, ]
+    
+    
+    dist0<- tibble(FIG=jj, ROW=ll, COL=1:length(renVal), cost=renVal)
+    
+    if(nrow(  distancias )==0  ){
+      distancias<-dist0
+    }else{
+      distancias<- rbind(distancias, dist0)
+    }
+    
+  }
+}
+
+
+distancias %>% group_by(FIG) %>% summarise(n())#%>%View()
+distancias %>% group_by(ROW, COL) %>% summarise(n())#%>%View()
+distancias %>% group_by(FIG,ROW, COL) %>% summarise(n())#%>%View()
+
+
+
+
+
+
+nombreCostos<- paste0('costoFotoMos', Hmisc::capitalize(nombreTitulo), dim1,'_', dim2, '.csv'  )
+nombreCostos<- paste0(folder, '/', nombreCostos)
+
+nombreDisp<- paste0('DispFotoMos', Hmisc::capitalize(nombreTitulo), dim1,'_', dim2, '.csv'  )
+nombreDisp<- paste0(folder, '/', nombreDisp)
+
+
+
+
+# write.csv(distanciasAltF0,'distCityTwitt15_15.csv',row.names = FALSE )
+# write.csv(distancias,nombreCostos,row.names = FALSE )
+# write.csv(finalDispDf,nombreDisp,row.names = FALSE )
 
 
 
