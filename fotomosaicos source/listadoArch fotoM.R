@@ -288,12 +288,15 @@ numsSel<- selParF_sel$num
 
 finalBlackWhites<- blackWhitesA
 # numsSel<- 28
+sapply(blackWhitesA, function(x)max(x))
+sapply(finalBlackWhites, function(x)max(x))
+
 
 for( q in numsSel   ){
   
   
   # q<- numsSel[1]
-  
+  # q<- 27
   numSel<-selParF_sel  %>%filter(num==q   ) 
   crit<- numSel$veredicto[1]
   print(paste0('número explorado: ', q))
@@ -349,11 +352,20 @@ for( q in numsSel   ){
     mean(blackWhitesA[[numSel$num[1] ]])
     img<- blackWhitesA[[numSel$num[1] ]] %>% as_tibble()
     sapply(img, class)
-    
-    img<- img  %>% mutate(rn=row_number()) %>% relocate(rn)%>% group_by(rn)%>%
-      mutate_at(-1,funs(replace(., is.numeric(.),
+    if(numI<0){
+      img<- img  %>% mutate(rn=row_number()) %>% relocate(rn)%>% group_by(rn)%>%
+        mutate_at(-1,funs(replace(., is.numeric(.),
                             max(c(.+numI*intv, 0 ) )  ))) %>%ungroup()%>% select(-rn) %>%
       as.matrix()
+    }
+    if(numI>0){
+      img<- img  %>% mutate(rn=row_number()) %>% relocate(rn)%>% group_by(rn)%>%
+        mutate_at(-1,funs(replace(., is.numeric(.),
+                                  min(c(.+numI*intv, 1 ) )  ))) %>%ungroup()%>% select(-rn) %>%
+        as.matrix()
+    }
+    
+    
     meanA<- mean(img)
     itMn<- 1
     
@@ -385,10 +397,21 @@ for( q in numsSel   ){
       itMn<- itMn+1
       print(paste0('itera acota: ', itMn))
       img<- img %>% as_tibble()
-      img<- img  %>% mutate(rn=row_number()) %>% relocate(rn)%>% group_by(rn)%>%
-        mutate_at(-1,funs(replace(., is.numeric(.),
-                                  max(c(.+paso, 0 ) )  ))) %>%ungroup()%>% select(-rn) %>%
-        as.matrix()
+      
+      if(numI<0){
+        img<- img  %>% mutate(rn=row_number()) %>% relocate(rn)%>% group_by(rn)%>%
+          mutate_at(-1,funs(replace(., is.numeric(.),
+                                    max(c(.+paso, 0 ) )  ))) %>%ungroup()%>% select(-rn) %>%
+          as.matrix()
+      }
+      
+      if(numI>0){
+        img<- img  %>% mutate(rn=row_number()) %>% relocate(rn)%>% group_by(rn)%>%
+          mutate_at(-1,funs(replace(., is.numeric(.),
+                                    min(c(.+paso, 1 ) )  ))) %>%ungroup()%>% select(-rn) %>%
+          as.matrix()
+      }
+
       meanA<- mean(img)
       conEx<- between(meanA, intvDesI,intvDesI+intv)
       
@@ -452,6 +475,6 @@ sumF<- selParF_sel %>% mutate(finalSel=TRUE)
 sumF %>% group_by(intervaloFinal) %>% summarise(n(), mean(lumP_MinFin))
 
 
-
+# sapply(frameModTot, function(x)max(x)  )
 write.csv(frameModTot,paste0(folder, '/', 'finalInf.csv'), row.names = FALSE )
 write.csv(sumF,paste0(folder, '/', 'parametrosSelFin.csv'), row.names = FALSE )
