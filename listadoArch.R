@@ -184,6 +184,7 @@ for(y in 1:length(pngs)  ){
 crit<- 'cut'
 intv<- 0.05
 prelInfFN<- prelInfFN %>% mutate(intervalo='Nulo')
+powIntv<-match(TRUE, round(intv  , 1:20) ==intv  )
 
 
 for( q in  seq(from=0, to=1, by=intv)[-1]   ){
@@ -213,10 +214,10 @@ for( q in  seq(from=0, to=1, by=intv)[-1]   ){
       
       imgR<- rotate(img)
       image(imgR, col  = gray((0:255)/255), 
-            xlab = paste0('eje X; promedio: ',listIntv$lumP_Min[ii]   ),
-            ylab = paste0(  'eje Y: ', 'intervalo ', q-intv,' - ', q, ', elemento ', 
+            xlab = paste0('eje X; promedio: ',round(listIntv$lumP_Min[ii], powIntv+1   )  ,
+            ylab = paste0(  'eje Y: ', 'intervalo ',round( q-intv,  powIntv+1 ),' - ', round(q,  powIntv+1 ), ', elemento ', 
                             ii,' img ',listIntv$nombre[ii]   )
-            )
+            ))
       
       
       # ?image(    )
@@ -286,6 +287,7 @@ numsSel<- selParF_sel$num
 
 
 finalBlackWhites<- blackWhitesA
+# numsSel<- 28
 
 for( q in numsSel   ){
   
@@ -296,6 +298,7 @@ for( q in numsSel   ){
   crit<- numSel$veredicto[1]
   print(paste0('número explorado: ', q))
   print(paste0('criterio: ', crit))
+
   
   if(  crit=='s' ){
     
@@ -306,12 +309,18 @@ for( q in numsSel   ){
     
     imgR<- rotate(img)
     image(imgR, col  = gray((0:255)/255), 
-          xlab = paste0('eje X; promedio: ',selTemp$lumP_MinFin[1]   ),
+          xlab = paste0('eje X; promedio: ',round(selTemp$lumP_MinFin[1],  powIntv+1 )     ),
           ylab = paste0(  'eje Y: ', 'intervalo ', selTemp$intervaloFinal[1], 
                           ii,' img ',selTemp$nombre[1]   )
     )
       
     finalBlackWhites[[selTemp$num[1] ]]<- img
+    
+    selParF_sel<- selParF_sel %>% mutate(
+      intervaloFinal=ifelse(  num==q, intervalo,intervaloFinal  ), 
+      lumP_MinFin=ifelse( num==q, lumP_Min,lumP_MinFin )
+      
+      )
     
     
   }else{
@@ -334,6 +343,8 @@ for( q in numsSel   ){
     intvDesI<-stri_extract_first( intvDesI,regex =  '([0-9]+)(\\.)(([0-9]+))'  )
     intvDesI<- as.numeric(intvDesI)
     intvDesI<- intvDesI+numI*intv
+    intvDesI<- round(intvDesI,powIntv+1 )
+    
     
     mean(blackWhitesA[[numSel$num[1] ]])
     img<- blackWhitesA[[numSel$num[1] ]] %>% as_tibble()
@@ -351,7 +362,7 @@ for( q in numsSel   ){
     imgR<- rotate(img)
     
     image(imgR, col  = gray((0:255)/255), 
-          xlab = paste0('eje X; promedio: ',meanA   ),
+          xlab = paste0('eje X; promedio: ',round(meanA,  powIntv+1 )   ),
           ylab = paste0(  'eje Y: ', 'intervalo ', numSel$intervaloFinal[1], 
                           ii,' img ',numSel$nombre[1], '; it ', itMn  )
     )
@@ -360,7 +371,7 @@ for( q in numsSel   ){
     conEx<- between(meanA, intvDesI,intvDesI+intv)
     
     
-    powIntv<-match(TRUE, round(intv  , 1:20) ==intv  )
+
     paso<- 10^(-powIntv)
     if(numI<0){
       paso<- (-paso)
@@ -385,7 +396,7 @@ for( q in numsSel   ){
       imgR<- rotate(img)
       
       image(imgR, col  = gray((0:255)/255), 
-            xlab = paste0('eje X; promedio: ',meanA, '; veredicto: ', conEx   ),
+            xlab = paste0('eje X; promedio: ',round(meanA,  powIntv+1 ), '; veredicto: ', conEx   ),
             ylab = paste0(  'eje Y: ', 'intervalo ', numSel$intervaloFinal[1], 
                             ii,' img ',numSel$nombre[1], '; it ', itMn  )
       )
@@ -397,9 +408,18 @@ for( q in numsSel   ){
     }
     
     
+    # intvDesI,intvDesI+intv
+    selParF_sel<- selParF_sel %>% mutate(
+      intervaloFinal=ifelse(  num==q, paste0( round( intvDesI ,  powIntv+1 ) ,' - ', 
+                                              round(intvDesI+intv ,  powIntv+1 ) ),intervaloFinal  ),
+      lumP_MinFin=ifelse( num==q, meanA,lumP_MinFin )
+      
+    )
+    
+    # intervalo=ifelse(  nombre %in% listIntv$nombre,
+                       # paste0( q-intv,' - ', q) , intervalo )
+    
     finalBlackWhites[[numSel$num[1] ]]<- img
-    
-    
     
     
   }
@@ -407,4 +427,28 @@ for( q in numsSel   ){
   
 }
 
+
+
+frameModTot<- tibble()
+
+for(th in 1:length(finalBlackWhites)){
+  # th<- 1
+  
+  print(th)
+  arr<- finalBlackWhites[[th]] %>% as_tibble() %>% mutate(num=th) %>% relocate(num)
+  
+  if(nrow(frameModTot)  ==0 ){
+    frameModTot<- arr
+  }else{
+    frameModTot<- rbind(frameModTot, arr)
+  }
+  
+  
+}
+
+frameModTot %>% group_by(num) %>% summarise(n()) #%>% View()
+
+
+
+write.csv(frameModTot,paste0(folder, '/', 'finalInf.csv'), row.names = FALSE )
 
