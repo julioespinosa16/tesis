@@ -514,8 +514,8 @@ seleccionF<-distanciasO %>% filter(seleccion==1)
 seleccionF %>% group_by(ROW, COL) %>%
   summarise(n()) #%>% View()
 
-matFin<- matrix(NA, nrow=dim1*largPix, ncol = dim2*largPix)
-matFinIm<- matrix(NA, nrow=dim1, ncol = dim2)
+matFin<- matrix(NA, nrow=dim2*largPix, ncol = dim1*largPix)
+# matFinIm<- matrix(NA, nrow=dim2, ncol = dim1)
 
 
 for(  mm in 1:length(geij) ){
@@ -544,16 +544,6 @@ matFinA<- matrix(NA, nrow=dim1, ncol = dim2)
 
 
 
-
-range(apply(matFin, 1, function(x)sum(is.na(x))  ))
-range(apply(matFin, 2, function(x)sum(is.na(x))  ))
-
-
-range(apply(matFin, 1, function(x)min(x)  ))
-range(apply(matFin, 2, function(x)min(x)  ))
-
-range(apply(matFin, 1, function(x)max(x)  ))
-range(apply(matFin, 2, function(x)max(x)  ))
 
 
 matObj_img<- rotate(matObj)
