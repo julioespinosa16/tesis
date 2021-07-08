@@ -1,7 +1,7 @@
 
 library(dplyr)
-library(RCurl)
-library(colorspace)
+# library(RCurl)
+# library(colorspace)
 library(png)
 library(tidyr)
 library(ggplot2)
@@ -18,31 +18,37 @@ dim2<- 20
 nombreTitulo<-'Twitter'
 subC<-'try1'
 nombrePng<-'twitter'
-reshapeDists<- TRUE
 habilitaEscrituras<- TRUE 
 carpetaCat<- 'instagram'
 
 
+holguraDisposiciones<- 0.3
+variabilidadDisposiciones<-0.3
+
+# subcarpeta-intento
 val<-1 
 
+# lee dos archivos: resumen-información (sumF) y pixeles de las distintas fotos (frameModTot)
 folder<-paste0(getwd(), '/', carpetaCat  ,'/', carpetaCat, 'Prop_', val)
 
 frameModTot<- read.csv(paste0(folder, '/', 'finalInf.csv'), stringsAsFactors  = FALSE )
 sumF<- read.csv(paste0(folder, '/', 'parametrosSelFin.csv'), stringsAsFactors = FALSE )
+
+# Reasignar número de cuadro
 sumF<- sumF %>% mutate(FIG=row_number())
 
-
+# selección final de fotos a ocupar
 frameModTotF <- frameModTot %>% filter(num %in% sumF$num) %>%
   mutate(rn=row_number()) %>% relocate(rn)
 frameModTotF<- merge(sumF %>%select(num, FIG), frameModTotF, 
                      by='num') %>% arrange(rn)
 
-
+# Extraer dimensiones de pixel de todos los cuadros
 largPix<- frameModTotF %>% group_by(num) %>% summarise(n=n()) %>% ungroup() %>%
   summarise(nf=unique(n))  %>% as.numeric()
 
 
-# llama función de particionar matrices en submatrices
+# función de particionar matrices en submatrices
 matsplitter<-function(M, r, c) {
   rg <- (row(M)-1)%/%r+1
   cg <- (col(M)-1)%/%c+1
@@ -64,15 +70,13 @@ x <- readPNG( paste0(getwd(),"/", subC ,"/",nombrePng,".png" )  )
 # x: dimensión de pixeles
 dim(x)
 
-
-# Nuevo punto
+# Arreglo matricial
 x0=x[,,1] # will hold the grayscale values divided by 255
-
 
 
 # x0<- x0 %>% as_tibble() %>% mutate_all(funs(replace(., .>=0.9, 1))) %>% as.matrix()
 
-# Rotación (para hacer plot en grayscales)
+# Rotación y visualización de imagen en grayscales
 x0_img<- rotate(x0)
 image(x0_img, col  = gray((0:255)/255)) # plot in grayscale
 
@@ -167,31 +171,12 @@ promediosPart<- sapply(listMats, function(x)mean(x)   )
 
 
 # Ciudades a computar por cuadro
-# geij<-  gamma_par  - floor( gamma_par* promediosPart/255 )
 geij<- promediosPart/255
-# range(geij)
 
 
-# opción A: ordenado es por llenado por renglón 
 # Función: convierte un valor de k-ésima submatriz (o cuadrado) en coordenadas (i, j)
-# coordGe<- function(num) {
-# 
-#   # num<- 16
-#   # num<-23
-#   
-#   # define renglón
-#   equis<- num%%dim2
-#   if(equis==0){
-#     equis<- dim2
-#   }
-#   
-#   # Define columna
-#   ye<-(num-equis)/dim2+1
-#   
-#   
-#   coord<- c(equis, ye)
-#   return(coord)
-# }
+# (renglón-columna) de matriz
+
 
 # opción B: ordenado es por llenado por columna 
 coordGe_c<- function(num) {
@@ -210,126 +195,31 @@ coordGe_c<- function(num) {
 }
 
 
-
-
-# Genera los cuatro extremos de las cuatro coordenadas del cuadrado x, y
-coordCuadr<- function(ex, yi){
-  # ex<- 10
-  # yi<-1
-  
-  # Define número de decimales en x y y
-  pow_x<-match(TRUE, round(1/dim1, 1:20) == 1/dim1)
-  pow_y<-match(TRUE, round(1/dim2, 1:20) == 1/dim2)
-  
-  # extremos izquierdo
-  equisCu<- (ex-1)/dim1
-  # Extremo superior
-  yeCu<- 1-(yi-1)/dim2
-  
-  
-  
-  # Definición de las 4 coordenadas
-  extrTot<- list(supIzq=  c(equisCu,yeCu),supDer= c(equisCu+1/dim1,yeCu), infIzq= c(equisCu,yeCu-1/dim2), 
-                 infDer=c(equisCu+1/dim1,yeCu-1/dim2) )
-  extrTot<- sapply(extrTot, function(x)round(x,max(  pow_x, pow_y)  ) ) %>% as_tibble()
-  extrTot<- as.list(extrTot)
-  
-  return(extrTot)
-  
-}
-
-
-
-# Dispersión ciudades
-# Genera arreglo eficientemente disperso de ciudades en el cuadrado
-funcionDistrCd<- function(  quant, precis, extremos ){
-  
-  # quant: nivel de oscuridad, discreto de 0 a gamma. 
-  # extremos: 4 límites del cuadrado
-  # precis: se generará un grid-2 dimensional delimitado entre los extremos, este grid contará con
-  # (precis+1) puntos a lo largo por (precis+1) puntos a lo ancho
-  
-  
-  
-  # quant<- 5
-  # extremos<- list(supIzq=  c(0,1),supDer= c(1, 1), infIzq= c(0, 0), infDer=c(1, 0)  )
-  # precis<- 10
-  if(floor(  quant)==quant & quant>0 ){
-    
-    
-    grid_x<- seq(from=max(extremos$supIzq[1], extremos$infIzq[1]), 
-                 to=max(extremos$supDer[1], extremos$infDer[1]) ,
-                 by= ((max(extremos$supDer[1], extremos$infDer[1])- max(extremos$supIzq[1], extremos$infIzq[1]) )/precis ) )
-    
-    grid_y<- seq(from=max(extremos$infIzq[2], extremos$infDer[2]), 
-                 to=max(extremos$supIzq[2], extremos$supDer[2]) ,
-                 by= ((max(extremos$supIzq[2], extremos$supDer[2])- max(extremos$infIzq[2], extremos$infDer[2]) )/precis ) )
-    
-    gridDim_m<- expand.grid(grid_x,grid_y)
-    gridDim<-gridDim_m%>% as.matrix()
-    
-    set.seed(1)
-    # distribución eficiente: quant centroides del grid 2-dimensional
-    gridPart<- kmeans(gridDim, centers = quant)
-    centrosDisp<-gridPart$centers %>% as_tibble()
-    obj<- centrosDisp %>% ggplot(aes( Var1, Var2 )   )+ geom_point()  +
-      xlim( range(gridDim_m$Var1)   )+ylim( range(gridDim_m$Var1) )#+labs(title = paste0('seed: ', j)) 
-    
-    
-  }else{
-    
-    centrosDisp<- tibble(Var1=NA, Var2=NA) %>% filter(!is.na(Var1)   )
-    
-  }
-  
-  return(centrosDisp)
-  
-}
-
-
+# Matriz objetivo a reproducir (luminosidad promedio por cuadro de la imagen original)
 matObj<- matrix(NA, nrow=dim1, ncol = dim2)
 
-
+# Generar arreglo 3-dimensional de distancias (renglón x columna x figuar)
 arr3 = rep(NA, dim1*dim2*nrow(sumF))
 dim(arr3) = c(dim1,dim2,  nrow(sumF) )
-# Construcción de las ciudades a recorrer
+
+
 # Recorrido por los dim1 x dim2 cuadros generados
 for(  k in 1:length(geij) ){
   # k<-16
   print(paste0('coordenada ', k))
   
-  # print(paste('ceil', k))
   osc<- geij[k]
   
   # Asginación k- coordendas i, j 
-  # cua<-coordGe(k)
   cua<-coordGe_c(k)
-  # print(paste('coordenadas x, y: ', cua[1], ', ', cua[2]))
   
-  
+  # cuadrado de distancia (en luminosidad) de la celda a las distintas figuras
   difIj<- (osc-sumF$lumP_MinFin)^2
   arr3[ cua[1], cua[2],   ]<- difIj
   
-  
+  # Oscuridad objetivo
   matObj[ cua[1], cua[2]   ]<- osc
   
-  # # Generación de extremos del cuadro
-  # cuadranteEsp<- coordCuadr(cua[1], cua[2])
-  # 
-  # # Genera dispersión de puntos sobre cuadrado
-  # dfCeil<- funcionDistrCd(osc, 10,cuadranteEsp)
-  
-  
-  
-  
-  # Incorpora información adicional
-  # dfCeil<- tibble(numIt=k, coordX=cua[1],coordY=cua[2], dfCeil )
-  # 
-  # if(k ==1){
-  #   dfCeilF<- dfCeil
-  # }else{
-  #   dfCeilF<-rbind(dfCeilF, dfCeil)
-  # }
   
 }
 
@@ -350,59 +240,57 @@ for(  y in 1:dim(arr3)[3] ){
 
 
 
+# Indicar si las dimensiones son correctas y
+# los valores se establecen en el rango correcto
 dimCorr<- FALSE
 if( sum( sapply(tblF, function(x)sum(is.na(x) & between(x, 0, 1)  )  )  ) ==0 &
     dim(arr3)[1]*dim(arr3)[2]*dim(arr3)[3]==nrow(tblF)*ncol(tblF)
+    & dim(arr3)[1]*dim(arr3)[2]>dim(arr3)[3]
     ){
   dimCorr<- TRUE
 }
 
 
-finalDisp<- c()
-if(dimCorr & dim(arr3)[1]*dim(arr3)[2]>dim(arr3)[3]  ){
+
+if(dimCorr   ){
   
+  # Vector de disponibilidades
+  finalDisp<- c()
   
-  disposiciones<- floor(dim(arr3)[1]*dim(arr3)[2] *1.3)
+  # Disposicones que sean más que las justas para llenar los espaciones
+  disposiciones<- floor(dim(arr3)[1]*dim(arr3)[2] * (1+holguraDisposiciones) )
   
   
   for(kk in 1: dim(arr3)[3]){
     
-    # vector<- disposiciones
-    vector<- floor(  (disposiciones/dim(arr3)[3])  *(1- 0.3) ): 
-      floor(  (disposiciones/dim(arr3)[3]  )*(1+ 0.3) )  
+    # añadir componente de variabilidad (qué tanto más o menos del promedio puedo disponer)
+    vector<- floor(  (disposiciones/dim(arr3)[3])  *(1- variabilidadDisposiciones) ): 
+      floor(  (disposiciones/dim(arr3)[3]  )*(1+ variabilidadDisposiciones) )  
     set.seed(kk+1)
     elemAdd<-sample(vector, 1)
     
     finalDisp<- c(finalDisp,elemAdd )
   }
   
+  # frame disponibilidades
+  finalDispDf<- tibble(quant=finalDisp) %>% mutate(FIG=row_number()) %>% relocate(FIG)
   
+  # Construcción del data frame de distancias
+  distancias<- tibble()
   
-  
-}
-
-sum(finalDisp)
-finalDispDf<- tibble(quant=finalDisp) %>% mutate(FIG=row_number()) %>% relocate(FIG)
-
-
-# sum(finalDisp)
-# dfCeilF<- dfCeilF %>% mutate(rn=row_number())
-
-distancias<- tibble()
-
-for(jj in 1: dim(arr3)[3]){
+  for(jj in 1: dim(arr3)[3]){
   # jj<-1
   
-  
-  # vector<- disposiciones
+  # Matriz de la jj-ésimo figura
   mat<- arr3[,,jj]
   
   for(  ll in 1:dim(mat)[1]  ){
     
-    # ll<-1
+    
+    # ll-ésimo renglón
     renVal<- mat[ll, ]
     
-    
+    # información con costos (luminosidad)
     dist0<- tibble(FIG=jj, ROW=ll, COL=1:length(renVal), cost=renVal)
     
     if(nrow(  distancias )==0  ){
@@ -420,9 +308,7 @@ distancias %>% group_by(ROW, COL) %>% summarise(n())#%>%View()
 distancias %>% group_by(FIG,ROW, COL) %>% summarise(n())#%>%View()
 
 
-
-
-
+# Escritura de df's de costos y de disponibilidades en csv's
 
 nombreCostos<- paste0('costoFotoMos', Hmisc::capitalize(nombreTitulo), dim1,'_', dim2, '.csv'  )
 nombreCostos<- paste0(folder, '/', nombreCostos)
@@ -432,38 +318,11 @@ nombreDisp<- paste0(folder, '/', nombreDisp)
 
 
 
-
-# write.csv(distanciasAltF0,'distCityTwitt15_15.csv',row.names = FALSE )
 # write.csv(distancias,nombreCostos,row.names = FALSE )
 # write.csv(finalDispDf,nombreDisp,row.names = FALSE )
 
 
 
-# 
-# Assignment01 <- function (c) {
-#   n <- dim(c) [1]
-#   coef <- as.vector (t(c) )
-#   rhs <- rep (1 , 2*n )
-#   
-#   Amatrix <- matrix (0 , 2*n , n*n )
-#   for ( i in 1: n ) {
-#     for ( j in 1: n ) {
-#       Amatrix [i , n*(i -1) + j ] <-1
-#     }
-#   }
-#   for ( i in 1: n ) {
-#     for ( j in 1: n ) {
-#       Amatrix [ n +i , n*(j -1) + i] <- 1
-#     }
-#   }
-#   signs <- rep("==", 2*n )
-#   var_type <- rep("B", 2*n )
-#   library ( Rglpk )
-#   solution <- Rglpk_solve_LP ( obj =coef , mat= Amatrix , dir=
-#                                     signs , types = var_type , rhs = rhs , max = TRUE )
-#   return ( solution )
-# }
-# 
 
 distanciasO<- distancias %>% mutate(rn=row_number())
 dirU<- 'min'
@@ -558,7 +417,7 @@ image(matFin_img, col  = gray((0:255)/255),
       xlab='eje X: final plot'
       ) # plot in grayscale
 
-
+}
 # matGen[1: length(finalDispDf$FIG) , ]%>% View()
 # apply(matGen, 1,  function(x)sum( is.na(x)  ))
 # apply(matGen, 1,  function(x)sum( is.na(x)  ))
