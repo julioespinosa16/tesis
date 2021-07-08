@@ -1,4 +1,3 @@
-
 library(dplyr)
 # library(RCurl)
 # library(colorspace)
@@ -74,7 +73,6 @@ dim(x)
 x0=x[,,1] # will hold the grayscale values divided by 255
 
 
-# x0<- x0 %>% as_tibble() %>% mutate_all(funs(replace(., .>=0.9, 1))) %>% as.matrix()
 
 # Rotación y visualización de imagen en grayscales
 x0_img<- rotate(x0)
@@ -322,16 +320,18 @@ nombreDisp<- paste0(folder, '/', nombreDisp)
 # write.csv(finalDispDf,nombreDisp,row.names = FALSE )
 
 
-
-
+# ordenamiento del data frame de distancias
 distanciasO<- distancias %>% mutate(rn=row_number())
+
+# Construcción de parámetros para problema lineal
 dirU<- 'min'
 coefs<- distanciasO$cost
 
-
+# Matriz de restricciones lineales
 matGen<- matrix(NA, nrow =(nrow(finalDispDf)  + dim1*dim2     ),ncol=length(coefs) )
-# dim(matGen)
 
+
+# Restricciones de disponibilidades de figuras
 for(  k in finalDispDf$FIG ){
   # k<-1
   matGen[k,which( distanciasO$FIG  ==k )]<- 1
@@ -340,13 +340,15 @@ for(  k in finalDispDf$FIG ){
 }
 
 
-
+# Asignar un número, llamado primero a cada combinación ROW, COL
 asignRC<-distanciasO %>%group_by(ROW, COL) %>% summarise( primero=min(rn)  ) %>% ungroup()#%>% View()
 distanciasO<- merge(distanciasO, asignRC, by=c('ROW', 'COL')) %>% arrange(rn)
 
 
 figs<-max(finalDispDf$FIG)
 
+
+# Restricción de unicidad de piezas (figuras) por coordenada i,j
 for(  k in 1:nrow(asignRC)  ){
   
   # k<-1
@@ -357,31 +359,40 @@ for(  k in 1:nrow(asignRC)  ){
 }
 
 
-
+# Dirección restricciones
 dirC<- rep('=',dim(matGen)[1] )
 dirC[1:figs]<- '<='
 
+
+# mano derecha, constantes restricciones
 rightH<-  rep(1,dim(matGen)[1] )
 rightH[1:figs]<- finalDispDf$quant
 
+# Construcción del problema, plasmarlo en objeto de clase lp
 problema<-lp(direction = dirU, objective.in=coefs, const.mat=matGen, const.dir=dirC, const.rhs=rightH)
 
 
+# Incorporar solución al data frame
 distanciasO<-distanciasO %>% mutate( seleccion=round(problema$solution) )
 
+# Selección final 
 seleccionF<-distanciasO %>% filter(seleccion==1) 
 seleccionF %>% group_by(ROW, COL) %>%
-  summarise(n()) #%>% View()
+  summarise(n()) 
 
+# Matriz-resultado final
 matFin<- matrix(NA, nrow=dim2*largPix, ncol = dim1*largPix)
-# matFinIm<- matrix(NA, nrow=dim2, ncol = dim1)
 
 
 for(  mm in 1:length(geij) ){
   
   
+  
   numeroFig<-seleccionF %>% filter(primero==mm) %>% select(FIG)%>% as.numeric()
-  # mm<-1
+  
+  
+  # extraer combinación renglón-columna
+  # ubicar coordenadas del pixel donde inicia el fotomosaico
   pos<- asignRC %>% filter(primero==mm)
   r<-pos$ROW
   rowI<-(r -1)*largPix+1
@@ -389,9 +400,10 @@ for(  mm in 1:length(geij) ){
   c<-pos$COL
   colI<-(c -1)*largPix+1
     
+  
+  # Incorporar arreglo de figuras
   arreglo<- frameModTotF %>% filter(FIG==numeroFig) %>%
     select(-num, -FIG, -rn) %>% as.matrix()
-  # dim(arreglo)
   
   matFin[rowI:(rowI+largPix-1),colI:(colI+largPix-1)]<- arreglo
     
@@ -399,25 +411,18 @@ for(  mm in 1:length(geij) ){
 
 
 
-matFinA<- matrix(NA, nrow=dim1, ncol = dim2)
-
-
-
-
-
+# Desplegar imagen-objetivo (mejor reproducción posible usando dim1 x dim2 pixeles)
 matObj_img<- rotate(matObj)
 image(matObj_img, col  = gray((0:255)/255)
-) # plot in grayscale
+) 
 
 
 
-
+# Desplegar resultado final
 matFin_img<- rotate(matFin)
 image(matFin_img, col  = gray((0:255)/255),
       xlab='eje X: final plot'
-      ) # plot in grayscale
+      ) 
 
 }
-# matGen[1: length(finalDispDf$FIG) , ]%>% View()
-# apply(matGen, 1,  function(x)sum( is.na(x)  ))
-# apply(matGen, 1,  function(x)sum( is.na(x)  ))
+
