@@ -22,6 +22,10 @@ nombrePng<-'twitter'
 reshapeDists<- FALSE
 habilitaEscrituras<- FALSE 
 
+# Tipo 1: se eligen centroides de k-medias
+# Tipo 2: se eligen puntos aleatorios en el rectángulo
+tipoDisp<- 2
+
 
 # llama función de particionar matrices en submatrices
 matsplitter<-function(M, r, c) {
@@ -269,9 +273,57 @@ funcionDistrCd<- function(  quant, precis, extremos ){
 
 
 
+# osc, 10,cuadranteEsp
+
+# Dispersión ciudades
+# Genera arreglo eficientemente disperso de ciudades en el cuadrado
+funcionDistrRndm<- function(  quant, ka,  extremos ){
+
+  # quant: nivel de oscuridad, discreto de 0 a gamma.
+  # extremos: 4 límites del cuadrado
+  # ka: deseamos que nuestro código sea reproducible, pero a la vez que se mantenga la aleatoridad
+  # por eso, ka fungirá como semilla
+  
+  # quant<-osc 
+  # extremos<-cuadranteEsp
+
+  if(floor(  quant)==quant & quant>0 ){
+    
+       # quant<-1
+       # definimos coordenadas x y y aleatorias
+       # baseSeed<- 0
+       
+       set.seed(0+ka)
+       xRan<-runif(quant, min=max(extremos$supIzq[1], extremos$infIzq[1]), 
+             max=max(extremos$supDer[1], extremos$infDer[1])
+             )
+       set.seed(321+ka)
+       yRan<- runif(quant, min=max(extremos$infIzq[2], extremos$infDer[2]), 
+                    max=max(extremos$supIzq[2], extremos$supDer[2]) 
+                    )
+    
+       
+       centrosDisp<-  tibble(Var1=xRan, Var2=yRan) 
+    
+  }else{
+
+    centrosDisp<- tibble(Var1=NA, Var2=NA) %>% filter(!is.na(Var1)   )
+
+  }
+
+  return(centrosDisp)
+
+}
+
+
+
+
+
 # Construcción de las ciudades a recorrer
 # Recorrido por los dim1 x dim2 cuadros generados
 for(  k in 1:length(geij) ){
+  # k<-1
+  
   
   # print(paste('ceil', k))
   osc<- geij[k]
@@ -287,7 +339,15 @@ for(  k in 1:length(geij) ){
   
   
   # Genera dispersión de puntos sobre cuadrado
-  dfCeil<- funcionDistrCd(osc, 10,cuadranteEsp)
+  if( tipoDisp==1  ){
+    dfCeil<- funcionDistrCd(osc, 10,cuadranteEsp)
+  }
+  
+  if(tipoDisp==2){
+    dfCeil<- funcionDistrRndm(osc, k,cuadranteEsp)
+  }
+  
+  
   
   # Incorpora información adicional
   dfCeil<- tibble(numIt=k, coordX=cua[1],coordY=cua[2], dfCeil )
