@@ -16,13 +16,19 @@ dim2<- 20
 # llama nombres de archivos y título de fotos
 nombreTitulo<-'Twitter'
 subC<-'try1'
-nombrePng<-'twitter'
+nombrePng<-'twitter_nl'
 habilitaEscrituras<- TRUE 
 carpetaCat<- 'instagram'
 
 
+# holguraDisposiciones<- dim1*dim2
+# variabilidadDisposiciones<-0
+
+
 holguraDisposiciones<- 0.3
 variabilidadDisposiciones<-0.3
+
+
 
 # subcarpeta-intento
 val<-1 
@@ -179,22 +185,22 @@ geij<- promediosPart/255
 # opción B: ordenado es por llenado por columna 
 coordGe_c<- function(num) {
   # num<-16
-  ye<- num%%dim1
-
-  if(ye==0){
-    ye<- dim1
-  }
-
-  equis<-(num-ye)/dim1+1
+  ye<- num%%dim2
   
-
+  if(ye==0){
+    ye<- dim2
+  }
+  
+  equis<-(num-ye)/dim2+1
+  
+  
   coord<- c(equis, ye)
   return(coord)
 }
 
 
 # Matriz objetivo a reproducir (luminosidad promedio por cuadro de la imagen original)
-matObj<- matrix(NA, nrow=dim1, ncol = dim2)
+matObj<- matrix(0, nrow=dim1, ncol = dim2)
 
 # Generar arreglo 3-dimensional de distancias (renglón x columna x figuar)
 arr3 = rep(NA, dim1*dim2*nrow(sumF))
@@ -202,17 +208,21 @@ dim(arr3) = c(dim1,dim2,  nrow(sumF) )
 
 
 # Recorrido por los dim1 x dim2 cuadros generados
-for(  k in 1:length(geij) ){
-  # k<-16
+for(  k in 1:length(geij
+                    # [1:floor(length(geij) /2 )  ]
+) ){
+  # k<-20
   print(paste0('coordenada ', k))
   
   osc<- geij[k]
   
   # Asginación k- coordendas i, j 
   cua<-coordGe_c(k)
+  # cua<-coordGe(k)
   
   # cuadrado de distancia (en luminosidad) de la celda a las distintas figuras
   difIj<- (osc-sumF$lumP_MinFin)^2
+  dim(arr3)
   arr3[ cua[1], cua[2],   ]<- difIj
   
   # Oscuridad objetivo
@@ -244,13 +254,14 @@ dimCorr<- FALSE
 if( sum( sapply(tblF, function(x)sum(is.na(x) & between(x, 0, 1)  )  )  ) ==0 &
     dim(arr3)[1]*dim(arr3)[2]*dim(arr3)[3]==nrow(tblF)*ncol(tblF)
     & dim(arr3)[1]*dim(arr3)[2]>dim(arr3)[3]
-    ){
+){
   dimCorr<- TRUE
 }
 
 
 
 if(dimCorr   ){
+  
   
   # Vector de disponibilidades
   finalDisp<- c()
@@ -277,152 +288,155 @@ if(dimCorr   ){
   distancias<- tibble()
   
   for(jj in 1: dim(arr3)[3]){
-  # jj<-1
-  
-  # Matriz de la jj-ésimo figura
-  mat<- arr3[,,jj]
-  
-  for(  ll in 1:dim(mat)[1]  ){
+    # jj<-1
     
+    # Matriz de la jj-ésimo figura
+    mat<- arr3[,,jj]
     
-    # ll-ésimo renglón
-    renVal<- mat[ll, ]
-    
-    # información con costos (luminosidad)
-    dist0<- tibble(FIG=jj, ROW=ll, COL=1:length(renVal), cost=renVal)
-    
-    if(nrow(  distancias )==0  ){
-      distancias<-dist0
-    }else{
-      distancias<- rbind(distancias, dist0)
+    for(  ll in 1:dim(mat)[1]  ){
+      
+      
+      # ll-ésimo renglón
+      renVal<- mat[ll, ]
+      
+      # información con costos (luminosidad)
+      dist0<- tibble(FIG=jj, ROW=ll, COL=1:length(renVal), cost=renVal)
+      
+      if(nrow(  distancias )==0  ){
+        distancias<-dist0
+      }else{
+        distancias<- rbind(distancias, dist0)
+      }
+      
     }
+  }
+  
+  
+  distancias %>% group_by(FIG) %>% summarise(n())#%>%View()
+  distancias %>% group_by(ROW, COL) %>% summarise(n())#%>%View()
+  distancias %>% group_by(FIG,ROW, COL) %>% summarise(n())#%>%View()
+  
+  
+  # Escritura de df's de costos y de disponibilidades en csv's
+  
+  nombreCostos<- paste0('costoFotoMos', Hmisc::capitalize(nombreTitulo), dim1,'_', dim2, '.csv'  )
+  nombreCostos<- paste0(folder, '/', nombreCostos)
+  
+  nombreDisp<- paste0('DispFotoMos', Hmisc::capitalize(nombreTitulo), dim1,'_', dim2, '.csv'  )
+  nombreDisp<- paste0(folder, '/', nombreDisp)
+  
+  
+  
+  # write.csv(distancias,nombreCostos,row.names = FALSE )
+  # write.csv(finalDispDf,nombreDisp,row.names = FALSE )
+  
+  
+  # ordenamiento del data frame de distancias
+  distanciasO<- distancias %>% mutate(rn=row_number())
+  
+  # Construcción de parámetros para problema lineal
+  dirU<- 'min'
+  coefs<- distanciasO$cost
+  
+  # Matriz de restricciones lineales
+  matGen<- matrix(NA, nrow =(nrow(finalDispDf)  + dim1*dim2     ),ncol=length(coefs) )
+  
+  
+  # Restricciones de disponibilidades de figuras
+  for(  k in finalDispDf$FIG ){
+    # k<-1
+    matGen[k,which( distanciasO$FIG  ==k )]<- 1
+    matGen[k,-which( distanciasO$FIG  ==k )]<-0
     
   }
-}
-
-
-distancias %>% group_by(FIG) %>% summarise(n())#%>%View()
-distancias %>% group_by(ROW, COL) %>% summarise(n())#%>%View()
-distancias %>% group_by(FIG,ROW, COL) %>% summarise(n())#%>%View()
-
-
-# Escritura de df's de costos y de disponibilidades en csv's
-
-nombreCostos<- paste0('costoFotoMos', Hmisc::capitalize(nombreTitulo), dim1,'_', dim2, '.csv'  )
-nombreCostos<- paste0(folder, '/', nombreCostos)
-
-nombreDisp<- paste0('DispFotoMos', Hmisc::capitalize(nombreTitulo), dim1,'_', dim2, '.csv'  )
-nombreDisp<- paste0(folder, '/', nombreDisp)
-
-
-
-# write.csv(distancias,nombreCostos,row.names = FALSE )
-# write.csv(finalDispDf,nombreDisp,row.names = FALSE )
-
-
-# ordenamiento del data frame de distancias
-distanciasO<- distancias %>% mutate(rn=row_number())
-
-# Construcción de parámetros para problema lineal
-dirU<- 'min'
-coefs<- distanciasO$cost
-
-# Matriz de restricciones lineales
-matGen<- matrix(NA, nrow =(nrow(finalDispDf)  + dim1*dim2     ),ncol=length(coefs) )
-
-
-# Restricciones de disponibilidades de figuras
-for(  k in finalDispDf$FIG ){
-  # k<-1
-  matGen[k,which( distanciasO$FIG  ==k )]<- 1
-  matGen[k,-which( distanciasO$FIG  ==k )]<-0
-  
-}
-
-
-# Asignar un número, llamado primero a cada combinación ROW, COL
-asignRC<-distanciasO %>%group_by(ROW, COL) %>% summarise( primero=min(rn)  ) %>% ungroup()#%>% View()
-distanciasO<- merge(distanciasO, asignRC, by=c('ROW', 'COL')) %>% arrange(rn)
-
-
-figs<-max(finalDispDf$FIG)
-
-
-# Restricción de unicidad de piezas (figuras) por coordenada i,j
-for(  k in 1:nrow(asignRC)  ){
-  
-  # k<-1
-  vecPrev<- rep(0, nrow(distanciasO))
-  vecPrev[which(distanciasO$primero==k   )   ]<- 1
-  matGen[  figs+k ,]<-vecPrev
-  
-}
-
-
-# Dirección restricciones
-dirC<- rep('=',dim(matGen)[1] )
-dirC[1:figs]<- '<='
-
-
-# mano derecha, constantes restricciones
-rightH<-  rep(1,dim(matGen)[1] )
-rightH[1:figs]<- finalDispDf$quant
-
-# Construcción del problema, plasmarlo en objeto de clase lp
-problema<-lp(direction = dirU, objective.in=coefs, const.mat=matGen, const.dir=dirC, const.rhs=rightH)
-
-
-# Incorporar solución al data frame
-distanciasO<-distanciasO %>% mutate( seleccion=round(problema$solution) )
-
-# Selección final 
-seleccionF<-distanciasO %>% filter(seleccion==1) 
-seleccionF %>% group_by(ROW, COL) %>%
-  summarise(n()) 
-
-# Matriz-resultado final
-matFin<- matrix(NA, nrow=dim2*largPix, ncol = dim1*largPix)
-
-
-for(  mm in 1:length(geij) ){
   
   
+  # Asignar un número, llamado primero a cada combinación ROW, COL
+  asignRC<-distanciasO %>%group_by(ROW, COL) %>% summarise( primero=min(rn)  ) %>% ungroup()#%>% View()
+  distanciasO<- merge(distanciasO, asignRC, by=c('ROW', 'COL')) %>% arrange(rn)
   
-  numeroFig<-seleccionF %>% filter(primero==mm) %>% select(FIG)%>% as.numeric()
+  
+  figs<-max(finalDispDf$FIG)
   
   
-  # extraer combinación renglón-columna
-  # ubicar coordenadas del pixel donde inicia el fotomosaico
-  pos<- asignRC %>% filter(primero==mm)
-  r<-pos$ROW
-  rowI<-(r -1)*largPix+1
-  
-  c<-pos$COL
-  colI<-(c -1)*largPix+1
+  # Restricción de unicidad de piezas (figuras) por coordenada i,j
+  for(  k in 1:nrow(asignRC)  ){
     
-  
-  # Incorporar arreglo de figuras
-  arreglo<- frameModTotF %>% filter(FIG==numeroFig) %>%
-    select(-num, -FIG, -rn) %>% as.matrix()
-  
-  matFin[rowI:(rowI+largPix-1),colI:(colI+largPix-1)]<- arreglo
+    # k<-1
+    vecPrev<- rep(0, nrow(distanciasO))
+    vecPrev[which(distanciasO$primero==k   )   ]<- 1
+    matGen[  figs+k ,]<-vecPrev
     
-}
-
-
-
-# Desplegar imagen-objetivo (mejor reproducción posible usando dim1 x dim2 pixeles)
-matObj_img<- rotate(matObj)
-image(matObj_img, col  = gray((0:255)/255)
-) 
-
-
-
-# Desplegar resultado final
-matFin_img<- rotate(matFin)
-image(matFin_img, col  = gray((0:255)/255),
-      xlab='eje X: final plot'
-      ) 
-
+  }
+  
+  
+  # Dirección restricciones
+  dirC<- rep('=',dim(matGen)[1] )
+  dirC[1:figs]<- '<='
+  
+  
+  # mano derecha, constantes restricciones
+  rightH<-  rep(1,dim(matGen)[1] )
+  rightH[1:figs]<- finalDispDf$quant
+  
+  # Construcción del problema, plasmarlo en objeto de clase lp
+  problema<-lp(direction = dirU, objective.in=coefs,
+               const.mat=matGen, const.dir=dirC, const.rhs=rightH)
+  
+  
+  ?lp()
+  # Incorporar solución al data frame
+  distanciasO<-distanciasO %>% mutate( seleccion=round(problema$solution) )
+  
+  # Selección final 
+  seleccionF<-distanciasO %>% filter(seleccion==1) 
+  seleccionF %>% group_by(ROW, COL) %>%
+    summarise(n()) 
+  
+  # Matriz-resultado final
+  matFin<- matrix(NA, nrow=dim1*largPix, ncol = dim2*largPix)
+  
+  
+  for(  mm in 1:length(geij) ){
+    
+    
+    
+    numeroFig<-seleccionF %>% filter(primero==mm) %>% select(FIG)%>% as.numeric()
+    
+    
+    # extraer combinación renglón-columna
+    # ubicar coordenadas del pixel donde inicia el fotomosaico
+    pos<- asignRC %>% filter(primero==mm)
+    r<-pos$ROW
+    rowI<-(r -1)*largPix+1
+    
+    c<-pos$COL
+    colI<-(c -1)*largPix+1
+    
+    
+    # Incorporar arreglo de figuras
+    arreglo<- frameModTotF %>% filter(FIG==numeroFig) %>%
+      select(-num, -FIG, -rn) %>% as.matrix()
+    
+    matFin[rowI:(rowI+largPix-1),colI:(colI+largPix-1)]<- arreglo
+    
+  }
+  
+  
+  
+  # Desplegar imagen-objetivo (mejor reproducción posible usando dim1 x dim2 pixeles)
+  matObj_img<- rotate(matObj)
+  image(matObj_img, col  = gray((0:255)/255)
+  ) 
+  
+  
+  
+  # Desplegar resultado final
+  matFin_img<- rotate(matFin)
+  image(matFin_img, col  = gray((0:255)/255),
+        xlab='eje X: final plot'
+  )
+  
+  
 }
 
