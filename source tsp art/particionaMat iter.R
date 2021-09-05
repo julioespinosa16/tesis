@@ -8,17 +8,26 @@ library(data.table)
 library(TSP)
 
 # Número de cuadros-renglón
-dim1<- 30
+dim1p<- 60
 # Número de cuadros-columna
-dim2<- 30
+dim2p<- 60
 
+tibF<-tibble()
+
+
+
+for(jul in 1:2){
+  
+
+  dim1<- dim1p+5*(jul-1)
+  dim2<- dim2p+5*(jul-1)
 # Máximo de ciudades a computar por cuadro
 gamma_par<- 7
 
 # llama nombres de archivos y título de fotos
 nombreTitulo<-'Twitter'
 subC<-'try1'
-nombrePng<-'twitter'
+nombrePng<-'twitter_nl'
 reshapeDists<- FALSE
 habilitaEscrituras<- FALSE 
 
@@ -51,7 +60,7 @@ x0=x[,,1] # will hold the grayscale values divided by 255
 
 
 
-x0<- x0 %>% as_tibble() %>% mutate_all(funs(replace(., .>=0.7, 1))) %>% as.matrix()
+# x0<- x0 %>% as_tibble() %>% mutate_all(funs(replace(., .>=0.9, 1))) %>% as.matrix()
 
 # Rotación (para hacer plot en grayscales)
 x0_img<- rotate(x0)
@@ -374,7 +383,23 @@ n_of_cities(etsp)
 labels(etsp)
 
 # computa gráfica y solución
+# inicia solión
+presolT<- proc.time()
+
 tour <- solve_TSP(etsp)
+
+
+solT<- proc.time()- presolT
+
+tibbS<- tibble( dim1, dim2
+                 ,tiempo=solT[3], cit=nrow(dfCeilF)
+                )
+if(nrow(tibF)==0){
+  tibF<-tibbS
+}else{
+  tibF<-rbind(tibF, tibbS)
+}
+
 
 class(tour)
 
@@ -395,7 +420,7 @@ if(habilitaEscrituras){
 intTour<-as.numeric(tour)
 
 # Genera reshape de los puntos en una versión que nos permitirá imprimir en ggplot el orden de las conexiones
-casoMin<-x%>% mutate(rn=row_number())
+casoMin<-x%>% mutate(rn=row_number()) 
 
 for(j in 1:(nrow(casoMin)-1) ){
   if(j%%100==0){
@@ -423,5 +448,9 @@ if(j==(nrow(casoMin)-1)){
 
 # Escribe con ggplot las conexiones entre puntos indicadas
 casoMinF %>% ggplot(aes(x, y))+
-  geom_line(aes(group = paired))+labs(title=paste0(nombreTitulo, ' con puntos (ciudades) conectados vía TSP') )
+  geom_line(aes(group = paired))+labs(title=paste0(nombreTitulo, ' con puntos (ciudades) conectados vía TSP') ) 
 
+}
+
+
+write.csv(tibF, 'set2.csv', row.names = FALSE)

@@ -8,17 +8,17 @@ library(data.table)
 library(TSP)
 
 # Número de cuadros-renglón
-dim1<- 30
+dim1<- 50
 # Número de cuadros-columna
-dim2<- 30
+dim2<- 50
 
 # Máximo de ciudades a computar por cuadro
 gamma_par<- 7
 
 # llama nombres de archivos y título de fotos
 nombreTitulo<-'Twitter'
-subC<-'try1'
-nombrePng<-'twitter'
+subC<-'jules'
+nombrePng<-'smile'
 reshapeDists<- FALSE
 habilitaEscrituras<- FALSE 
 
@@ -229,42 +229,42 @@ funcionDistrCd<- function(  quant, precis, extremos ){
   # extremos: 4 límites del cuadrado
   # precis: se generará un grid-2 dimensional delimitado entre los extremos, este grid contará con
   # (precis+1) puntos a lo largo por (precis+1) puntos a lo ancho
+
   
   
+# quant<- 5
+# extremos<- list(supIzq=  c(0,1),supDer= c(1, 1), infIzq= c(0, 0), infDer=c(1, 0)  )
+# precis<- 10
+if(floor(  quant)==quant & quant>0 ){
   
-  # quant<- 5
-  # extremos<- list(supIzq=  c(0,1),supDer= c(1, 1), infIzq= c(0, 0), infDer=c(1, 0)  )
-  # precis<- 10
-  if(floor(  quant)==quant & quant>0 ){
-    
-    
-    grid_x<- seq(from=max(extremos$supIzq[1], extremos$infIzq[1]), 
-                 to=max(extremos$supDer[1], extremos$infDer[1]) ,
-                 by= ((max(extremos$supDer[1], extremos$infDer[1])- max(extremos$supIzq[1], extremos$infIzq[1]) )/precis ) )
-    
-    grid_y<- seq(from=max(extremos$infIzq[2], extremos$infDer[2]), 
-                 to=max(extremos$supIzq[2], extremos$supDer[2]) ,
-                 by= ((max(extremos$supIzq[2], extremos$supDer[2])- max(extremos$infIzq[2], extremos$infDer[2]) )/precis ) )
-    
-    gridDim_m<- expand.grid(grid_x,grid_y)
-    gridDim<-gridDim_m%>% as.matrix()
-    
-    set.seed(1)
-    # distribución eficiente: quant centroides del grid 2-dimensional
-    gridPart<- kmeans(gridDim, centers = quant)
-    centrosDisp<-gridPart$centers %>% as_tibble()
-    obj<- centrosDisp %>% ggplot(aes( Var1, Var2 )   )+ geom_point()  +
-      xlim( range(gridDim_m$Var1)   )+ylim( range(gridDim_m$Var1) )#+labs(title = paste0('seed: ', j)) 
-    
-    
-  }else{
-    
-    centrosDisp<- tibble(Var1=NA, Var2=NA) %>% filter(!is.na(Var1)   )
-    
-  }
   
-  return(centrosDisp)
+  grid_x<- seq(from=max(extremos$supIzq[1], extremos$infIzq[1]), 
+             to=max(extremos$supDer[1], extremos$infDer[1]) ,
+             by= ((max(extremos$supDer[1], extremos$infDer[1])- max(extremos$supIzq[1], extremos$infIzq[1]) )/precis ) )
   
+  grid_y<- seq(from=max(extremos$infIzq[2], extremos$infDer[2]), 
+             to=max(extremos$supIzq[2], extremos$supDer[2]) ,
+             by= ((max(extremos$supIzq[2], extremos$supDer[2])- max(extremos$infIzq[2], extremos$infDer[2]) )/precis ) )
+  
+  gridDim_m<- expand.grid(grid_x,grid_y)
+  gridDim<-gridDim_m%>% as.matrix()
+  
+  set.seed(1)
+  # distribución eficiente: quant centroides del grid 2-dimensional
+  gridPart<- kmeans(gridDim, centers = quant)
+  centrosDisp<-gridPart$centers %>% as_tibble()
+  obj<- centrosDisp %>% ggplot(aes( Var1, Var2 )   )+ geom_point()  +
+    xlim( range(gridDim_m$Var1)   )+ylim( range(gridDim_m$Var1) )#+labs(title = paste0('seed: ', j)) 
+
+
+}else{
+  
+  centrosDisp<- tibble(Var1=NA, Var2=NA) %>% filter(!is.na(Var1)   )
+  
+}
+
+return(centrosDisp)
+
 }
 
 
@@ -315,37 +315,37 @@ distancias<-dist(dfCeilF[, c('Var1', 'Var2')])  %>% as.matrix()
 
 if( reshapeDists ){
   
+
+
+# Reshape de la matriz de distancias a 
+for(kk in 1:nrow(distancias)){
   
-  
-  # Reshape de la matriz de distancias a 
-  for(kk in 1:nrow(distancias)){
-    
-    if(kk%%100==0){
-      print(paste0(kk, '-ésimo renglón'))
-    }
-    
-    # kk<-1
-    distanciasAlt<- tibble(distancias[kk,])
-    names(distanciasAlt)<-'dist'
-    distanciasAlt<- tibble(partida=kk, dest=1:nrow(distancias), distanciasAlt    )
-    
-    
-    
-    if(kk==1){
-      distanciasAltF<- distanciasAlt
-    }else{
-      distanciasAltF<- rbind(distanciasAltF,distanciasAlt )
-    }
-    
+  if(kk%%100==0){
+    print(paste0(kk, '-ésimo renglón'))
   }
   
+  # kk<-1
+  distanciasAlt<- tibble(distancias[kk,])
+  names(distanciasAlt)<-'dist'
+  distanciasAlt<- tibble(partida=kk, dest=1:nrow(distancias), distanciasAlt    )
+  
+  
+  
+  if(kk==1){
+    distanciasAltF<- distanciasAlt
+  }else{
+    distanciasAltF<- rbind(distanciasAltF,distanciasAlt )
+  }
+  
+}
+ 
   distanciasAltF0<- distanciasAltF %>% select(ROW=partida, COL=dest, distance=dist)
   if(habilitaEscrituras){
     nombreDists<- paste0('distCity', Hmisc::capitalize(nombreTitulo), dim1,'_', dim2, '.csv'  )
     # write.csv(distanciasAltF0,'distCityTwitt15_15.csv',row.names = FALSE )
     write.csv(distanciasAltF0,nombreDists,row.names = FALSE )
   }
-  
+ 
 }
 
 if(habilitaEscrituras){
@@ -387,7 +387,7 @@ nombreTsp<- paste0('etsp_', nombrePng, dim1,'_', dim2, '.tsp')
 if(habilitaEscrituras){
   write_TSPLIB(etsp, nombreTsp, precision = 6, inf = NULL, neg_inf = NULL)
   read_TSPLIB(nombreTsp, precision = 0)
-  
+
 }
 
 
@@ -401,27 +401,30 @@ for(j in 1:(nrow(casoMin)-1) ){
   if(j%%100==0){
     print(j)
   }
-  
+
   casoMinA<- casoMin  %>% filter(rn %in% c(intTour[j], intTour[ (j+1) ] ) )  %>% mutate(paired=j )
-  
+
   if(j==1){
     casoMinF<- casoMinA
   }else{
     casoMinF<- rbind(casoMinF,casoMinA )
   }
-  
-  
+
+
 }
 
 if(j==(nrow(casoMin)-1)){
   casoMinA<- casoMin  %>% filter(rn %in% c(intTour[1], intTour[ (j) ] ) )  %>% mutate(paired=(j+1) )
-  
+
   casoMinF<- rbind(casoMinF,casoMinA )
-  
+
 }
 
 
 # Escribe con ggplot las conexiones entre puntos indicadas
 casoMinF %>% ggplot(aes(x, y))+
   geom_line(aes(group = paired))+labs(title=paste0(nombreTitulo, ' con puntos (ciudades) conectados vía TSP') )
+
+
+
 
