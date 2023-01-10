@@ -82,7 +82,58 @@
 
 \section{Introducción}\label{section:intro}
 
-Históricamente, la optimización matemática ha sido una disciplina altamente recurrida para la solución de problemas en varias áreas del conocimiento (economía, informática, industria, logística, etc.) y en distintos grados de complejidad. Sin embargo, fuera de la amplia esfera de problemas técnicos o puramente científicos abordables por la optimización hay una serie planteamientos resolvibles que concilian la optimización, particularmente del tipo lineal, con problemas de carácter estético más vinculados con ramas como el arte o la composición fotográfica. La presente tesina abordará el problema de reproducir o replicar con buena similaridad una imagen mediante el empleo, ya sea de trazos continuos a lo largo de un cuadro, o mediante imágenes diversas que, posicionadas estratégicamente, lograrán construir un producto que, a ojo humano, tendrá una forma fácilmente asociable con la imagen objetivo. Siendo ambos problemas de optimización lineal entera: el primero, una aplicación del problema del agente viajero (TSP por sus siglas en inglés); y el segundo, un problema lineal con variables de decisión en tres dimensiones (asociadas a renglón, columna y tipo de imagen). 
+Históricamente, la optimización matemática ha sido una disciplina altamente recurrida para la solución de problemas en varias áreas del conocimiento y la práctica (economía, informática, industria, logística, etc.) y en distintos grados de complejidad. Sin embargo, fuera de la amplia esfera de problemas técnicos o puramente científicos abordables por la optimización hay una de serie planteamientos resolvibles que concilian la optimización, particularmente del tipo lineal, con problemas de carácter estético más vinculados con ramas como el arte o la composición fotográfica. La presente tesina abordará el problema de reproducir o replicar con buena similaridad una imagen mediante el empleo, ya sea de trazos continuos a lo largo de un cuadro, o mediante imágenes diversas que, posicionadas estratégicamente, lograrán construir un producto que, a ojo humano, tendrá una forma fácilmente asociable con la imagen objetivo. Siendo ambos problemas de optimización lineal entera: el primero, una aplicación del problema del agente viajero (TSP por sus siglas en inglés); y el segundo, un problema lineal con variables de decisión en tres dimensiones (asociadas a renglón, columna y tipo de imagen). 
+
+\section{La programación lineal}\label{section:intro}
+
+La programación lineal es un área de la programación matemática y la optimización dedicado a minimizar o maximizar una función lineal sobre múltiples variables (multivariada) de tal manera que dichas variables se expresen mediante un sistema de restricciones también lineales en forma de igualdades o desigualdades. La expresión estándar de un problema lineal es la siguiente
+
+
+\begin{subequations}
+
+\begin{equation}\label{uno} 
+ \underset{x_{i}  }{\text{min}}
+ \sum_{i=1}^{ i } c_{i} x_{i} \\
+\end{equation}  
+
+\begin{equation}\label{dos} 
+ \text{s.a.}
+ \ A x \leq b  \\
+\end{equation}
+
+\begin{equation}\label{tres} 
+ \  x \geq 0  \\
+\end{equation}
+
+
+\end{subequations}
+
+
+Las restricciones mencionadas generan un espacio geométrico cerrado, más específicamente un poliedro convexo, y de contornos lineales, al cual se les denomina región de factibilidad.
+
+La disciplina y teoría de la programación lineal se manifiesta en problemas que lo que buscan es maximizar un beneficio o minimizar un costo bajo circunstancias que restringen la usabilidad de recursos. Dicho beneficio o costo depende de las cantidades de dichos recursos. Algunos de sus primeros usos se remontan a la Segunda Guerra Mundial en la búsqueda de planificar gastos y recursos para reducir costos del enemigo y aumentar las pérdidas del enemigo. Otros usos, empleados a lo largo del siglo XXI consisten en problemas de flujos de redes en informática y de mercancías en comercio; así como economía y gestiones de inventario, portafolios financieros y alimentos.
+
+
+Los programas lineales fácilmente se pueden garantizar que son resolvibles en la medida de que la región factible sea no vacía y acotada en la dirección del gradiente de la función objetivo. Gráficamente la solución se puede represetar como el contacto de un poliedro convexo con las curvas de valor de una función objetivo cóncava. Sin embargo, al no haber convexidad estricta de la región factible ni concavidad estricta de la función, no se puede garantizar la unicidad de las soluciones; es más, para programas lineales no discretos puede haber hasta una infinidad de soluciones. Lo que sí se puede asegurar es que cuando menos un vértice de la región factible es una solución óptima. La siguiente gráfica da un ejemplo en el espacio 2-dimensional de curvas de valor desplazándose hasta tocar el vértice óptimo. Este ejemplo gráfico tiene una noción que extiende su alcance y validez a más dimensiones y una amplia variedad de restricciones lineales.
+
+
+ \begin{figure}[h]
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{direccion_reg_fac.png}
+         \caption{Ejemplo bi-dimensional de la resolución gráfica un problema lineal}
+         %\label{fig:fig15}
+     \end{subfigure}
+     \hfill
+\end{figure}
+
+Las variaciones de esta clase de problemas extendidas a más dimensiones pueden resolverse mediante el método Simplex, que incorpora variables de holgura para convertir las desigualdades en igualdades y ejecuta operaciones lineales simples sobre la función objetivo y las restricciones para encontrar el óptimo de un problema lineal. Este método irá conduciendo a quien lo resuelve de vértice en vertice hacia mejores soluciones cada vez hasta dar con el(los) óptimo(s).
+ 
+ 
+ Cuando se añade la integralidad de las variables a un programa lineal, el problema de abordar las propiedades geométricas del problema no entero (o relajado) directamente para resolución se vuelve más complejo, dado que pueden haber casos donde, si las soluciones del problema no íntegro son truncadas a enteros sin salirnos del área factible, se está aún lejos del óptimo entero, por lo que hay explorar distintas zonas de la región factible mediante algoritmos como el de ramificación y acotamiento.
+
+El algoritmo de ramificación y acotamiento parte inicialmente de la resolución del problema lineal sin restricciones de enterez (también llamado problema relajado) y, dada esta primera solución del problema, o primer óptimo, va incorporando dos restricciones sobre alguna variable no entera (no importa mucho cuál): una restricción con el valor de esta variable por encima del 'techo' del primer óptimo y otra por debajo del 'piso' del mismo, eligiéndose de ahí aquella restricción con la mejor solución; en caso de que esta última solución sea entera, se para el método, de otra forma, se procede con la elección de una nueva variable no entera a ramificar. Dada la solución más reciente el algoritmo reproduce y evalua las ramificaciones de distintas variables fraccionales hasta dar con una solución con todas sus variables enteras.
 
 \section{TSP: Agente viajero}\label{section:tsp}
 
@@ -128,15 +179,18 @@ La teoría de grafos estudia las propiedades y relaciones de un grafo que es un 
  Donde $S$ es el conjunto potencia generado con $\{ 1, \dots , n_{*} \}$. El problema lineal esbozado arriba se conforma por componentes. Para entenderlo, defínase antes el conjunto de variables de decisión como 
  $\{ x_{i,j} | (i, j) \in \{1, \dots , n_{*} \}^{2} \}$ con dos asignaciones de valor posibles: $0$ y $1$. $1$ representa que el agente realizó un recorrido directo partiendo de la ciudad $i$ hacia la ciudad $j$ con una distancia correspondiente de $c_{i, j}$; $0$, por el contrario, representa el caso opuesto. En términos técnicos, el agente viajero ocupó el dígrafo dirigido $(i, j)$.
  
- Así, la primera expresión ec.  \eqref{uno} es la función objetivo: el recorrido total para arribar a las $n_{*}$ ciudades. \eqref{dos} exige que de cada ciudad se parta hacia una única ciudad; \eqref{tres}, análogo a \eqref{dos}, requiere que a cada ciudad se arribe desde un único punto de partida. La factibilidad del \textit{tour} generado por el agente se termina de construir en el conjunto \eqref{cuatro}, ya que sin éste podrían haber \textit{tours} donde a cada ciudad se llega una única vez y cada ciudad parte hacia un único destino, pero dos o más subconjuntos resultado de la partición de $ \{ 1, \dots , n_{*} \}$ generan cada uno un recorrido o \textit{tour} cerrado. Supongamos que se generó una solución optimal con las restricciones \eqref{dos} y \eqref{tres} cumplidas, pero que constara de tres \textit{subtours}: $T_{1}, T_{2}, T_{3}$ con $T_{1} \cup T_{2}  \cup T_{3} = \{ 1, \dots , n_{*} \}$. Poniéndonos imaginativos, esto querría decir que el agente terminó de recorrer $T_{1}$, al terminar 'se teletransportó' a $T_{2}$ sin recorrer distancia alguna, finalmente siguió haciendo lo propio de $T_{2}$ a $T_{3}$. Claramente esto no tiene sentido en el plano real; además, se viola el supuesto de que el agente parte de un punto y termina en el mismo tras recorrer todas las ciudades. La restricción \eqref{cuatro} elimina la posibilidad de \textit{subtours}. Sin embargo, al tratarse de una restricción que explora a cada uno de los $2^{n_{*}}$ posibles subconjuntos generables con  $\{ 1, \dots , n_{*} \}$, es una restricción con una elevada complejidad computacional asociada que debe simplificarse con adecuadas restricciones alternativas (véanse restricciones de Miller, Tucker  \& Zemlin,  1960). Si a eso le sumamos que el programa lineal tiene como conjunto factible los $n_{*}!$ posibles ordenamientos de $\{ 1, ..., n_{*} \}$, podemos entender que se diga que los programas que lo resuelven trabajan bajo los llamados \say{algoritmos de optimización combinatoria}. 
+ Así, la primera expresión ec.  \eqref{uno} es la función objetivo: el recorrido total para arribar a las $n_{*}$ ciudades. \eqref{dos} exige que de cada ciudad se parta hacia una única ciudad; \eqref{tres}, análogo a \eqref{dos}, requiere que a cada ciudad se arribe desde un único punto de partida. La factibilidad del \textit{tour} generado por el agente se termina de construir en el conjunto de ecuaciones \eqref{cuatro}, ya que sin éste podrían haber \textit{tours} donde a cada ciudad se llega una única vez y cada ciudad parte hacia un único destino, pero dos o más subconjuntos resultado de la partición de $ \{ 1, \dots , n_{*} \}$ generan cada uno un recorrido o \textit{tour} cerrado. Supongamos que se generó una solución optimal con las restricciones \eqref{dos} y \eqref{tres} cumplidas, pero que constara de tres \textit{subtours}: $T_{1}, T_{2}, T_{3}$ con $T_{1} \cup T_{2}  \cup T_{3} = \{ 1, \dots , n_{*} \}$. Poniéndonos imaginativos, esto querría decir que el agente terminó de recorrer $T_{1}$, al terminar 'se teletransportó' a $T_{2}$ sin recorrer distancia alguna, finalmente siguió haciendo lo propio de $T_{2}$ a $T_{3}$. Claramente esto no tiene sentido en el plano real; además, se viola el supuesto de que el agente parte de un punto y termina en el mismo tras recorrer todas las ciudades. La restricción \eqref{cuatro} elimina la posibilidad de \textit{subtours}. Sin embargo, al tratarse de una restricción que explora a cada uno de los $2^{n_{*}}$ posibles subconjuntos generables con  $\{ 1, \dots , n_{*} \}$, es una restricción con una elevada complejidad computacional asociada que debe simplificarse con adecuadas restricciones alternativas (véanse restricciones de Miller, Tucker  \& Zemlin,  1960). Si a eso le sumamos que el programa lineal tiene como conjunto factible los $n_{*}!$ posibles ordenamientos de $\{ 1, ..., n_{*} \}$, podemos entender que se diga que los programas que lo resuelven trabajan bajo los llamados \say{algoritmos de optimización combinatoria}. 
 
-\subsection{Arte con el agente viajero}\label{ssec:tspDescrip}
+
+ 
+
+\subsection{Arte con el agente viajero, o arte con línea continua}\label{ssec:tspDescrip}
 
 En la introducción se hace referencia a dos maneras de replicar imágenes con optimización lineal que se desarrollarán en el presente estudio. La primer versión es vía el TSP: parte del supuesto de que se cuenta con una imagen en blanco y negro con una gama de \textit{greyscales} (o escala de grises\footnotetext{En adelante se emplearan indistintamente '\textit{greyscales}' o 'escala de grises'}). Asociamos una mayor \textit{greyscale} a una mayor luminosidad o blancura. Así pues, procedemos de la siguiente manera
 
 \begin{itemize}
 	\item Particionamos la imagen en grupos de pixeles. Cada grupo constará de rectángulos con $k$ pixeles a lo largo por $h$ pixeles a lo ancho. Derivamos de la imagen $m$ submatrices-renglón de grupos o rectángulos y $n$ submatrices-columna de éstos, de tal manera que la matriz grande cuenta con dimensiones $\mu' \times \nu'$ con $\mu'= k\;m$ y $\nu'= h\;n$; asímismo, obtenemos una escala de grises para cada pixel en el rango discreto de $0$ a $255$. 
-	\item Obtenemos la \textit{greyscale} promedio de cada rectángulo y fijamos un parámetro que ponderará el nivel de detalle que deseamos para la imagen a reproducir: $\gamma \in [4, 9] \cap \mathbb{N}$. De tal manera, para el rectángulo $(i, j) \in \{1, \dots , m \} \times \{1, \dots , n  \}$ la \textit{greyscale} del pixel promedio será de $\psi_{ij}$, con valores entre $0$ y $255$. De tal forma constrúyase
+	\item Obtenemos la \textit{greyscale} promedio de cada rectángulo y fijamos un parámetro que ponderará el nivel de detalle que deseamos para la imagen a reproducir: $\gamma \in [4, 9] \cap \mathbb{N}$ \footnotetext{Este rango de $[4,9]$ no tiene otra justificación más allá de la visual, i.e. se define a la luz de los resultados usando esos números; por el contrario valores superiores a $9$ podrían generar imágenes sobre-saturadas de puntos}. De tal manera, para el rectángulo $(i, j) \in \{1, \dots , m \} \times \{1, \dots , n  \}$ la \textit{greyscale} del pixel promedio será de $\psi_{ij}$, con valores entre $0$ y $255$. De tal forma constrúyase
 	
 	\begin{equation}\label{oscG} 
 	\begin{aligned}
@@ -155,6 +209,21 @@ En la introducción se hace referencia a dos maneras de replicar imágenes con o
 	
     Computamos las distancias (o \say{costos}) entre las $\tau$ distintas coordenadas en una matriz $C=[c]_{ij}$  de $\tau \times \tau$; resolvemos el TSP sobre estas distancias. Siendo que ahora el planteamiento se esboza sobre $\tau$ ciudades y relacionándolo con la expresión para el agente viajero explicada al inicio de esta sección, podemos entender que ahora $n_{*}=\tau$.
 \end{itemize}
+
+
+
+ \begin{figure}[h]
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{monalisa robert bosch.png}
+         \caption{Rostro de la Monalisa reproducido por Robert Bosch usando el probelema del agente viajero}
+         %\label{fig:fig15}
+     \end{subfigure}
+     \hfill
+\end{figure}
+
+ 
 
 
 \section{Foto mosaicos}
@@ -177,7 +246,7 @@ En el área del \textit{marketing} han pululado técnicas de \textit{advertising
 
 \begin{equation}\label{unoM} 
 \underset{x_{f i j}  }{\text{min}}
- \sum_{f \in F} \sum_{i=1}^{n} \sum_{j=1}^{n} (b_{f}-\beta_{ij})^2 x_{f i j} \\
+ \sum_{f \in F} \sum_{i=1}^{n} \sum_{j=1}^{m} (b_{f}-\beta_{ij})^2 x_{f i j} \\
 \end{equation}  
 
 \begin{equation}\label{dosM} 
@@ -202,10 +271,10 @@ La expresión ec. \eqref{unoM}  minimiza la suma de diferencias cuadráticas ent
 
 \subsection{Partición de la matriz en submatrices}\label{ssec:partic}
 
-Una imagen en escala de grises se entiende como un despliegue visual en el que cada unidad básica mostrada en la pantalla —mejor conocida como pixel— se ve representada por una cifra que cuantifica la cantidad de luz (o información de intensidad lumínica) con que cuenta. Representando la mínima unidad al negro y, la máxima, al blanco. La escala tiende a volverse discreta, ya que contar con un continuo estándar de $0$ a $1$ (o $0\%$ a $100\%$) representaría un reto computacional y de almacenaje considerable. Algunas imágenes en escala de grises tempranas cuantificaban hasta 16 valores, lo cual implicaba un almacenaje de 4 bits por pixel; en la medida de que la rama de la fotografía digital evolucionó, aumentó hasta 256 intensidades, implicando un peso de 8 bits por pixel. Si bien actualmente hay adicionales variaciones con mayor o menor número de valores (también discretos), los cuales se eligen en función de la aplicación de la imagen, un estándar recurrentemente usado es el de 256 escalas. Por eso, y en aras de seguir convenciones, se usará esta escala discreta, o bien, la escala continua de $0$ a $1$. Para pasar de la escala $[0,1]$ a la escala $\{0, \dots , 255\}$ hacemos $e_{255}=round(255 e_{1})$; para pasar en sentido inverso se usará $e_{1}=\frac{1}{255}e_{255}$.
+Una imagen en escala de grises se entiende como un despliegue visual en el que cada unidad básica mostrada en la pantalla —mejor conocida como pixel— se ve representada por una cifra que cuantifica la cantidad de luz (o información de intensidad lumínica) con que cuenta. Representando la mínima unidad al negro y, la máxima, al blanco. La escala tiende a volverse discreta, ya que contar con un continuo estándar de $0$ a $1$ (o $0\%$ a $100\%$) representaría un reto computacional y de almacenaje considerable. Algunas imágenes en escala de grises tempranas cuantificaban hasta 16 valores, lo cual implicaba un almacenaje de 4 bits por pixel; en la medida de que la rama de la fotografía digital evolucionó, aumentó hasta 256 intensidades, implicando un peso de 8 bits por pixel. Si bien actualmente hay adicionales variaciones con mayor o menor número de valores (también discretos), los cuales se eligen en función de la aplicación de la imagen, un estándar recurrentemente usado es el de 256 escalas. Por eso, y en aras de seguir convenciones, se usará esta escala discreta, o bien, dependiendo del caso, la escala continua de $0$ a $1$. Para pasar de la escala $[0,1]$ a la escala $\{0, \dots , 255\}$ hacemos $e_{255}=round(255 e_{1})$; para pasar en sentido inverso se usará $e_{1}=\frac{1}{255}e_{255}$.
 
 En este apartado se describirá cómo se procede para formular y computar los dos enfoques para reproducir imágenes: el de TSP y el de los fotomosaicos, explicados brevemente en la sección  \ref{section:tsp} \footnotetext{mostrar número de sección}
-. Para iniciar los ejercicios decidí usar una imagen de la red social Twitter, la cual se anexa a continuación. La librería de R encargada de procesar y graficar las imágenes de tipo png tiene como nombre \say{png}. La función $readPNG( \period )$ se encarga de leer el archivo-imagen objetivo y sintetizarlo en un objeto numérico estructurado en un arreglo 3-dimensional con dimensiones para sus pixeles de renglón ($\mu$) $\times$ columna ($\nu$) $\times 3$. De los elementos extrapolados del primer componente de la dimensión tres, $readPNG( \period )[,,1]$, se extrae una matriz $\mu \times \nu$, la cual consta de valores constituyendo la escala de grises de la imagen en el intervalo continuo de $0$ a $1$. Para graficar dicha imagen en el cuadrante $x-y$ (delimitado al rango $[0,1]$ para ambas dimensiones) se usará la función $image( \period )$. Esta función despliega la figura interpretando al renglón como la coordenada $x$ y a la columna como la coordenada $y$. Sin embargo, esta es una interpretación distinta a la asignación que interpreta a los renglones como el largo (es decir, el eje $y$) y a las columnas como el ancho (es decir, el eje $x$) y que es tal como se conforma el output de $readPNG( \period )[,,1]$. De tal manera, si se computa la escala de grises de este output mediante $image( \period )$ se tendría como resultado la imagen rotada 90º en sentido contrario a las manecillas del reloj (hacia la izquierda), como se muestra en la siguiente imagen. 
+. Para iniciar los ejercicios decidí usar una imagen de la red social Twitter, la cual se anexa a continuación. La librería de R encargada de procesar y graficar las imágenes de tipo png tiene como nombre \say{png}. La función $readPNG( \period )$ se encarga de leer el archivo-imagen objetivo y sintetizarlo en un objeto numérico estructurado en un arreglo 3-dimensional con dimensiones para sus pixeles de renglón ($\mu$) $\times$ columna ($\nu$) $\times 3$. De los elementos extrapolados del primer componente de la dimensión tres, $readPNG( \period )[,,1]$, se extrae una matriz $\mu \times \nu$, la cual consta de valores constituyendo la escala de grises de la imagen en el intervalo continuo de $0$ a $1$. Para graficar dicha imagen en el cuadrante del plano cartesiano $x-y$ (delimitado al rango $[0,1]$ para ambas dimensiones) se usará la función $image( \period )$. Esta función despliega la figura interpretando al renglón como la coordenada $x$ y a la columna como la coordenada $y$. Sin embargo, esta es una interpretación distinta a la asignación que interpreta a los renglones como el largo (es decir, el eje $y$) y a las columnas como el ancho (es decir, el eje $x$) y que es tal como se conforma el output de $readPNG( \period )[,,1]$. De tal manera, si se computa la escala de grises de este output mediante $image( \period )$ se tendría como resultado la imagen rotada 90º en sentido contrario a las manecillas del reloj (hacia la izquierda), como se muestra en la siguiente imagen. 
 
 \begin{figure} [h]
   \centering
@@ -225,7 +294,7 @@ Para solventar este problema se usará una versión auxiliar de la matriz origin
 \end{figure}
 
 
-El siguiente paso consiste en usar las dimensiones $m$ y $n$ para delimitar el tamaño de la matriz tal que se permita generar una partición de la misma en submatrices que sea factible ante los \textit{inputs} enviados a la función de partición. Se requiere que la cantidad de renglones de la nueva matriz acotada sea $0$ módulo $m$ y, la cantidad de columnas, $0$ módulo $n$. Si bien puede haber más de una combinación renglón $\times$ columna consistente con las propiedades mencionadas, se escoge una nueva dimensión $\mu' \times \nu'$ que corresponda al máximo valor factible que no exceda $\mu \times \nu$.  
+El siguiente paso consiste en usar las dimensiones $m$ y $n$ para delimitar el tamaño de la matriz tal que se permita generar una partición de la misma en submatrices que sea factible, es decir, que sean submatrices de dimensiones idénticas y que, posicionadas estratégicamente, generen la matriz grande (o matriz total). Para ello se requiere que la cantidad de renglones de la nueva matriz acotada sea $0$ módulo $m$ y, la cantidad de columnas, $0$ módulo $n$. Si bien puede haber más de una combinación renglón $\times$ columna consistente con las propiedades mencionadas, para nuestra regla de recortar la matriz mayor se escogerá una nueva dimensión $\mu' \times \nu'$ que corresponda al máximo valor factible que no exceda $\mu \times \nu$.  
 
 \begin{equation} \label{dimensiones} 
 DIM = \{ (\mu'=max(a), \nu'=max(b) | 0=a mod(m), 0=b mod(n), a \in [0,\mu] \cap \mathbb{N},  b \in [0,\nu] \cap \mathbb{N} \}
@@ -260,7 +329,7 @@ $
 
 \end{enumerate}
 
- Al iterar este proceso las $m \; n$ veces, se obtienen las $\sum_{k=1}^{m \; n } g_{k}=\tau$ \footnotetext{esta es una expresión equivalente a la ecuación ec.\eqref{totalCiudades}  , pero en la versión que mapea $(i,j) \rightarrow k(i,j)$ }  ciudades objetivo y podemos resolver el TSP sobre éstas. Los resultados de escribir todos las ciudades como puntos bajo los ejercicios con $15 \times 15$ rectángulos y ($608$ ciudades) y con $50 \times 50$ ($5807$ ciudades) se desglosan a continuación. 
+ Al iterar este proceso las $m \; n$ veces, se obtienen las $\sum_{k=1}^{m \; n } g_{k}=\tau$ \footnotetext{esta es una expresión equivalente a la ecuación ec.\eqref{totalCiudades}  , pero en la versión que mapea $(i,j) \rightarrow k(i,j)$ }  ciudades objetivo y podemos resolver el TSP sobre éstas. Los resultados de escribir todas las ciudades como puntos bajo los ejercicios con $15 \times 15$ rectángulos y ($608$ ciudades) y con $50 \times 50$ ($5807$ ciudades) se desglosan a continuación. 
  
  \begin{figure}[h]
      \centering
@@ -284,7 +353,7 @@ $
  
  
  
- Existe un tipo de archivo cuya extensión es \say{.tsp}. Éste se basa en el conjunto de ciudades sobre el que se ha de resolver una instancia del problema lineal. Dicha solución puede procederse mediante distintos métodos o heurísticas y puede realizarse mediante distintos \textit{softwares}, algunos de los cuales son R, Python, Java y Concorde. En aras de practicidad, y en vista de que hasta el momento la construcción de los rectángulos y las ciudades se ha llevado a cabo con R, se usará este lenguaje para manipular tanto objetos como archivos de tipo TSP. Para este efecto se usará la librería homónima cuya función, $ETSP( \period )$ debe su nombre a \textit{Euclidean TSP} y convierte el \textit{data frame} de $2$ columnas (una por coordenada) y $\tau$ renglones (uno por ciudades) en un problema del agente viajero. El \textit{Euclidean} obedece a que las coordenadas podrías ser de otra métrica o terrestres. La función encargada de resolver un etsp es $solveTSP(\period)$. Si bien se le puede ingresar el método a emplear como campo, el que se usa por \textit{default} es el algoritmo de inserción arbitraria con refinamiento de tipo two opt. El tipo de datos del \textit{output} es doble: \textit{tour} y entero. La versión como entero consiste en el orden de las ciudades que se anidan para construir el \textit{tour}. Con ello se puede graficar la solución con ayuda de $ggplot( \period )$. Los resultados con $15 \times 15$ y $50 \times 50$ son los siguientes. 
+ Existe un tipo de archivo cuya extensión es \say{.tsp}. Éste se basa en el conjunto de ciudades sobre el que se ha de resolver una instancia del problema lineal. Dicha solución puede procederse mediante distintos métodos o heurísticas y puede realizarse mediante distintos \textit{softwares}, algunos de los cuales son R, Python, Java y Concorde. En aras de practicidad, y en vista de que hasta el momento la construcción de los rectángulos y las ciudades se ha llevado a cabo con R, se usará este lenguaje para manipular tanto objetos como archivos de tipo TSP. Para este efecto se usará la librería homónima cuya función, $ETSP( \period )$ debe su nombre a \textit{Euclidean TSP} y convierte el \textit{data frame} de $2$ columnas (una por coordenada) y $\tau$ renglones (uno por ciudades) en un problema del agente viajero. El \textit{Euclidean} obedece a que, en otros potenciales ejercicios del agente viajero, las coordenadas podrían ser de otra métrica o incluso terrestres. La función encargada de resolver un etsp es $solveTSP(\period)$. Si bien se le puede ingresar el método o algoritmo a emplear como entrada de la función, el que se usa por \textit{default} es el algoritmo de inserción arbitraria con refinamiento de tipo \textit{two opt}. El tipo de datos del \textit{output} es doble: uno es de la clase \textit{tour} y otro es entero. La versión como entero consiste en el orden de las ciudades que se anidan para construir el \textit{tour}. Con ello se puede graficar la solución con ayuda de $ggplot( \period )$. Los resultados con $15 \times 15$ y $50 \times 50$ son los siguientes. 
  
  
   \begin{figure}[h]
@@ -450,7 +519,7 @@ Si bien el problema no fue restringido a enterez, el resultado es entero y const
 
 Se puede validar que este procedimiento llena por completo y con valores factibles a la matriz $MF$. 
 
-El siguiente paso es ejecutar los pasos descritos hasta este punto de la subsección usando una gama de imágenes cuadradas y buscando emular el logo de Twitter. Para ello, se generó un código de R que lee todos los archivos png de una subcarpeta y extrae sus dimensiones (pixeles). Posteriormente elige la mínima dimensión (de entre columnas y renglones) del conjunto de imágenes, acota a todas las imágenes de manera que cumplan con esta dimensión a lo largo y ancho y guarda su luminosidad promedio. Además, define un intervalo, $i=1/ cf$, con $cf \in  \mathbb{N}$ sobre el cual se seleccionará la imagen. Esto es, si $i=0 \period 05$ entonces las figuras se clasificarán en $cf=20$ categorías, a saber, $\{[0,0 \period 05), [0 \period 05,0 \period 10) , [0 \period 10,0 \period 15),  \period  \period  \period  , [0 \period 90,0 \period 95), [0  \period  95,1] \}$. Para el primer ejercicio extraemos las imágenes de un conjunto de $60$ fotos de una cuenta de Instagram. Al computar su luminosidad se encuentra que las $20$ categorías no son todas cubiertas, estando las imágenes acotadas en luminosidades entre $0 \period 30$ y $0 \period  75$. Para hacer que la cantidad de categorías cubiertas sea de $20$ entonces se oscurecen o iluminan más tantas imágenes como categorías falten por cubrir. El resultado de hacer la selección de $20$ imágenes, ordenadas por luminosidad de menor a mayor, se muestra a continuación. 
+El siguiente paso es ejecutar los pasos descritos hasta este punto de la subsección usando una gama de imágenes cuadradas y buscando emular el logo de Twitter. Para ello, se generó un código de R que lee todos los archivos png de una subcarpeta y extrae sus dimensiones (pixeles). Posteriormente, elige la mínima dimensión (de entre columnas y renglones) del conjunto de imágenes, acota a todas las imágenes de manera que cumplan con esta dimensión a lo largo y ancho y guarda su luminosidad promedio. Además, define un intervalo de luminosidad, $i=1/ cf$, con $cf \in  \mathbb{N}$ sobre el cual se seleccionará la imagen. Esto es, si $i=0 \period 05$ entonces las figuras se clasificarán en $cf=20$ categorías, a saber, $\{[0,0 \period 05), [0 \period 05,0 \period 10) , [0 \period 10,0 \period 15),  \period  \period  \period  , [0 \period 90,0 \period 95), [0  \period  95,1] \}$. Para el primer ejercicio extraemos las imágenes de un conjunto de $60$ fotos de una cuenta de Instagram. Al computar su luminosidad se encuentra que las $20$ categorías no son todas cubiertas, estando las imágenes acotadas en luminosidades entre $0 \period 30$ y $0 \period  75$. Para hacer que la cantidad de categorías cubiertas sea de $20$ entonces se oscurecen o iluminan tantas más imágenes como categorías falten por cubrir. El resultado de hacer la selección de $20$ imágenes, ordenadas por luminosidad de menor a mayor, se muestra a continuación. 
 
 
 \begin{figure} [h]
@@ -462,7 +531,7 @@ El siguiente paso es ejecutar los pasos descritos hasta este punto de la subsecc
 
 
 
-Habiendo seleccionado las imagenes se procede a reproducir el ejercicio de los fotomosaicos. Al hacerlo con $dp=0 \period 3$ y $vp=0 \period 3$, podemos desplegar la imagen resultante con dimensiones $15 \times 15$ y $20 \times 20$
+Habiendo seleccionado las imagenes, se procede a reproducir el ejercicio de los fotomosaicos. Al hacerlo con $dp=0 \period 3$ y $vp=0 \period 3$, podemos desplegar la imagen resultante con dimensiones $15 \times 15$ y $20 \times 20$
 
  
   \begin{figure}[h]
@@ -487,7 +556,20 @@ Habiendo seleccionado las imagenes se procede a reproducir el ejercicio de los f
         \label{fig:dos figurasIn}
 \end{figure}
 
+
+Para instancias con los parámetros indicados, el problema de $20 \times 20$ fue el más complejo de computar para el desplegado de la imagen mediante $image( \period ) $. En dimensiones más grandes, la función arrojaba errores por sobrepasarse el máximo peso de input (matriz) computable. Sin embargo, una función similar, que acepta parámetros de la misma clase, $display(\period)$ de la librería $EBImage$, logró desplegar el resultado del ejercicio de $25 \times 25$, tal como se muestra a continuación. 
+
+\begin{figure} [h]
+  \centering
+   \includegraphics[width=0.4\linewidth]{twittMos25.png}
+  \caption{Soluciones gráficas al problema de los fotomosaicos con $dp=0 \period 3$ y $vp=0 \period 3$; 
+        dimensiones $25 \times 25$ }
+  \label{partes }
+\end{figure}
+
+
 Claramente el resultado ha mostrado ser, visualmente, eficiente. La matriz $mp$ sirve como referencia para ver cómo se vería la imagen si se deseara desplegar la mejor representación posible de la imagen original contando exactamente con dimensiones de pixel $m \times n$. El resultado se muestra a continuación. 
+
 
 
 
@@ -513,7 +595,49 @@ Claramente el resultado ha mostrado ser, visualmente, eficiente. La matriz $mp$ 
         %\label{fig:jobInformationDialog}
 \end{figure}
 
-Una cuestión interesante de abordar es el atributo de escasez de fichas en el problema, el cual se concentra en el vector de parámetros, $u$. Inspeccionando visualmente la imagen original, o bien, incluso a la versión de $mp$ de la misma, se puede observar que todos los contornos de la imagen (alrededor del pajaro) tienen la máxima luminosidad disponible. Esto incluye, naturalmente a los extremos inferior derecho y superior derecho. Sin embargo, al ver el fotomosaico en figura \ref{fig:dos figurasIn} se observa claramente que las celdas inferiores derecha tienen una luminosidad muy elevada (cercana a $1$), en tanto que la luminosidad de la superior derecha es alta, pero claramente menor. Esto ocurre porque, si bien pudiera ser deseable que todos los contornos tuvieran el máximo de luminosidad, existe una disponibilidad limitada de la ficha más blanca, así como de todas en general. Por lo tanto, se recurren a otras fichas, lo menos oscuras posibles que minimicen la suma de diferencias cuadráticas de luminosidades para cubrir el contorno del ave sin exceder los recursos existentes. Haciendo uso de los parámetros introducidos y explicados en el presente escrito, podríamos hacer el ejericio sin limitar estos recursos. Basta indicar que $hd=m \; n$, queriendo decir que, si tuviéramos dimensiones $m\times n= 15\times 15$, entonces las fichas disponibles son $15^{2}=225$ y, si asignamos $hd=225$, entonces dispondremos de $22500\%$ más de las fichas estrictamente necesarias. Además, si $vd=0$ las disponibilidades se distribuirán homogéneamente, con lo cual garantizamos que cada tipo de ficha tiene el potencial de llenar todo el fotomosaico con fichas de un solo tipo. Así pues, a continuación se muestra el resultado de hacer $hd=m\;n$ y $vd=0$
+
+Procedemos a evaluar la complejidad computacional del algoritmo de resolución del programa lineal. Para ello, registramos el tiempo que lleva resolver una determinada imagen conforme se agregan más dimensiones o rectángulos y, por consecuente, más ciudades. 
+
+Las siguientes gráficas y tablas reflejan la relación que tiene la dimensión (suponiendo que hay tantos rectángulos a lo largo como a lo ancho) con el tiempo de cómputo requerido para generar la imagen de Twitter; también, la que hay entre el total de rectángulos (la dimensión al cuadrado) y el tiempo.
+
+ 
+ \begin{figure}[h]
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{dim_tiempo fm.png}
+         \caption{ Dimensión vs tiempo}
+         %\label{fig:fig15}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{rec_ tiempo fm.png}
+         \caption{ Rectángulos vs tiempo}
+         %\label{fig:fig50}
+     \end{subfigure}
+     \hfill
+\end{figure}
+
+\begin{center}
+\begin{tabular}{c*{6}{c}r}
+Renglones (= Columnas) & Total mosaicos &   Tiempo de ejecución (s) & Variables & restricciones  \\
+\hline
+15 &  225 & 0.25 & 4500 & 245   \\
+20 &  400 & 0.50 & 8000 & 420\\
+25 &  625 & 1.22 & 12500 & 645 \\
+30 &  900 & 2.93 & 18000 & 920  \\
+35 &  1225 & 6.65 & 24500 & 1245\\ 
+40 &  1600 & 14.65 & 32000 & 1620 \\
+\end{tabular}
+\end{center}
+
+
+ 
+ 
+
+
+Una cuestión interesante de abordar es el atributo de escasez de fichas en el problema, el cual se concentra en el vector de parámetros, $u$. Inspeccionando visualmente la imagen original, o bien, incluso a la versión de $mp$ de la misma, se puede observar que todos los contornos de la imagen (alrededor del pajaro) tienen la máxima luminosidad disponible. Esto incluye, naturalmente a los extremos inferior derecho y superior derecho. Sin embargo, al ver el fotomosaico en figura \ref{fig:dos figurasIn} se observa claramente que las celdas inferiores derechas tienen una luminosidad muy elevada (cercana a $1$), en tanto que la luminosidad de las superiores derechas es alta, pero claramente menor. Esto ocurre porque, si bien pudiera ser deseable que todos los contornos tuvieran el máximo de luminosidad, existe una disponibilidad limitada de la ficha más blanca, así como de todas en general. Por lo tanto, se recurren a otras fichas, lo menos oscuras posibles que minimicen la suma de diferencias cuadráticas de luminosidades para cubrir el contorno del ave sin exceder los recursos existentes. Haciendo uso de los parámetros introducidos y explicados en el presente escrito, podríamos hacer el ejericio sin limitar estos recursos. Basta indicar que $hd=m \; n$, queriendo decir que, si tuviéramos dimensiones $m\times n= 15\times 15$, entonces las fichas disponibles son $15^{2}=225$ y, si asignamos $hd=225$, entonces dispondremos de $22500\%$ más de las fichas estrictamente necesarias. Además, si $vd=0$ las disponibilidades se distribuirán homogéneamente, con lo cual garantizamos que cada tipo de ficha tiene el potencial de llenar todo el fotomosaico con fichas de un solo tipo. Así pues, a continuación se muestra el resultado de hacer $hd=m\;n$ y $vd=0$
 
 
   \begin{figure}[h]
@@ -538,7 +662,107 @@ Una cuestión interesante de abordar es el atributo de escasez de fichas en el p
         \label{fig:dos figuras}
 \end{figure}
 
-Claramente, estas imágenes tienen contornos más blancos y los fotomosaicos asemejan más a los resultados de usar los valores de matriz perfecta para \textit{greyscales}, \ref{fig:dos figurasPerf}. Lamentablemente, se observa claramente que no todos los $20$ tipos de fichas disponibles se están empleando. 
+Claramente, estas imágenes tienen contornos más blancos y los fotomosaicos asemejan más a los resultados de usar los valores de matriz perfecta para \textit{greyscales}, \ref{fig:dos figurasPerf}. Sin embargo, la observación de que no todos los $20$ tipos de fichas disponibles se están empleando, lo cual es indicador de que la imagen carece de manera importante de variedad en escalas de color, nos podría hacer perder interés en esta instancia específica del problema.
+
+
+
+
+Un siguiente paso interesante puede consistir en evaluar la potencia computacional del solver del tsp en R que se ha ocupado (módulo \textit{tsp}, función $solve_TSP(.)$ ) al registrar el tiempo que lleva resolver una determinada imagen conforme se agregan más dimensiones o rectángulos y, por consecuente, más ciudades. 
+Las siguientes gráficas reflejan la relación que tiene la dimensión (suponiendo que hay tantos rectángulos a lo largo como a lo ancho) con el número de ciudades en la imagen de Twitter; asimismo describen la relación del número de ciudades con el tiempo de solución del tsp; claramente esta relación es de una complejidad superior a la lineal. 
+
+ 
+ \begin{figure}[h]
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{dim_cit.png}
+         \caption{ Dimensión: no. ciudades}
+         %\label{fig:fig15}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{cit_tiemp.png}
+         \caption{ no. ciudades vs tiempo}
+         %\label{fig:fig50}
+     \end{subfigure}
+     \hfill
+\end{figure}
+ 
+La siguiente es la tabla asociada a la gráfica anterior. Vale la pena mencionar que la columna de restricciones supone la técnica de reducción de restricciones a los subtours de Miller-Tucker-Zemlin que asumen que son $n^{2}$ y no $2^{n}$ de estas restricciones
+ 
+\begin{center}
+\begin{tabular}{c*{6}{c}r}
+Renglones (= Columnas) & Total ciudades &   Tiempo de ejecución (s) & Variables & restricciones  \\
+\hline
+10 &  286 & 0.00 & 81796 & 82368   \\
+15 &  608 & 0.03 & 369664 & 370880\\
+20 &  1051 & 0.25 & 1104601 & 1106703 \\
+25 &  1670 & 1.35 & 2788900 & 2792240  \\
+30 &  2284 & 4.65 & 5216656 & 5221224\\ 
+35 &  3058 & 10.26 & 9351364 & 9357480 \\
+40 &  3894 & 28.77 & 15163236 & 15171024   \\
+45 &  4723 & 57.33 & 22306729 & 22316175\\
+50 &  5807 & 139.93 & 33721249 & 33732863 \\
+55 &  7360 & 283.53 & 54169600 & 54184320  \\
+60 &  8271 & 310.83 & 68409441 & 68425983\\ 
+65 &  9616 & 586.88 & 92467456 & 92486688 \\
+70 &  10987 & 744.08 & 120714169 & 120736143 \\
+\end{tabular}
+\end{center}
+
+
+
+Una cuestión que vale la pena abordar es la relativa a si el algoritmo programado es capaz de reproducir imágenes de un grado más elevado de complejidad, o se limita a ser aplicable solo a imágenes sin relieve, ni dimensión, ni variedad de colores. Para este efecto buscaré reproducir una foto mía en mi escritorio de casa, la foto tendrá por nombre “\textit{home office}” y es la siguiente
+
+
+\begin{figure} [h]
+  \centering
+   \includegraphics[width=0.7\linewidth]{j_smile.png}
+  \caption{Catálogo de imágenes seleccionadas para el fotomosaico  }
+  \label{catal}
+\end{figure}
+
+Lo que sigue es reproducir la imagen. Para esto, se hizo uso de un truco: atenuar los colores más claros. Es decir, a partir de un parámetro determinado de escala de luminosidad en adelante se aclarará la escala al máximo valor posible, es decir, 1. Para esta imagen el parámetro elegido es de 0.70.  Esto permitió que la imagen resultara más distinguible, sobre todo en lo que concierne a las facciones faciales: cara, ojos, boca y al implemento electrónico que se tiene sobre las orejas (audífonos). La razón de este recurso puede aclararse si se muestra el resultado de ejecutar el programa sin hacer esta modificación de la luminosidad. Ambos resultados se muestran en los dos pares de imágenes siguientes. 
+
+ \begin{figure}[h]
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{j_tspSmile.png}
+         \caption{Ciudades o puntillismo con imagen \textit{home office}: 9768 ciudades}
+         \label{fig:fig15m}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{j_citSmile.png}
+         \caption{TSP con imagen textit{home office}: 9768 ciudades}
+         \label{fig:fig20m}
+     \end{subfigure}
+     \hfill
+\end{figure}
+
+
+ \begin{figure}[h]
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{j_citSmile_s.png}
+         \caption{Ciudades o puntillismo con imagen \textit{home office} atenuada: 8726 ciudades}
+         \label{fig:fig15m}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{j_tspSmile_s.jpeg}
+         \caption{TSP con imagen \textit{home office} atenuada: 8726 ciudades}
+         \label{fig:fig20m}
+     \end{subfigure}
+     \hfill
+\end{figure}
+
+
 
 \section{Referencias}
 [1]
