@@ -12,24 +12,24 @@ library(grid)
 
 
 # Número de cuadros-renglón
-# dim1<- 10
+dim1<- 10
 # Número de cuadros-columna
-# dim2<- 15
+dim2<- 15
 
 
 
 
 # Número de cuadros-renglón
-dim1<- 20
+# dim1<- 20
 # Número de cuadros-columna
-dim2<- 30
+# dim2<- 30
 
 
 
 # Número de cuadros-renglón
-# dim1<- 2
+dim1<- 2
 # Número de cuadros-columna
-# dim2<- 6
+dim2<- 6
 
 
 
@@ -87,10 +87,21 @@ plotTheme <- function() {
 }
 
 
-# class(x_ro)
-# class(arr_col)
 
-funct2(x_ro)
+
+# opción B: ordenado es por llenado por columna 
+coordGe_c<- function(num) {
+  # num<-16
+  ye<- num%%dim2
+  
+  if(ye==0){
+    ye<- dim2
+  }
+  equis<-(num-ye)/dim2+1
+  
+  coord<- c(equis, ye)
+  return(coord)
+}
 
 
 modCol <- function( arr_col, funct, plotting   ){
@@ -229,8 +240,9 @@ x0 <-x
 
 
 # Rotación y visualización de imagen en grayscales
-x0_img<- rotate(x0)
-image(x0_img, col  = gray((0:255)/255)) # plot in grayscale
+# x0_img<- rotate(x0)
+# image(x0_img, col  = gray((0:255)/255)) 
+# plot in grayscale
 # image(x0_img) 
 
 
@@ -297,8 +309,8 @@ x0_modN<- x0_modN[1:rowN,1:colN, ]
 dim(x0_modN)
 
 # Desplegar imagen en tonos grises
-x0N_img<- rotate(x0_modN)
-image(x0N_img, col  = gray((0:255)/255)) # plot in grayscale
+# x0N_img<- rotate(x0_modN)
+# image(x0N_img, col  = gray((0:255)/255)) # plot in grayscale
 
 grid.raster(x0_modN, interpolate=FALSE)
 
@@ -363,8 +375,9 @@ for(xx in 1:length(frameModTotF3D)){
 # promediosFigCol[[1]]
 
 # Desplegar imagen en tonos grises
-x0N_img<- rotate(x0_modN)
-image(x0N_img, col  = gray((0:255)/255)) # plot in grayscale
+# x0N_img<- rotate(x0_modN)
+# image(x0N_img, col  = gray((0:255)/255))
+# plot in grayscale
 
 
 dim(x0_mod)
@@ -375,25 +388,23 @@ x0_esc2<- x0_mod[,,2] %>% as_tibble() %>% mutate_all( funs(replace(., is.numeric
   mutate_if(is.numeric, as.integer)
 x0_esc3<- x0_mod[,,3] %>% as_tibble() %>% mutate_all( funs(replace(., is.numeric(.) , round(.*255)  ))  ) %>%
   mutate_if(is.numeric, as.integer)
-dim(x0_esc)
+
+
+
 x0_escN1<- x0_modN[,,1] %>% as_tibble() %>% mutate_all( funs(replace(., is.numeric(.) , round(.*255)  ))  ) %>%
   mutate_if(is.numeric, as.integer)
 x0_escN2<- x0_modN[,,2] %>% as_tibble() %>% mutate_all( funs(replace(., is.numeric(.) , round(.*255)  ))  ) %>%
   mutate_if(is.numeric, as.integer)
 x0_escN3<- x0_modN[,,3] %>% as_tibble() %>% mutate_all( funs(replace(., is.numeric(.) , round(.*255)  ))  ) %>%
   mutate_if(is.numeric, as.integer)
-dim(x0_esc)
+# dim(x0_esc)
 
 
 # Muestra valores dentro de la escala existentes
-valoresExistente<-unique(unlist(x0_esc))
-valoresExistente
+# valoresExistente<-unique(unlist(x0_esc))
+# valoresExistente
 
 
-
-dim(x0_esc)
-image(x0_esc1%>% as.matrix(), col  = gray((0:255)/255))
-image(x0_escN1%>% as.matrix(), col  = gray((0:255)/255))
 
 
 
@@ -410,9 +421,6 @@ matrices3<-matsplitter(x0_escN3,  dim(x0_modN)[1]/dim1, dim(x0_modN)[2]/dim2)
 
 
 # 22-feb: revisar estas dimensiones
-dim(x0_modN)
-dim(x0_escN2)
-dim(matrices3)
 
 
 # Matrices en lista
@@ -444,7 +452,7 @@ promediosPart1<- sapply(listMats1, function(x)mean(x)   )
 
 # dim(listmatsG[[5]])
 
-length(listmatsG)
+# length(listmatsG)
 # grid.raster(listmatsG[[3]], interpolate=FALSE)
 # 
 # listmatsG[[5]][,,1]%>% View()
@@ -582,7 +590,7 @@ if( sum( sapply(tblF, function(x)sum(is.na(x) & between(x, 0, 1)  )  )  ) ==0 &
 
 
 
-# if(dimCorr){
+if(dimCorr){
   
   
   # Vector de disponibilidades
@@ -712,7 +720,7 @@ if( sum( sapply(tblF, function(x)sum(is.na(x) & between(x, 0, 1)  )  )  ) ==0 &
                const.mat=matGen, const.dir=dirC, const.rhs=rightH)
   
   
-  ?lp()
+  
   # Incorporar solución al data frame
   distanciasO<-distanciasO %>% mutate( seleccion=round(problema$solution) )
   
@@ -757,11 +765,7 @@ if( sum( sapply(tblF, function(x)sum(is.na(x) & between(x, 0, 1)  )  )  ) ==0 &
   
   
   # Desplegar imagen-objetivo (mejor reproducción posible usando dim1 x dim2 pixeles)
-  # matObj_img<- rotate(matObj)
-  # image(matObj_img, col  = gray((0:255)/255)
-  # ) 
-  
-  
+  # a color
   # dim(matFin)
   grid.raster(matFin, interpolate=FALSE)
   
@@ -769,14 +773,6 @@ if( sum( sapply(tblF, function(x)sum(is.na(x) & between(x, 0, 1)  )  )  ) ==0 &
   
   
   
-  
-  # Desplegar resultado final
-  # matFin_img<- rotate(matFin)
-  # image(matFin_img, col  = gray((0:255)/255),
-  #       xlab='eje X: final plot'
-  # )
-  
-  
-# }
+}
 
 
