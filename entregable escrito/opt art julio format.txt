@@ -264,90 +264,7 @@ Las variaciones de esta clase de problemas extendidas a más dimensiones pueden 
 
  El algoritmo de ramificación y acotamiento parte inicialmente de la resolución del problema lineal sin restricciones de enterez (también llamado problema relajado) y, dada esta primera solución, o primer óptimo, va incorporando dos restricciones sobre alguna variable no entera (no importa mucho cuál): una restricción con el valor de esta variable por encima del 'techo' del primer óptimo y otra por debajo del 'piso' del mismo, eligiéndose de ahí aquella restricción con la mejor solución; en caso de que esta última solución sea entera, se detiene la ejecución de los pasos dando con un óptimo, de otra forma, se procede con la elección de una nueva variable no entera a ramificar. Dada la solución más reciente el algoritmo reproduce y evalua las ramificaciones de distintas variables fraccionales hasta dar con una solución con todas sus variables enteras.
 
-\chapter{TSP: Agente viajero}\label{chapter:tsp}
-%\section{Introducción}\label{section:intro}
-
-
 %\subsection{Nuevo rival - Cardoso, et. al.}
-
-\section{Problema de Agente viajero, descripción general}\label{sec:tspGral}
-
-La teoría de grafos estudia las propiedades y relaciones de un grafo que es un par $(V,E)$ con $V$ un conjunto de vértices y $E$ conjunto de aristas que los une. Siendo la arista modelada, ya sea como un par dirigido, donde el orden de los vértices importa (digrafo), o bien, no dirigido. Existen problemas de optimización planteados sobre esquemas de grafos que pueden ser resueltos por la vía de la programación lineal, siendo el problema del agente viajero (\textit{Traveling Salesman Problem}, TSP) uno de los más interesantes y populares. Este problema se esboza partiendo de un individuo (agente) que desea visitar una cantidad $n_{*}$ de ciudades partiendo de una ciudad origen y finalizando el recorrido en dicha ciudad con el objetivo de minimizar la distancia total recorrida. Existe un único conjunto de parámetros necesario para definir el problema: la distancia que hay entre cada par de ciudades existente; para ello defínase $c_{i, j}$ como el valor cuantitativo de dicha la distancia que hay entre las ciudades (o vértices) $(i, j)$ para cada par $(i, j) \in \{1,\dots ,n_{*}\}^2$.  Explicado este problema, podemos desarrollar una intuitiva formulación matemática mediante la programación lineal entera siguiente.
-
-
-\begin{subequations}
-
-\begin{equation}\label{uno} 
- \underset{x_{i, j}  }{\text{min}}
- \sum_{i=1}^{n_{*}} \sum_{j=1}^{n_{*}} c_{i, j}x_{i, j} \\
-\end{equation}  
-
-\begin{equation}\label{dos} 
- \text{s.a.}
- \sum_{i=1}^{n_{*}} x_{i, j}=1 \hspace{0.5cm}   \forall j \in \{ 1, \dots , n_{*} \} \\
-\end{equation}
-
-\begin{equation}\label{tres} 
-\;\;\;\;\; \sum_{j=1}^{n_{*}} x_{i, j}=1  \hspace{0.5cm}   \forall i \in \{ 1, \dots , n_{*} \} \\
-\end{equation}
-
-\begin{equation}\label{cuatro} 
-\;\;\;\;\; \sum_{i \in S}\sum_{j \in S}  x_{i, j} \leq |S|-1 \hspace{0.5cm}   \forall S \subset \{ 1, \dots ,  n_{*} \}
-\end{equation}
-
-\end{subequations}
-
- 
- Donde $S$ es el conjunto potencia generado con $\{ 1, \dots , n_{*} \}$. El problema lineal esbozado arriba se conforma por componentes. Para entenderlo, defínase antes el conjunto de variables de decisión como 
- $\{ x_{i,j} | (i, j) \in \{1, \dots , n_{*} \}^{2} \}$ con dos asignaciones de valor posibles: $0$ y $1$. $1$ representa que el agente realizó un recorrido directo partiendo de la ciudad $i$ hacia la ciudad $j$ con una distancia correspondiente de $c_{i, j}$; $0$, por el contrario, representa el caso opuesto: no se viaja de $i$ a $j$. En términos técnicos, hablamos de que el agente viajero ocupó (o no) el dígrafo dirigido $(i, j)$.
- 
-
- Así, la primera expresión ec.  \eqref{uno} es la función objetivo: el recorrido total para arribar a las $n_{*}$ ciudades. \eqref{dos} exige que de cada ciudad se parta hacia una única ciudad; \eqref{tres}, análogo a \eqref{dos}, requiere que a cada ciudad se arribe desde un único punto de partida. La factibilidad del \textit{tour} generado por el agente se termina de construir en el conjunto de ecuaciones \eqref{cuatro}, ya que sin éste podrían haber \textit{tours} donde a cada ciudad se llega una única vez y cada ciudad parte hacia un único destino, pero dos o más subconjuntos resultado de la partición de $ \{ 1, \dots , n_{*} \}$ generan cada uno un recorrido o \textit{tour} cerrado. Supongamofs que se generó una solución optimal con las restricciones \eqref{dos} y \eqref{tres} cumplidas, pero que constara de tres \textit{subtours}: $T_{1}, T_{2}, T_{3}$ con $T_{1} \cup T_{2}  \cup T_{3} = \{ 1, \dots , n_{*} \}$. Poniéndonos imaginativos, esto querría decir que el agente terminó de recorrer $T_{1}$, al terminar pasó a recorrer $T_{2}$ sin haber algún digrafo que enlazara de algún punto de $T_{1}$ a un punto de $T_{2}$ (¿entonces se teletransportó?), finalmente siguió haciendo lo propio de $T_{2}$ a $T_{3}$. Claramente esto realmente no tiene sentido; además, se viola el supuesto de que el agente parte de un punto y termina en el mismo tras recorrer todas las ciudades. La restricción \eqref{cuatro} elimina la posibilidad de lo que llamaremos \textit{subtours}. Sin embargo, al tratarse de una restricción que explora a cada uno de los $2^{n_{*}}$ posibles subconjuntos generables con  $\{ 1, \dots , n_{*} \}$, es una restricción con una elevada complejidad computacional asociada que debe simplificarse con adecuadas restricciones alternativas (véanse restricciones de Miller, Tucker  \& Zemlin,  1960). Si a eso le sumamos que el programa lineal tiene como conjunto factible los $n_{*}!$ posibles ordenamientos de $\{ 1, ..., n_{*} \}$, podemos entender que se diga que los programas que lo resuelven trabajan bajo los llamados \say{algoritmos de optimización combinatoria}. 
-
-%\subchapter{Arte con el agente viajero, o arte con línea continua}%\label{ssec:tspDescrip}
-\section{Arte con el agente viajero, o arte con línea continua}\label{sec:tspDescrip}
-
-En la introducción se hace referencia a dos maneras de replicar imágenes con optimización lineal que se desarrollarán en el presente estudio. La primer versión es vía el TSP: parte del supuesto de que se cuenta con una imagen en blanco y negro con una gama de \textit{greyscales} (o escala de grises\footnotetext{En adelante se emplearan indistintamente '\textit{greyscales}' o 'escala de grises'}). Asociamos una mayor \textit{greyscale} a una mayor luminosidad o blancura. Así pues, procedemos de la siguiente manera
-
-
-
-\begin{itemize}
-	\item Particionamos la imagen en grupos de pixeles. Cada grupo constará de rectángulos con $k$ pixeles a lo largo por $h$ pixeles a lo ancho. Derivamos de la imagen $m$ submatrices-renglón de grupos o rectángulos y $n$ submatrices-columna de éstos, de tal manera que la matriz grande cuenta con dimensiones $\mu' \times \nu'$ con $\mu'= k\;m$ y $\nu'= h\;n$; asímismo, obtenemos una escala de grises para cada pixel en el rango discreto de $0$ a $255$. 
-	\item Obtenemos la \textit{greyscale} promedio de cada rectángulo y fijamos un parámetro que ponderará el nivel de detalle que deseamos para la imagen a reproducir: $\gamma \in [4, 9] \cap \mathbb{N}$ \footnotetext{Este rango de $[4,9]$ no tiene otra justificación más allá de la visual, i.e. se define a la luz de los resultados usando esos números; por el contrario valores superiores a $9$ podrían generar imágenes sobre-saturadas de puntos}. De tal manera, para el rectángulo $(i, j) \in \{1, \dots , m \} \times \{1, \dots , n  \}$ la \textit{greyscale} del pixel promedio será de $\psi_{ij}$, con valores entre $0$ y $255$. De tal forma constrúyase
-	
-	\begin{equation}\label{oscG} 
-	\begin{aligned}
-	g_{ij} =  \floor{ \gamma -  \gamma \psi_{ij}/255} 
-	\end{aligned}
-	\end{equation}
-	
-	Esta será una escala de oscuridad del rectángulo.
-    \item Dividimos la imagen en $m \times n$ rectángulos, en cada uno situamos uniformemente $g_{ij}$ ciudades. El conjunto total de ciudades construidas será de cardinalidad $\tau$, definida como
-    
-    \begin{equation}\label{totalCiudades} 
-	\begin{aligned}
-	\tau=\sum_{i=1}^{m } \sum_{j=1}^{n} g_{ij}
-	\end{aligned}
-	\end{equation}
-	
-    Computamos las distancias (o \say{costos}) entre las $\tau$ distintas coordenadas en una matriz $C=[c]_{ij}$  de $\tau \times \tau$; resolvemos el TSP sobre estas distancias. Siendo que ahora el planteamiento se esboza sobre $\tau$ ciudadesk podemos entender que ahora la $n_{*}$ introducida en la sección anterior tiene un valor en el problema del arte con línea continua $n_{*}=\tau$.
-    
-\end{itemize}
-
-
-
- \begin{figure}[h]
-     \centering
-     \begin{subfigure}[b]{0.4\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{monalisa robert bosch.png}
-         \caption{Rostro de la Monalisa reproducido por Robert Bosch usando el problema del agente viajero}
-     \end{subfigure}
-     \hfill
-\end{figure}
-
-
-
 
 \chapter{Fotomosaicos}\label{chapter:photom}
 
@@ -484,6 +401,171 @@ En relación a la imagen de la flor blanca, desglosemos el color dominante deriv
 \end{figure}
 
 
+
+\section{Problema de Agente viajero, descripción general}\label{sec:tspGral}
+
+La teoría de grafos estudia las propiedades y relaciones de un grafo que es un par $(V,E)$ con $V$ un conjunto de vértices y $E$ conjunto de aristas que los une. Siendo la arista modelada, ya sea como un par dirigido, donde el orden de los vértices importa (digrafo), o bien, no dirigido. Existen problemas de optimización planteados sobre esquemas de grafos que pueden ser resueltos por la vía de la programación lineal, siendo el problema del agente viajero (\textit{Traveling Salesman Problem}, TSP) uno de los más interesantes y populares. Este problema se esboza partiendo de un individuo (agente) que desea visitar una cantidad $n_{*}$ de ciudades partiendo de una ciudad origen y finalizando el recorrido en dicha ciudad con el objetivo de minimizar la distancia total recorrida. Existe un único conjunto de parámetros necesario para definir el problema: la distancia que hay entre cada par de ciudades existente; para ello defínase $c_{i, j}$ como el valor cuantitativo de dicha la distancia que hay entre las ciudades (o vértices) $(i, j)$ para cada par $(i, j) \in \{1,\dots ,n_{*}\}^2$.  Explicado este problema, podemos desarrollar una intuitiva formulación matemática mediante la programación lineal entera siguiente.
+
+
+\begin{subequations}
+
+\begin{equation}\label{uno} 
+ \underset{x_{i, j}  }{\text{min}}
+ \sum_{i=1}^{n_{*}} \sum_{j=1}^{n_{*}} c_{i, j}x_{i, j} \\
+\end{equation}  
+
+\begin{equation}\label{dos} 
+ \text{s.a.}
+ \sum_{i=1}^{n_{*}} x_{i, j}=1 \hspace{0.5cm}   \forall j \in \{ 1, \dots , n_{*} \} \\
+\end{equation}
+
+\begin{equation}\label{tres} 
+\;\;\;\;\; \sum_{j=1}^{n_{*}} x_{i, j}=1  \hspace{0.5cm}   \forall i \in \{ 1, \dots , n_{*} \} \\
+\end{equation}
+
+\begin{equation}\label{cuatro} 
+\;\;\;\;\; \sum_{i \in S}\sum_{j \in S}  x_{i, j} \leq |S|-1 \hspace{0.5cm}   \forall S \subset \{ 1, \dots ,  n_{*} \}
+\end{equation}
+
+\end{subequations}
+
+ 
+ Donde $S$ es el conjunto potencia generado con $\{ 1, \dots , n_{*} \}$. El problema lineal esbozado arriba se conforma por componentes. Para entenderlo, defínase antes el conjunto de variables de decisión como 
+ $\{ x_{i,j} | (i, j) \in \{1, \dots , n_{*} \}^{2} \}$ con dos asignaciones de valor posibles: $0$ y $1$. $1$ representa que el agente realizó un recorrido directo partiendo de la ciudad $i$ hacia la ciudad $j$ con una distancia correspondiente de $c_{i, j}$; $0$, por el contrario, representa el caso opuesto: no se viaja de $i$ a $j$. En términos técnicos, hablamos de que el agente viajero ocupó (o no) el dígrafo dirigido $(i, j)$.
+ 
+
+ Así, la primera expresión ec.  \eqref{uno} es la función objetivo: el recorrido total para arribar a las $n_{*}$ ciudades. \eqref{dos} exige que de cada ciudad se parta hacia una única ciudad; \eqref{tres}, análogo a \eqref{dos}, requiere que a cada ciudad se arribe desde un único punto de partida. La factibilidad del \textit{tour} generado por el agente se termina de construir en el conjunto de ecuaciones \eqref{cuatro}, ya que sin éste podrían haber \textit{tours} donde a cada ciudad se llega una única vez y cada ciudad parte hacia un único destino, pero dos o más subconjuntos resultado de la partición de $ \{ 1, \dots , n_{*} \}$ generan cada uno un recorrido o \textit{tour} cerrado. Supongamofs que se generó una solución optimal con las restricciones \eqref{dos} y \eqref{tres} cumplidas, pero que constara de tres \textit{subtours}: $T_{1}, T_{2}, T_{3}$ con $T_{1} \cup T_{2}  \cup T_{3} = \{ 1, \dots , n_{*} \}$. Poniéndonos imaginativos, esto querría decir que el agente terminó de recorrer $T_{1}$, al terminar pasó a recorrer $T_{2}$ sin haber algún digrafo que enlazara de algún punto de $T_{1}$ a un punto de $T_{2}$ (¿entonces se teletransportó?), finalmente siguió haciendo lo propio de $T_{2}$ a $T_{3}$. Claramente esto realmente no tiene sentido; además, se viola el supuesto de que el agente parte de un punto y termina en el mismo tras recorrer todas las ciudades. La restricción \eqref{cuatro} elimina la posibilidad de lo que llamaremos \textit{subtours}. Sin embargo, al tratarse de una restricción que explora a cada uno de los $2^{n_{*}}$ posibles subconjuntos generables con  $\{ 1, \dots , n_{*} \}$, es una restricción con una elevada complejidad computacional asociada que debe simplificarse con adecuadas restricciones alternativas (véanse restricciones de Miller, Tucker  \& Zemlin,  1960). Si a eso le sumamos que el programa lineal tiene como conjunto factible los $n_{*}!$ posibles ordenamientos de $\{ 1, ..., n_{*} \}$, podemos entender que se diga que los programas que lo resuelven trabajan bajo los llamados \say{algoritmos de optimización combinatoria}. 
+
+%\subchapter{Arte con el agente viajero, o arte con línea continua}%\label{ssec:tspDescrip}
+\section{Arte con el agente viajero, o arte con línea continua}\label{sec:tspDescrip}
+
+En la introducción se hace referencia a dos maneras de replicar imágenes con optimización lineal que se desarrollarán en el presente estudio. La primer versión es vía el TSP: parte del supuesto de que se cuenta con una imagen en blanco y negro con una gama de \textit{greyscales} (o escala de grises\footnotetext{En adelante se emplearan indistintamente '\textit{greyscales}' o 'escala de grises'}). Asociamos una mayor \textit{greyscale} a una mayor luminosidad o blancura. Así pues, procedemos de la siguiente manera
+
+
+
+\begin{itemize}
+	\item Particionamos la imagen en grupos de pixeles. Cada grupo constará de rectángulos con $k$ pixeles a lo largo por $h$ pixeles a lo ancho. Derivamos de la imagen $m$ submatrices-renglón de grupos o rectángulos y $n$ submatrices-columna de éstos, de tal manera que la matriz grande cuenta con dimensiones $\mu' \times \nu'$ con $\mu'= k\;m$ y $\nu'= h\;n$; asímismo, obtenemos una escala de grises para cada pixel en el rango discreto de $0$ a $255$. 
+	\item Obtenemos la \textit{greyscale} promedio de cada rectángulo y fijamos un parámetro que ponderará el nivel de detalle que deseamos para la imagen a reproducir: $\gamma \in [4, 9] \cap \mathbb{N}$ \footnotetext{Este rango de $[4,9]$ no tiene otra justificación más allá de la visual, i.e. se define a la luz de los resultados usando esos números; por el contrario valores superiores a $9$ podrían generar imágenes sobre-saturadas de puntos}. De tal manera, para el rectángulo $(i, j) \in \{1, \dots , m \} \times \{1, \dots , n  \}$ la \textit{greyscale} del pixel promedio será de $\psi_{ij}$, con valores entre $0$ y $255$. De tal forma constrúyase
+	
+	\begin{equation}\label{oscG} 
+	\begin{aligned}
+	g_{ij} =  \floor{ \gamma -  \gamma \psi_{ij}/255} 
+	\end{aligned}
+	\end{equation}
+	
+	Esta será una escala de oscuridad del rectángulo.
+    \item Dividimos la imagen en $m \times n$ rectángulos, en cada uno situamos uniformemente $g_{ij}$ ciudades. El conjunto total de ciudades construidas será de cardinalidad $\tau$, definida como
+    
+    \begin{equation}\label{totalCiudades} 
+	\begin{aligned}
+	\tau=\sum_{i=1}^{m } \sum_{j=1}^{n} g_{ij}
+	\end{aligned}
+	\end{equation}
+	
+    Computamos las distancias (o \say{costos}) entre las $\tau$ distintas coordenadas en una matriz $C=[c]_{ij}$  de $\tau \times \tau$; resolvemos el TSP sobre estas distancias. Siendo que ahora el planteamiento se esboza sobre $\tau$ ciudadesk podemos entender que ahora la $n_{*}$ introducida en la sección anterior tiene un valor en el problema del arte con línea continua $n_{*}=\tau$.
+    
+\end{itemize}
+
+
+
+ \begin{figure}[h]
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{monalisa robert bosch.png}
+         \caption{Rostro de la Monalisa reproducido por Robert Bosch usando el problema del agente viajero}
+     \end{subfigure}
+     \hfill
+\end{figure}
+
+
+
+\chapter{TSP: Agente viajero}\label{chapter:tsp}
+%\section{Introducción}\label{section:intro}
+
+
+%\subsection{Nuevo rival - Cardoso, et. al.}
+
+\section{Problema de Agente viajero, descripción general}\label{sec:tspGral}
+
+La teoría de grafos estudia las propiedades y relaciones de un grafo que es un par $(V,E)$ con $V$ un conjunto de vértices y $E$ conjunto de aristas que los une. Siendo la arista modelada, ya sea como un par dirigido, donde el orden de los vértices importa (digrafo), o bien, no dirigido. Existen problemas de optimización planteados sobre esquemas de grafos que pueden ser resueltos por la vía de la programación lineal, siendo el problema del agente viajero (\textit{Traveling Salesman Problem}, TSP) uno de los más interesantes y populares. Este problema se esboza partiendo de un individuo (agente) que desea visitar una cantidad $n_{*}$ de ciudades partiendo de una ciudad origen y finalizando el recorrido en dicha ciudad con el objetivo de minimizar la distancia total recorrida. Existe un único conjunto de parámetros necesario para definir el problema: la distancia que hay entre cada par de ciudades existente; para ello defínase $c_{i, j}$ como el valor cuantitativo de dicha la distancia que hay entre las ciudades (o vértices) $(i, j)$ para cada par $(i, j) \in \{1,\dots ,n_{*}\}^2$.  Explicado este problema, podemos desarrollar una intuitiva formulación matemática mediante la programación lineal entera siguiente.
+
+
+\begin{subequations}
+
+\begin{equation}\label{uno} 
+ \underset{x_{i, j}  }{\text{min}}
+ \sum_{i=1}^{n_{*}} \sum_{j=1}^{n_{*}} c_{i, j}x_{i, j} \\
+\end{equation}  
+
+\begin{equation}\label{dos} 
+ \text{s.a.}
+ \sum_{i=1}^{n_{*}} x_{i, j}=1 \hspace{0.5cm}   \forall j \in \{ 1, \dots , n_{*} \} \\
+\end{equation}
+
+\begin{equation}\label{tres} 
+\;\;\;\;\; \sum_{j=1}^{n_{*}} x_{i, j}=1  \hspace{0.5cm}   \forall i \in \{ 1, \dots , n_{*} \} \\
+\end{equation}
+
+\begin{equation}\label{cuatro} 
+\;\;\;\;\; \sum_{i \in S}\sum_{j \in S}  x_{i, j} \leq |S|-1 \hspace{0.5cm}   \forall S \subset \{ 1, \dots ,  n_{*} \}
+\end{equation}
+
+\end{subequations}
+
+ 
+ Donde $S$ es el conjunto potencia generado con $\{ 1, \dots , n_{*} \}$. El problema lineal esbozado arriba se conforma por componentes. Para entenderlo, defínase antes el conjunto de variables de decisión como 
+ $\{ x_{i,j} | (i, j) \in \{1, \dots , n_{*} \}^{2} \}$ con dos asignaciones de valor posibles: $0$ y $1$. $1$ representa que el agente realizó un recorrido directo partiendo de la ciudad $i$ hacia la ciudad $j$ con una distancia correspondiente de $c_{i, j}$; $0$, por el contrario, representa el caso opuesto: no se viaja de $i$ a $j$. En términos técnicos, hablamos de que el agente viajero ocupó (o no) el dígrafo dirigido $(i, j)$.
+ 
+
+ Así, la primera expresión ec.  \eqref{uno} es la función objetivo: el recorrido total para arribar a las $n_{*}$ ciudades. \eqref{dos} exige que de cada ciudad se parta hacia una única ciudad; \eqref{tres}, análogo a \eqref{dos}, requiere que a cada ciudad se arribe desde un único punto de partida. La factibilidad del \textit{tour} generado por el agente se termina de construir en el conjunto de ecuaciones \eqref{cuatro}, ya que sin éste podrían haber \textit{tours} donde a cada ciudad se llega una única vez y cada ciudad parte hacia un único destino, pero dos o más subconjuntos resultado de la partición de $ \{ 1, \dots , n_{*} \}$ generan cada uno un recorrido o \textit{tour} cerrado. Supongamos que se generó una solución optimal con las restricciones \eqref{dos} y \eqref{tres} cumplidas, pero que constara de tres \textit{subtours}: $T_{1}, T_{2}, T_{3}$ con $T_{1} \cup T_{2}  \cup T_{3} = \{ 1, \dots , n_{*} \}$. Poniéndonos imaginativos, esto querría decir que el agente terminó de recorrer $T_{1}$, al terminar pasó a recorrer $T_{2}$ sin haber algún digrafo que enlazara de algún punto de $T_{1}$ a un punto de $T_{2}$ (¿entonces se teletransportó?), finalmente siguió haciendo lo propio de $T_{2}$ a $T_{3}$. Claramente esto realmente no tiene sentido; además, se viola el supuesto de que el agente parte de un punto y termina en el mismo tras recorrer todas las ciudades. La restricción \eqref{cuatro} elimina la posibilidad de lo que llamaremos \textit{subtours}. Sin embargo, al tratarse de una restricción que explora a cada uno de los $2^{n_{*}}$ posibles subconjuntos generables con  $\{ 1, \dots , n_{*} \}$, es una restricción con una elevada complejidad computacional asociada que debe simplificarse con adecuadas restricciones alternativas (véanse restricciones de Miller, Tucker  \& Zemlin,  1960). Si a eso le sumamos que el programa lineal tiene como conjunto factible los $n_{*}!$ posibles ordenamientos de $\{ 1, ..., n_{*} \}$, podemos entender que se diga que los programas que lo resuelven trabajan bajo los llamados \say{algoritmos de optimización combinatoria}. 
+
+%\subchapter{Arte con el agente viajero, o arte con línea continua}%\label{ssec:tspDescrip}
+\section{Arte con el agente viajero, o arte con línea continua}\label{sec:tspDescrip}
+
+En la introducción se hace referencia a dos maneras de replicar imágenes con optimización lineal que se desarrollarán en el presente estudio. La primer versión es vía el TSP: parte del supuesto de que se cuenta con una imagen en blanco y negro con una gama de \textit{greyscales} (o escala de grises\footnotetext{En adelante se emplearan indistintamente '\textit{greyscales}' o 'escala de grises'}). Asociamos una mayor \textit{greyscale} a una mayor luminosidad o blancura. Así pues, procedemos de la siguiente manera
+
+
+
+\begin{itemize}
+	\item Particionamos la imagen en grupos de pixeles. Cada grupo constará de rectángulos con $k$ pixeles a lo largo por $h$ pixeles a lo ancho. Derivamos de la imagen $m$ submatrices-renglón de grupos o rectángulos y $n$ submatrices-columna de éstos, de tal manera que la matriz grande cuenta con dimensiones $\mu' \times \nu'$ con $\mu'= k\;m$ y $\nu'= h\;n$; asímismo, obtenemos una escala de grises para cada pixel en el rango discreto de $0$ a $255$. 
+	\item Obtenemos la \textit{greyscale} promedio de cada rectángulo y fijamos un parámetro que ponderará el nivel de detalle que deseamos para la imagen a reproducir: $\gamma \in [4, 9] \cap \mathbb{N}$ \footnotetext{Este rango de $[4,9]$ no tiene otra justificación más allá de la visual, i.e. se define a la luz de los resultados usando esos números; por el contrario valores superiores a $9$ podrían generar imágenes sobre-saturadas de puntos}. De tal manera, para el rectángulo $(i, j) \in \{1, \dots , m \} \times \{1, \dots , n  \}$ la \textit{greyscale} del pixel promedio será de $\psi_{ij}$, con valores entre $0$ y $255$. De tal forma constrúyase
+	
+	\begin{equation}\label{oscG} 
+	\begin{aligned}
+	g_{ij} =  \floor{ \gamma -  \gamma \psi_{ij}/255} 
+	\end{aligned}
+	\end{equation}
+	
+	Esta será una escala de oscuridad del rectángulo.
+    \item Dividimos la imagen en $m \times n$ rectángulos, en cada uno situamos uniformemente $g_{ij}$ ciudades. El conjunto total de ciudades construidas será de cardinalidad $\tau$, definida como
+    
+    \begin{equation}\label{totalCiudades} 
+	\begin{aligned}
+	\tau=\sum_{i=1}^{m } \sum_{j=1}^{n} g_{ij}
+	\end{aligned}
+	\end{equation}
+	
+    Computamos las distancias (o \say{costos}) entre las $\tau$ distintas coordenadas en una matriz $C=[c]_{ij}$  de $\tau \times \tau$; resolvemos el TSP sobre estas distancias. Siendo que ahora el planteamiento se esboza sobre $\tau$ ciudadesk podemos entender que ahora la $n_{*}$ introducida en la sección anterior tiene un valor en el problema del arte con línea continua $n_{*}=\tau$.
+    
+\end{itemize}
+
+
+
+ \begin{figure}[h]
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{monalisa robert bosch.png}
+         \caption{Rostro de la Monalisa reproducido por Robert Bosch usando el problema del agente viajero}
+     \end{subfigure}
+     \hfill
+\end{figure}
+
+
+
+
+
 %\section{Implementación}\label{subsection:partic}
 \chapter{Implementación}\label{chapter:implem}
 
@@ -520,185 +602,6 @@ DIM = \{ (\mu', \nu') = (max(a), max(b)) | 0=a mod(m), 0=b mod(n), a \in [0,\mu]
 
 
 Es trivial notar que se requiere que $m \leq \mu$ y  $n \leq \nu$. El acotamiento arriba expresado se realiza de la manera más simétrica posible. Esto es, si $\mu' < \mu$, se recortarán $\epsilon= \floor{   \frac{1}{2}(\mu - \mu') }$ renglones por arriba y $\delta = (\mu - \mu ')- \epsilon$ renglones por abajo . Así, se tendrá $\epsilon - \delta \in \{0, 1 \}$ ($0$ si $\frac{1}{2}(\mu - \mu')$ es par, $1$ e.o.c), lo cual quiere decir que, en el peor caso, se recortará un pixel más por un lado que por otro. Análogamente, si $\nu' < \nu$, se recortarán $\rho= \floor{   \frac{1}{2}(\nu - \nu') }$ columnas por la izquierda y $\sigma = (\nu - \nu ')- \rho$ por la derecha (siendo también la diferencia de, a lo mucho, uno). El siguiente paso consiste en convertir la matriz de la escala $[0,1]$ a la escala $\{ 0, \dots, 255\}$. Luego, se procede a fraccionar la matriz en un conjunto de $m \; n$ submatrices mediante la función $matsplitter(.)$ de R, la cual recibe como entradas la matriz a fraccionar, la cantidad de renglones por submatriz, $k=\mu ' / m$ y la cantidad de columnas,  $h=\nu ' / n$. $matsplitter( \period )$ entregará una lista de $m \times n$ elementos. Los elementos $1$ a $n$ de la lista consistirán en las primeras $n$ submatrices superiores de la matriz, los elementos $n +1$ a $2n$ consistirán en las segundas $n$ submatrices superiores. Así sucesivamente, hasta llegar a las $n$ submatrices inferiores, ennumeradas $n \; m-n+1$ a $m \; n$. En el supuesto de que cada submatriz representara un único valor numérico (o arreglo $1 \times 1$) dentro de una matriz $m \times n$; entendemos que este tipo de ordenamiento es de clase \textit{rowwise} (o por renglón), ya que se va llenando renglón por renglón, empezando por los renglones de arriba y continuando hacia abajo. Cada renglón se llena de izquierda a derecha. El otro tipo común de ordenamiento es \textit{columnwise}, o por columna\footnotetext{Arreglo por columna, o \textit{columnwise} donde se llenan las columnas de izquierda a derecha, cada columna se llena de arriba a abajo}. Conociendo esto, podemos calcular la luminosidad promedio de cada elemento del output de $matsplitter( \period )$. Dicho conjunto de luminosidades puede sintetizarse en un vector de dimensión $m \; n$. 
-
-
-\section{Arte con el agente viajero}\label{sec:tspImplem}
-
-\subsection{Arte con el agente viajero, caso Twitter}
-
-
-Tras haber seguido los pasos de la sección \ref{sec:partic} lo siguiente consiste en convertir la escala del conjunto $\{0, \dots, 255\}$ a la escala $\{0, \dots , \gamma \}$, empleando la ecuación, ec. \eqref{oscG} desglosada en la sección  \ref{sec:tspDescrip} de la presente tesina. Así pues, obtenemos un vector de dimensión $m \; n$, llámese $g$. Para el primer ejercicio, asígnese $\gamma=7$. Bajo esta $\gamma$, las escalas primera a treintaiseisava de luminosidad coinciden con la escala $7$ en oscuridad (o siete \say{ciudades}). Las siguientes luminosidades (por orden) corresponden a seis ciudades; sucesivamente, hasta llegar a la escala 255, que corresponde a cero ciudades. Es obvio que situar más puntos, o ubicar más aristas que conecten éstos en un rectángulo generará una mayor oscuridad en el mismo, de ahí que se considere a $\gamma$ como una escala de oscuridad. Lo siguiente consta en ubicar las ciudades en el plano $x-y$, haciendo un loop a través de las $m \; n$ matrices. 
-
-
-\begin{enumerate}
-\item La asignación del k-ésimo elemento de la lista $\{1, \dots , m \; n \}$ a una coordenada de matriz $(i,j)$ se rige por el siguiente pseudocódigo, el cual tiene como base el tipo de arreglo \textit{rowwise}. 
-
-
-$
-mod2=k mod(n) \\
-si \; mod2=0 \\
-entonces \; i =mod2 \\
-e \period o \period c \period \\
-         i=mod2\\
-j=\frac{(k-i)}{n}+1
-$
-
-\item Una vez que tenemos la asignación $k \mapsto (i, j)$, $(i(k), j(k) )$, el siguiente paso es plasmar los puntos que asemejarán a la imagen objetivo sobre el rectángulo $[0,1]\times[0,1]$ en el plano $x-y$. Para ello, vale la pena considerar que el extremo superior izquierdo de la imagen corresponde al elemento $(1,1)$ de la matriz y a la coordenada $(0,1)$ del plano $x-y$. Partiendo de aquí, deducimos la posición del extremo superior izquierdo de la coordenada genérica $(i,j)$ de la matriz. La coordenada $x$ corresponde al pixel con la columna $j$, representando un paso de $\frac{(j-1)}{n}$ a la derecha de $x=0$. La coordenada $y$, con el renglón $i$, corresponde su ubicación en el eje $y$ a un paso de $\frac{(i-1)}{m}$ unidades abajo de $y=1$. Bajo esta formulación, derivamos que cada rectángulo (asociado a una submatriz) tendrá un ancho $\frac{1}{n}$ y un largo de $\frac{1}{m}$. Bajo este planteamiento se puede demostrar que para todo par de coordenadas de matriz de tipo $\{(i, j), (i+1, j)\}$ o  $\{(i, j), (i, j+1)\}$ existirá una relación de adyacencia entre sus correspondientes rectángulos. Además, las esquinas de la figura que envuelve a este conjunto de $m \; n$ rectángulos serán las coordenadas $\{(0,1), (1,1), (0,0), (1,0)\}$. Con esto, garantizamos que los rectángulos mencionados conforman una partición del cuadrado $[0,1] \times [0, 1]$
-
-\item El siguiente paso es usar el valor entero $g_{k}=g[k]$ para colocar esa cantidad de ciudades en el rectángulo asociado a la coordenda $(i(k), j(k) )$. Una alternativa inmediata es colocarlas aleatoriamente, lo cual muy probablemente permitiría reproducir la imagen con buena similaridad. Sin embargo, se propuso hacer una asignación de coordenadas más razonada que obedece a la idea de hacer una buena distribución de las ciudades a lo largo y ancho de su correspondiente rectángulo. Con una \say{buena} distribución se busca dar a entender que se quiere evitar una excesiva concentración de las ciudades en una zona del rectángulo, dejando a otras zonas muy blancas (o sin ciudades). La idea propuesta, pues, es generar un \textit{grid} de coordenadas $\{ x_{0}, x_{1}, \dots , x_{10}  \}$ donde $x_{0}$ y $x_{10}$ corresponden a los extremos izquierdo y derecho del rectángulo y $x_{l+1}-x_{l}=q \forall l \in \{0, \dots ,9 \}$ ($q=\frac{1}{10n}$); otro grid para las coordendas $y$: $\{ y_{0}, y_{1}, \dots, y_{10}  \}$, con $y_{p+1}-y_{p}=r \forall p \in \{0, \dots  ,9 \} $ (  $r=\frac{1}{10m}$ ) con $y_{0}$ y $y_{10}$ extremos superior e inferior.  Con esto, ya habremos construido el \textit{grid} $2$-dimensional $G=\{  (x_{i}, y_{i}) | (i,j) \in \{   0, \dots, 10 \}^{2} \}$ que consiste en $121$ coordenadas. Sobre este conjunto de coordenadas aplicar un \textit{k-means} con $g_{k}$ centroides. Una buena asignación de ciudades que cumple la condiciones deseadas (y previamente descritas) es aquella que asocia un centroide a una ciudad. Se procede a guardar esta asignación de ciudades y añadirlas a la selección correspondiente a submatrices anteriores (si es que hay anteriores).
-
-\end{enumerate}
-
- Al iterar este proceso las $m \; n$ veces, se obtienen las $\sum_{k=1}^{m \; n } g_{k}=\tau$ \footnotetext{esta es una expresión equivalente a la ecuación ec.\eqref{totalCiudades}  , pero en la versión que mapea $(i,j) \rightarrow k(i,j)$ }  ciudades objetivo y podemos resolver el TSP sobre éstas. Los resultados de escribir todas las ciudades como puntos bajo los ejercicios con $15 \times 15$ rectángulos y ($608$ ciudades) y con $50 \times 50$ ($5807$ ciudades) se desglosan a continuación. 
-
-
-\begin{figure}[h]
-     \centering
-     \begin{subfigure}[b]{0.4\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{twitt15.png}
-         \caption{ $15 \times 15$ rectángulos o $608$ ciudades}
-         \label{fig:fig15}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.4\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{twitt50.png}
-         \caption{$50 \times 50$ rectángulos o $5807$ ciudades}
-         \label{fig:fig50}
-     \end{subfigure}
-     \hfill
-        \caption{Gráfica de los puntos sobre el cuadrante $x-y$}
-        \label{fig:dos figuras}
-\end{figure}
- 
- 
-
- 
- Existe un tipo de archivo cuya extensión es \say{.tsp}. Éste se basa en el conjunto de ciudades sobre el que se ha de resolver una instancia del problema lineal. Dicha solución puede procederse mediante distintos métodos o heurísticas y puede realizarse mediante distintos \textit{softwares}, algunos de los cuales son R, Python, Java y Concorde. En aras de practicidad, y en vista de que hasta el momento la construcción de los rectángulos y las ciudades se ha llevado a cabo con R, se usará este lenguaje para manipular tanto objetos como archivos de tipo TSP. Para este efecto se usará la librería homónima cuya función, $ETSP( \period )$ debe su nombre a \textit{Euclidean TSP} y convierte el \textit{data frame} de $2$ columnas (una por coordenada) y $\tau$ renglones (uno por ciudades) en un problema del agente viajero. El \textit{Euclidean} obedece a que, en otros potenciales ejercicios del agente viajero, las coordenadas podrían ser de otra métrica sobre un espacio normado o incluso, coordenadas terrestres. La función encargada de resolver un etsp es $solveTSP(\period)$. Si bien se le puede ingresar el método o algoritmo a emplear como entrada de la función, el que se usa por \textit{default} es el algoritmo de inserción arbitraria con refinamiento de tipo \textit{two opt}. El tipo de datos del \textit{output} es doble: uno es de la clase \textit{tour} y otro es entero. La versión como entero consiste en el orden de las ciudades que se anidan para construir el \textit{tour}. Con ello se puede graficar la solución con ayuda de $ggplot( \period )$. Los resultados con fv$15 \times 15$ y $50 \times 50$ son los siguientes. 
- 
- 
-  \begin{figure}[h]
-     \centering
-     \begin{subfigure}[b]{0.4\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{twittRes15.png}
-         \caption{ $15 \times 15$ rectángulos o $608$ ciudades; solución vía TSP}
-         \label{fig:fig15r}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.4\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{twittRes50.png}
-         \caption{$50 \times 50$ rectángulos o $5807$ ciudades; solución vía TSP}
-         \label{fig:fig50r}
-     \end{subfigure}
-     \hfill
-        \caption{Gráfica de las líneas uniendo a los puntos de manera eficiente sobre el cuadrante $x-y$}
-        \label{fig:dos figuras}
-\end{figure}
-
-
-
-\subsection{Arte con el agente viajero, complejidad y exploración de instancias más complejas}
-
-
-Un siguiente paso interesante consiste en evaluar la potencia computacional del solver del tsp en $R$ que se ha ocupado (módulo \textit{tsp}, función $solve_TSP(.)$ ) al registrar el tiempo que lleva resolver una determinada imagen conforme se agregan más dimensiones o rectángulos y, por consecuente, más ciudades. 
-Las siguientes gráficas reflejan la relación que tiene la dimensión (suponiendo que hay tantos rectángulos a lo largo como a lo ancho) con el número de ciudades en la imagen de Twitter; asimismo describen la relación del número de ciudades con el tiempo de solución del tsp; claramente esta relación es de una complejidad superior a la lineal. 
-
- 
- \begin{figure}[h]
-     \centering
-     \begin{subfigure}[b]{0.4\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{dim_cit.png}
-         \caption{ Dimensión: no. ciudades}
-         %\label{fig:fig15}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.4\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{cit_tiemp.png}
-         \caption{ no. ciudades vs tiempo}
-         %\label{fig:fig50}
-     \end{subfigure}
-     \hfill
-\end{figure}
- 
-La siguiente es la tabla asociada a la gráfica anterior. Vale la pena mencionar que la columna de restricciones supone la técnica de reducción de restricciones a los subtours de Miller-Tucker-Zemlin que asumen que son $n^{2}$ y no $2^{n}$ de estas restricciones
- 
-\begin{center}
-\begin{tabular}{c*{6}{c}r}
-Renglones (= Columnas) & Total ciudades &   Tiempo de ejecución (s) & Variables & restricciones  \\
-\hline
-10 &  286 & 0.00 & 81796 & 82368   \\
-15 &  608 & 0.03 & 369664 & 370880\\
-20 &  1051 & 0.25 & 1104601 & 1106703 \\
-25 &  1670 & 1.35 & 2788900 & 2792240  \\
-30 &  2284 & 4.65 & 5216656 & 5221224\\ 
-35 &  3058 & 10.26 & 9351364 & 9357480 \\
-40 &  3894 & 28.77 & 15163236 & 15171024   \\
-45 &  4723 & 57.33 & 22306729 & 22316175\\
-50 &  5807 & 139.93 & 33721249 & 33732863 \\
-55 &  7360 & 283.53 & 54169600 & 54184320  \\
-60 &  8271 & 310.83 & 68409441 & 68425983\\ 
-65 &  9616 & 586.88 & 92467456 & 92486688 \\
-70 &  10987 & 744.08 & 120714169 & 120736143 \\
-\end{tabular}
-\end{center}
-
-
-Una cuestión que vale la pena abordar es la relativa a si el algoritmo programado es capaz de reproducir imágenes de un grado más elevado de complejidad, o se limita a ser aplicable solo a imágenes sin relieve, ni dimensión, ni variedad de colores. Para este efecto buscaré reproducir una foto mía en mi escritorio de casa, la foto tendrá por nombre “\textit{home office}” y es la siguiente
-
-
-\begin{figure} [h]
-  \centering
-   \includegraphics[width=0.7\linewidth]{j_smile.png}
-  \caption{Catálogo de imágenes seleccionadas para el fotomosaico  }
-  \label{catal}
-\end{figure}
-
-Lo que sigue es reproducir la imagen. Para esto, se hizo uso de un truco: atenuar los colores más claros. Es decir, a partir de un parámetro determinado de escala de luminosidad en adelante se aclarará la escala al máximo valor posible, es decir, 1. Para esta imagen el parámetro elegido es de 0.70.  Esto permitió que la imagen resultara más distinguible, sobre todo en lo que concierne a las facciones faciales: cara, ojos, boca y al implemento electrónico que se tiene sobre las orejas (audífonos). La razón de este recurso puede aclararse si se muestra el resultado de ejecutar el programa sin hacer esta modificación de la luminosidad. Ambos resultados se muestran en los dos pares de imágenes siguientes. 
-
-
- \begin{figure}[h]
-     \centering
-     \begin{subfigure}[b]{0.4\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{j_tspSmile.png}
-         \caption{Ciudades o puntillismo con imagen \textit{home office}: 9768 ciudades}
-         \label{fig:fig15m}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.4\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{j_citSmile.png}
-         \caption{TSP con imagen textit{home office}: 9768 ciudades}
-         \label{fig:fig20m}
-     \end{subfigure}
-     \hfill
-\end{figure}
-
-
- \begin{figure}[h]
-     \centering
-     \begin{subfigure}[b]{0.4\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{j_citSmile_s.png}
-         \caption{Ciudades o puntillismo con imagen \textit{home office} atenuada: 8726 ciudades}
-         \label{fig:fig15m}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.4\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{j_tspSmile_s.jpeg}
-         \caption{TSP con imagen \textit{home office} atenuada: 8726 ciudades}
-         \label{fig:fig20m}
-     \end{subfigure}
-     \hfill
-\end{figure}
-
-
 
 
 \section{Fotomosaicos}\label{sec:photomImplem}
@@ -1125,6 +1028,186 @@ Habiendo seleccionado la imagen a computar y las fichas, se procede a generar el
 
 
 La imagen se ha computado con éxito. Como se preveía, las asignaciones están concentradas principalmente en los tres colores especificados que integran la bandera (verde, blanco, rojo y café); al computar el caso de  $20 \times 30$ se observa que las flores anaranjas están desplegadas en $3$ ocasiones por el motivo de los contornos de la imagen cuyas submatrices tienen centroides en el hiperplano $RGB$ ubicado entre el verde de la encina, el laurel y el nopal y el café del águila. El rosa se aleja de las posibilidades de ser seleccionado en la medida de que es un color distante de los que componen la bandera.
+
+
+
+\section{Arte con el agente viajero}\label{sec:tspImplem}
+
+\subsection{Arte con el agente viajero, caso Twitter}
+
+
+Tras haber seguido los pasos de la sección \ref{sec:partic} lo siguiente consiste en convertir la escala del conjunto $\{0, \dots, 255\}$ a la escala $\{0, \dots , \gamma \}$, empleando la ecuación, ec. \eqref{oscG} desglosada en la sección  \ref{sec:tspDescrip} de la presente tesina. Así pues, obtenemos un vector de dimensión $m \; n$, llámese $g$. Para el primer ejercicio, asígnese $\gamma=7$. Bajo esta $\gamma$, las escalas primera a treintaiseisava de luminosidad coinciden con la escala $7$ en oscuridad (o siete \say{ciudades}). Las siguientes luminosidades (por orden) corresponden a seis ciudades; sucesivamente, hasta llegar a la escala 255, que corresponde a cero ciudades. Es obvio que situar más puntos, o ubicar más aristas que conecten éstos en un rectángulo generará una mayor oscuridad en el mismo, de ahí que se considere a $\gamma$ como una escala de oscuridad. Lo siguiente consta en ubicar las ciudades en el plano $x-y$, haciendo un loop a través de las $m \; n$ matrices. 
+
+
+\begin{enumerate}
+\item La asignación del k-ésimo elemento de la lista $\{1, \dots , m \; n \}$ a una coordenada de matriz $(i,j)$ se rige por el siguiente pseudocódigo, el cual tiene como base el tipo de arreglo \textit{rowwise}. 
+
+
+$
+mod2=k mod(n) \\
+si \; mod2=0 \\
+entonces \; i =mod2 \\
+e \period o \period c \period \\
+         i=mod2\\
+j=\frac{(k-i)}{n}+1
+$
+
+\item Una vez que tenemos la asignación $k \mapsto (i, j)$, $(i(k), j(k) )$, el siguiente paso es plasmar los puntos que asemejarán a la imagen objetivo sobre el rectángulo $[0,1]\times[0,1]$ en el plano $x-y$. Para ello, vale la pena considerar que el extremo superior izquierdo de la imagen corresponde al elemento $(1,1)$ de la matriz y a la coordenada $(0,1)$ del plano $x-y$. Partiendo de aquí, deducimos la posición del extremo superior izquierdo de la coordenada genérica $(i,j)$ de la matriz. La coordenada $x$ corresponde al pixel con la columna $j$, representando un paso de $\frac{(j-1)}{n}$ a la derecha de $x=0$. La coordenada $y$, con el renglón $i$, corresponde su ubicación en el eje $y$ a un paso de $\frac{(i-1)}{m}$ unidades abajo de $y=1$. Bajo esta formulación, derivamos que cada rectángulo (asociado a una submatriz) tendrá un ancho $\frac{1}{n}$ y un largo de $\frac{1}{m}$. Bajo este planteamiento se puede demostrar que para todo par de coordenadas de matriz de tipo $\{(i, j), (i+1, j)\}$ o  $\{(i, j), (i, j+1)\}$ existirá una relación de adyacencia entre sus correspondientes rectángulos. Además, las esquinas de la figura que envuelve a este conjunto de $m \; n$ rectángulos serán las coordenadas $\{(0,1), (1,1), (0,0), (1,0)\}$. Con esto, garantizamos que los rectángulos mencionados conforman una partición del cuadrado $[0,1] \times [0, 1]$
+
+\item El siguiente paso es usar el valor entero $g_{k}=g[k]$ para colocar esa cantidad de ciudades en el rectángulo asociado a la coordenda $(i(k), j(k) )$. Una alternativa inmediata es colocarlas aleatoriamente, lo cual muy probablemente permitiría reproducir la imagen con buena similaridad. Sin embargo, se propuso hacer una asignación de coordenadas más razonada que obedece a la idea de hacer una buena distribución de las ciudades a lo largo y ancho de su correspondiente rectángulo. Con una \say{buena} distribución se busca dar a entender que se quiere evitar una excesiva concentración de las ciudades en una zona del rectángulo, dejando a otras zonas muy blancas (o sin ciudades). La idea propuesta, pues, es generar un \textit{grid} de coordenadas $\{ x_{0}, x_{1}, \dots , x_{10}  \}$ donde $x_{0}$ y $x_{10}$ corresponden a los extremos izquierdo y derecho del rectángulo y $x_{l+1}-x_{l}=q \forall l \in \{0, \dots ,9 \}$ ($q=\frac{1}{10n}$); otro grid para las coordendas $y$: $\{ y_{0}, y_{1}, \dots, y_{10}  \}$, con $y_{p+1}-y_{p}=r \forall p \in \{0, \dots  ,9 \} $ (  $r=\frac{1}{10m}$ ) con $y_{0}$ y $y_{10}$ extremos superior e inferior.  Con esto, ya habremos construido el \textit{grid} $2$-dimensional $G=\{  (x_{i}, y_{i}) | (i,j) \in \{   0, \dots, 10 \}^{2} \}$ que consiste en $121$ coordenadas. Sobre este conjunto de coordenadas aplicar un \textit{k-means} con $g_{k}$ centroides. Una buena asignación de ciudades que cumple la condiciones deseadas (y previamente descritas) es aquella que asocia un centroide a una ciudad. Se procede a guardar esta asignación de ciudades y añadirlas a la selección correspondiente a submatrices anteriores (si es que hay anteriores).
+
+\end{enumerate}
+
+ Al iterar este proceso las $m \; n$ veces, se obtienen las $\sum_{k=1}^{m \; n } g_{k}=\tau$ \footnotetext{esta es una expresión equivalente a la ecuación ec.\eqref{totalCiudades}  , pero en la versión que mapea $(i,j) \rightarrow k(i,j)$ }  ciudades objetivo y podemos resolver el TSP sobre éstas. Los resultados de escribir todas las ciudades como puntos bajo los ejercicios con $15 \times 15$ rectángulos y ($608$ ciudades) y con $50 \times 50$ ($5807$ ciudades) se desglosan a continuación. 
+
+
+\begin{figure}[h]
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{twitt15.png}
+         \caption{ $15 \times 15$ rectángulos o $608$ ciudades}
+         \label{fig:fig15}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{twitt50.png}
+         \caption{$50 \times 50$ rectángulos o $5807$ ciudades}
+         \label{fig:fig50}
+     \end{subfigure}
+     \hfill
+        \caption{Gráfica de los puntos sobre el cuadrante $x-y$}
+        \label{fig:dos figuras}
+\end{figure}
+ 
+ 
+
+ 
+ Existe un tipo de archivo cuya extensión es \say{.tsp}. Éste se basa en el conjunto de ciudades sobre el que se ha de resolver una instancia del problema lineal. Dicha solución puede procederse mediante distintos métodos o heurísticas y puede realizarse mediante distintos \textit{softwares}, algunos de los cuales son R, Python, Java y Concorde. En aras de practicidad, y en vista de que hasta el momento la construcción de los rectángulos y las ciudades se ha llevado a cabo con R, se usará este lenguaje para manipular tanto objetos como archivos de tipo TSP. Para este efecto se usará la librería homónima cuya función, $ETSP( \period )$ debe su nombre a \textit{Euclidean TSP} y convierte el \textit{data frame} de $2$ columnas (una por coordenada) y $\tau$ renglones (uno por ciudades) en un problema del agente viajero. El \textit{Euclidean} obedece a que, en otros potenciales ejercicios del agente viajero, las coordenadas podrían ser de otra métrica sobre un espacio normado o incluso, coordenadas terrestres. La función encargada de resolver un etsp es $solveTSP(\period)$. Si bien se le puede ingresar el método o algoritmo a emplear como entrada de la función, el que se usa por \textit{default} es el algoritmo de inserción arbitraria con refinamiento de tipo \textit{two opt}. El tipo de datos del \textit{output} es doble: uno es de la clase \textit{tour} y otro es entero. La versión como entero consiste en el orden de las ciudades que se anidan para construir el \textit{tour}. Con ello se puede graficar la solución con ayuda de $ggplot( \period )$. Los resultados con fv$15 \times 15$ y $50 \times 50$ son los siguientes. 
+ 
+ 
+  \begin{figure}[h]
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{twittRes15.png}
+         \caption{ $15 \times 15$ rectángulos o $608$ ciudades; solución vía TSP}
+         \label{fig:fig15r}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{twittRes50.png}
+         \caption{$50 \times 50$ rectángulos o $5807$ ciudades; solución vía TSP}
+         \label{fig:fig50r}
+     \end{subfigure}
+     \hfill
+        \caption{Gráfica de las líneas uniendo a los puntos de manera eficiente sobre el cuadrante $x-y$}
+        \label{fig:dos figuras}
+\end{figure}
+
+
+
+\subsection{Arte con el agente viajero, complejidad y exploración de instancias más complejas}
+
+
+Un siguiente paso interesante consiste en evaluar la potencia computacional del solver del tsp en $R$ que se ha ocupado (módulo \textit{tsp}, función $solve_TSP(.)$ ) al registrar el tiempo que lleva resolver una determinada imagen conforme se agregan más dimensiones o rectángulos y, por consecuente, más ciudades. 
+Las siguientes gráficas reflejan la relación que tiene la dimensión (suponiendo que hay tantos rectángulos a lo largo como a lo ancho) con el número de ciudades en la imagen de Twitter; asimismo describen la relación del número de ciudades con el tiempo de solución del tsp; claramente esta relación es de una complejidad superior a la lineal. 
+
+ 
+ \begin{figure}[h]
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{dim_cit.png}
+         \caption{ Dimensión: no. ciudades}
+         %\label{fig:fig15}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{cit_tiemp.png}
+         \caption{ no. ciudades vs tiempo}
+         %\label{fig:fig50}
+     \end{subfigure}
+     \hfill
+\end{figure}
+ 
+La siguiente es la tabla asociada a la gráfica anterior. Vale la pena mencionar que la columna de restricciones supone la técnica de reducción de restricciones a los subtours de Miller-Tucker-Zemlin que asumen que son $n^{2}$ y no $2^{n}$ de estas restricciones
+ 
+\begin{center}
+\begin{tabular}{c*{6}{c}r}
+Renglones (= Columnas) & Total ciudades &   Tiempo de ejecución (s) & Variables & restricciones  \\
+\hline
+10 &  286 & 0.00 & 81796 & 82368   \\
+15 &  608 & 0.03 & 369664 & 370880\\
+20 &  1051 & 0.25 & 1104601 & 1106703 \\
+25 &  1670 & 1.35 & 2788900 & 2792240  \\
+30 &  2284 & 4.65 & 5216656 & 5221224\\ 
+35 &  3058 & 10.26 & 9351364 & 9357480 \\
+40 &  3894 & 28.77 & 15163236 & 15171024   \\
+45 &  4723 & 57.33 & 22306729 & 22316175\\
+50 &  5807 & 139.93 & 33721249 & 33732863 \\
+55 &  7360 & 283.53 & 54169600 & 54184320  \\
+60 &  8271 & 310.83 & 68409441 & 68425983\\ 
+65 &  9616 & 586.88 & 92467456 & 92486688 \\
+70 &  10987 & 744.08 & 120714169 & 120736143 \\
+\end{tabular}
+\end{center}
+
+
+Una cuestión que vale la pena abordar es la relativa a si el algoritmo programado es capaz de reproducir imágenes de un grado más elevado de complejidad, o se limita a ser aplicable solo a imágenes sin relieve, ni dimensión, ni variedad de colores. Para este efecto buscaré reproducir una foto mía en mi escritorio de casa, la foto tendrá por nombre “\textit{home office}” y es la siguiente
+
+
+\begin{figure} [h]
+  \centering
+   \includegraphics[width=0.7\linewidth]{j_smile.png}
+  \caption{Catálogo de imágenes seleccionadas para el fotomosaico  }
+  \label{catal}
+\end{figure}
+
+Lo que sigue es reproducir la imagen. Para esto, se hizo uso de un truco: atenuar los colores más claros. Es decir, a partir de un parámetro determinado de escala de luminosidad en adelante se aclarará la escala al máximo valor posible, es decir, 1. Para esta imagen el parámetro elegido es de 0.70.  Esto permitió que la imagen resultara más distinguible, sobre todo en lo que concierne a las facciones faciales: cara, ojos, boca y al implemento electrónico que se tiene sobre las orejas (audífonos). La razón de este recurso puede aclararse si se muestra el resultado de ejecutar el programa sin hacer esta modificación de la luminosidad. Ambos resultados se muestran en los dos pares de imágenes siguientes. 
+
+
+ \begin{figure}[h]
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{j_tspSmile.png}
+         \caption{Ciudades o puntillismo con imagen \textit{home office}: 9768 ciudades}
+         \label{fig:fig15m}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{j_citSmile.png}
+         \caption{TSP con imagen textit{home office}: 9768 ciudades}
+         \label{fig:fig20m}
+     \end{subfigure}
+     \hfill
+\end{figure}
+
+
+ \begin{figure}[h]
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{j_citSmile_s.png}
+         \caption{Ciudades o puntillismo con imagen \textit{home office} atenuada: 8726 ciudades}
+         \label{fig:fig15m}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{j_tspSmile_s.jpeg}
+         \caption{TSP con imagen \textit{home office} atenuada: 8726 ciudades}
+         \label{fig:fig20m}
+     \end{subfigure}
+     \hfill
+\end{figure}
+
+
 
 
 %\chapter*{Bibliografía}
