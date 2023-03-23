@@ -270,7 +270,7 @@ Las variaciones de esta clase de problemas extendidas a más dimensiones pueden 
 
 \section{Fotomosaicos: concepto y contexto histórico}\label{sec:phm_grey}
 
-En el área del \textit{marketing} han pululado técnicas de \textit{advertising} que consisten fen reproducir con elevada similaridad una imagen de interés conformada por un conjunto de imágenes  o grupos de pixeles. Un fotomosaico ---o mosaico fotográfico--- es una imagen dividida en secciones (las cuales, con el conocimiento adquirido en este documento pueden entenderse como submatrices) donde cada sección se reemplaza por otra imagen que se le asocia por algún criterio de similaridad. Para construir un fotomosaico, se requieren tres insumos: una foto objetivo, un \textit{set} de fotos a usar para una dada subsección y un \textit{software}-lógica que ejecute la tarea. La idea del fotomosaico tiene una historia reciente en el ámbito de la computación, cuando en fechas similares dos personajes implementaron lógicas y softwares con los cuales podía llevarse a cabo esta tarea. En 1993 Joseph Francis, diseñador, desarrolló lo propio trabajando en el departamento de animación por computadora de la agencia de publicidad R/Greenberg. Por otra parte, en 1995. Robert Silvers, como estudiante de ingeniería en el MIT, desarrolló una lógica que asumiría proyección e importante audiencia cuando se construyó la imagen de la Princesa Diana como parte de una edición para el sexoagésimo aniversario de la revista LIFE (portada de la misma), haciendo extensivo su desarrollo a un algoritmo \textit{software} cuya patente registró años más tarde. 
+En el área del \textit{marketing} han abundado técnicas de \textit{advertising} que consisten fen reproducir con elevada similaridad una imagen de interés conformada por un conjunto de imágenes  o grupos de pixeles. Un fotomosaico ---o mosaico fotográfico--- es una imagen dividida en secciones (las cuales, con el conocimiento adquirido en este documento pueden entenderse como submatrices) donde cada sección se reemplaza por otra imagen que se le asocia por algún criterio de similaridad. Para construir un fotomosaico, se requieren tres insumos: una foto objetivo, un \textit{set} de fotos a usar para una dada subsección y un \textit{software}-lógica que ejecute la tarea. La idea del fotomosaico tiene una historia reciente en el ámbito de la computación, cuando en fechas similares dos personajes implementaron lógicas y softwares con los cuales podía llevarse a cabo esta tarea. En 1993 Joseph Francis, diseñador, desarrolló lo propio trabajando en el departamento de animación por computadora de la agencia de publicidad R/Greenberg. Por otra parte, en 1995. Robert Silvers, como estudiante de ingeniería en el MIT, desarrolló una lógica que asumiría proyección e importante audiencia cuando se construyó la imagen de la Princesa Diana como parte de una edición para el sexoagésimo aniversario de la revista LIFE (portada de la misma), haciendo extensivo su desarrollo a un algoritmo \textit{software} cuya patente registró años más tarde. 
 
 
  \begin{figure}[h]
@@ -287,7 +287,7 @@ El programa desarrollado por Silver se se vio reflejado en réditos económicos 
 
 \section{Fotomosaicos en escalas de grises}\label{sec:phm_grey}
 
-En la introducción se hace referencia a dos maneras de replicar imágenes con optimización lineal que se desarrollarán en el presente estudio. El primer implemento es el de los fotomosaicos en blanco y negro. Parte del supuesto de que se cuenta con una imagen en blanco y negro con una gama de \textit{greyscales} (o escala de grises\footnotetext{En adelante se emplearan indistintamente '\textit{greyscales}' o 'escala de grises'}). Asociamos una mayor \textit{greyscale} a una mayor luminosidad o blancura. Hay una serie de pasos estándar que deben de seguirse si se buscan generar las instancias de programación lineal por fotomosaicos, o bien por el TSP. A continuación se enlistan
+En la introducción se hace referencia a dos maneras de replicar imágenes con optimización lineal que se desarrollarán en el presente estudio. El primer implemento es el de los fotomosaicos en blanco y negro. Parte del supuesto de que se cuenta con una imagen en blanco y negro con una gama de \textit{greyscales} (o escala de grises\footnote{En adelante se emplearan indistintamente \say{\textit{greyscales}} o \say{escala de grises} } ). Asociamos una mayor \textit{greyscale} a una mayor luminosidad o blancura. Hay una serie de pasos estándar que deben de seguirse si se buscan generar las instancias de programación lineal por fotomosaicos, o bien por el TSP. A continuación se enlistan
 
 \begin{itemize}
 	\item Particionamos la imagen en grupos de pixeles. Cada grupo constará de rectángulos con $k$ pixeles a lo largo por $h$ pixeles a lo ancho. Derivamos de la imagen $m$ submatrices-renglón de grupos o rectángulos y $n$ submatrices-columna de éstos, de tal manera que la matriz grande cuenta con dimensiones $\mu' \times \nu'$ con $\mu'= k\;m$ y $\nu'= h\;n$; asímismo, obtenemos una escala de grises para cada pixel en el rango discreto de $0$ a $255$. Llámesele $\psi$.
@@ -404,6 +404,7 @@ En relación a la imagen de la flor blanca, desglosemos el color dominante deriv
          \centering
          \includegraphics[width=\textwidth]{fl_1px.png}
          \caption{Color promedio de flores blancas derivadas de $k=2$}
+         \label{fig:colprom bl}
      \end{subfigure}
      \hfill
 \end{figure}
@@ -453,13 +454,13 @@ La teoría de grafos estudia las propiedades y relaciones de un grafo que es un 
 %\subchapter{Arte con el agente viajero, o arte con línea continua}%\label{ssec:tspDescrip}
 \section{Arte con el agente viajero, o arte con línea continua}\label{sec:tspDescrip}
 
-La segunda implemantación de una imagen a emular es vía el TSP: parte del supuesto de que se cuenta con una imagen en blanco y negro con una gama de \textit{greyscales} (o escala de grises\footnotetext{En adelante se emplearan indistintamente '\textit{greyscales}' o 'escala de grises'}). Procedemos de la siguiente manera
+La segunda implemantación de una imagen a emular es vía el TSP: parte del supuesto de que se cuenta con una imagen en blanco y negro con una gama de \textit{greyscales}. Procedemos de la siguiente manera
 
 
 
 \begin{itemize}
 	\item Particionamos la imagen en grupos de pixeles. Cada grupo constará de rectángulos con $k$ pixeles a lo largo por $h$ pixeles a lo ancho. Derivamos de la imagen $m$ submatrices-renglón de grupos o rectángulos y $n$ submatrices-columna de éstos, de tal manera que la matriz grande cuenta con dimensiones $\mu' \times \nu'$ con $\mu'= k\;m$ y $\nu'= h\;n$; asímismo, obtenemos una escala de grises para cada pixel en el rango discreto de $0$ a $255$. 
-	\item Obtenemos la \textit{greyscale} promedio de cada rectángulo y fijamos un parámetro que ponderará el nivel de detalle que deseamos para la imagen a reproducir: $\gamma \in [4, 9] \cap \mathbb{N}$ \footnotetext{Este rango de $[4,9]$ no tiene otra justificación más allá de la visual, i.e. se define a la luz de los resultados usando esos números; por el contrario valores superiores a $9$ podrían generar imágenes sobre-saturadas de puntos}. De tal manera, para el rectángulo $(i, j) \in \{1, \dots , m \} \times \{1, \dots , n  \}$ la \textit{greyscale} del pixel promedio será de $\psi_{ij}$, con valores entre $0$ y $255$. Entonces constrúyase
+	\item Obtenemos la \textit{greyscale} promedio de cada rectángulo y fijamos un parámetro que ponderará el nivel de detalle que deseamos para la imagen a reproducir: $\gamma \in [4, 9] \cap \mathbb{N}$ \footnote{Este rango de $[4,9]$ no tiene otra justificación más allá de la visual, i.e. se define a la luz de los resultados usando esos números; por el contrario valores superiores a $9$ podrían generar imágenes sobre-saturadas de puntos}. De tal manera, para el rectángulo $(i, j) \in \{1, \dots , m \} \times \{1, \dots , n  \}$ la \textit{greyscale} del pixel promedio será de $\psi_{ij}$, con valores entre $0$ y $255$. Entonces constrúyase
 	
 	\begin{equation}\label{oscG} 
 	\begin{aligned}
@@ -489,6 +490,7 @@ Siendo que ahora el planteamiento se esboza sobre $\tau$ ciudades podemos entend
          \centering
          \includegraphics[width=\textwidth]{monalisa robert bosch.png}
          \caption{Rostro de la Monalisa reproducido por Robert Bosch usando el problema del agente viajero}
+         \label{fig:monalisa}
      \end{subfigure}
      \hfill
 \end{figure}
@@ -504,48 +506,36 @@ Siendo que ahora el planteamiento se esboza sobre $\tau$ ciudades podemos entend
 \section{Partición de la matriz en submatrices}\label{sec:partic}
 
 
-Una imagen en escala de grises se entiende como un despliegue visual en el que cada unidad básica mostrada en la pantalla —mejor conocida como pixel— se ve representada por una cifra que cuantifica la cantidad de luz (o información de intensidad lumínica) con que cuenta. Representando la mínima unidad al negro y, la máxima, al blanco. La escala tiende a volverse discreta, ya que contar con un continuo estándar de $0$ a $1$ (o $0\%$ a $100\%$) representaría un reto computacional y de almacenaje considerable. Algunas imágenes en escala de grises tempranas cuantificaban hasta 16 valores, lo cual implicaba un almacenaje de 4 bits por pixel; en la medida de que la rama de la fotografía digital evolucionó, aumentó hasta 256 intensidades, implicando un peso de 8 bits por pixel. Si bien actualmente hay adicionales variaciones con mayor o menor número de valores (también discretos), los cuales se eligen en función de la aplicación de la imagen, un estándar recurrentemente usado es el de 256 escalas. Por eso, y en aras de seguir convenciones, se usará esta escala discreta, o bien, dependiendo del caso, la escala continua de $0$ a $1$. Para pasar de la escala $[0,1]$ a la escala $\{0, \dots , 255\}$ hacemos $e_{255}=round(255 e_{1})$; para pasar en sentido inverso se usará $e_{1}=\frac{1}{255}e_{255}$.
+Una imagen en escala de grises se entiende como un despliegue visual en el que cada unidad básica mostrada en la pantalla —mejor conocida como pixel— se ve representada por una cifra que cuantifica la cantidad de luz (o información de intensidad lumínica) con que cuenta. Representando la mínima unidad al negro y, la máxima, al blanco. La escala tiende a volverse discreta, ya que contar con un continuo estándar de $0$ a $1$ (o $0\%$ a $100\%$) representaría un reto computacional y de almacenaje considerable. Algunas imágenes en escala de grises tempranas cuantificaban hasta 16 valores, lo cual implicaba un almacenaje de $4$ bits por pixel; en la medida de que la rama de la fotografía digital evolucionó, aumentó a hasta $256$ intensidades, implicando un peso de 8 bits por pixel. Si bien actualmente hay adicionales variaciones con mayor o menor número de valores (también discretos), los cuales se eligen en función de la aplicación de la imagen, un estándar recurrentemente usado es el de $256$ escalas. Por eso, y en aras de seguir convenciones, se usará esta escala discreta, o bien, dependiendo del caso, la escala continua de $0$ a $1$. Para pasar de la escala $[0,1]$ a la escala $\{0, \dots , 255\}$ hacemos $e_{255}=round(255 e_{1})$; para pasar en sentido inverso se usará $e_{1}=\frac{1}{255}e_{255}$.
 
-En este apartado se describirá cómo se procede para formular y computar los dos enfoques para reproducir imágenes: el de TSP y el de los fotomosaicos, explicados brevemente en el capítulo \ref{chapter:tsp}. Para iniciar los ejercicios decidí usar una imagen de la red social Twitter, la cual se anexa a continuación. La librería de R encargada de procesar y graficar las imágenes de tipo png tiene como nombre \say{png}. La función $readPNG( \period )$ se encarga de leer el archivo-imagen objetivo y sintetizarlo en un objeto numérico estructurado en un arreglo $3$-dimensional con dimensiones para sus pixeles de renglón ($\mu$) $\times$ columna ($\nu$) $\times 3$. De los elementos extrapolados del primer componente de la dimensión tres, $readPNG( \period )[,,1]$, se extrae una matriz $\mu \times \nu$, la cual consta de valores constituyendo la escala de grises de la imagen en el intervalo continuo de $0$ a $1$. Para graficar dicha imagen en el cuadrante del plano cartesiano $x-y$ (delimitado al rango $[0,1]$ para ambas dimensiones) se usará la función $image( \period )$. Esta función despliega la figura interpretando al renglón como la coordenada $x$ y a la columna como la coordenada $y$. Sin embargo, esta es una interpretación distinta a la asignación que interpreta a los renglones como el largo (es decir, el eje $y$) y a las columnas como el ancho (es decir, el eje $x$) propia del output de $readPNG( \period )[,,1]$. De tal manera, si se computa la escala de grises de este output mediante $image( \period )$ se tendría como resultado la imagen rotada 90º en sentido contrario a las manecillas del reloj (hacia la izquierda), como se muestra en la siguiente imagen. 
+En este apartado se describirá cómo se procede para formular y computar los dos enfoques para reproducir imágenes: el de TSP y el de los fotomosaicos, explicados brevemente en el capítulo \ref{chapter:tsp}. Para iniciar los ejercicios decidí usar una imagen de la red social Twitter, la cual se anexa a continuación. La librería de R encargada de procesar y graficar las imágenes de tipo png tiene como nombre \say{png}. La función $readPNG( \period )$ se encarga de leer el archivo-imagen objetivo y sintetizarlo en un objeto numérico estructurado en un arreglo $3$-dimensional con dimensiones para sus pixeles de renglón ($\mu$) $\times$ columna ($\nu$) $\times 3$. De los elementos extrapolados del primer componente de la dimensión tres, $readPNG( \period )[,,1]$, se extrae una matriz $\mu \times \nu$, la cual consta de valores constituyendo la escala de grises de la imagen en el intervalo continuo de $0$ a $1$. Para graficar dicha imagen en el cuadrante del plano cartesiano $x-y$ (delimitado al rango $[0,1]$ para ambas dimensiones) se usará la función $grid.raster( \period )$ perteneciente al paquete $grid$.
 
-\begin{figure} [h]
-  \centering
-   \includegraphics[width=0.4\linewidth]{orig.png}
-  \caption{Despliegue image(.), matriz original }
-  \label{partes }
-\end{figure}
-
-Para solventar este problema se usará una versión auxiliar de la matriz original, rotándola 90º en sentido de las manecillas del reloj. El resultado se despliega a continuación. 
 
 \begin{figure} [h]
   \centering
    \includegraphics[width=0.4\linewidth]{orig rot.png}
-  \caption{Despliegue image(.), matriz rotada 90 a la derecha  }
+  \caption{Despliegue con $grid.raster(.)$  }
   \label{partes }
 \end{figure}
 
 
-El siguiente paso consiste en usar las dimensiones de pixeles, $m$ y $n$, para delimitar el tamaño de la matriz tal que se permita generar una partición de la misma en submatrices que sea factible, es decir, que sean submatrices de dimensiones idénticas y que, posicionadas estratégicamente, generen la matriz grande (o matriz total). Para ello se requiere que la cantidad de renglones de la nueva matriz acotada sea $0$ módulo $m$ y, la cantidad de columnas, $0$ módulo $n$. Si bien puede haber más de una combinación renglón $\times$ columna consistente con las propiedades mencionadas, para nuestra regla de recortar la matriz mayor se escogerá una nueva dimensión $\mu' \times \nu'$ que corresponda al máximo valor factible que no exceda $\mu \times \nu$.  
-
-\begin{equation} \label{dimensiones} 
-DIM = \{ (\mu', \nu') = (max(a), max(b)) | 0=a mod(m), 0=b mod(n), a \in [0,\mu] \cap \mathbb{N},  b \in [0,\nu] \cap \mathbb{N} \}
-\end{equation}
+El siguiente paso consiste en usar las dimensiones de pixeles, $m$ y $n$, para delimitar el tamaño de la matriz tal que se permita generar una partición de la misma en submatrices que sea factible; es decir, que sean submatrices de dimensiones idénticas y que, posicionadas estratégicamente, generen la matriz grande (o matriz total). Para ello pasamos de $(\mu, \nu)$ a $(\mu', \nu')$\footnote{Véase más detalle sobre las propiedades de la regla de asignación para generar esta transformación en apéndice}.
 
 
-Es trivial notar que se requiere que $m \leq \mu$ y  $n \leq \nu$. El acotamiento arriba expresado se realiza de la manera más simétrica posible. Esto es, si $\mu' < \mu$, se recortarán $\epsilon= \floor{   \frac{1}{2}(\mu - \mu') }$ renglones por arriba y $\delta = (\mu - \mu ')- \epsilon$ renglones por abajo . Así, se tendrá $\epsilon - \delta \in \{0, 1 \}$ ($0$ si $\frac{1}{2}(\mu - \mu')$ es par, $1$ e.o.c), lo cual quiere decir que, en el peor caso, se recortará un pixel más por un lado que por otro. Análogamente, si $\nu' < \nu$, se recortarán $\rho= \floor{   \frac{1}{2}(\nu - \nu') }$ columnas por la izquierda y $\sigma = (\nu - \nu ')- \rho$ por la derecha (siendo también la diferencia de, a lo mucho, uno). El siguiente paso consiste en convertir la matriz de la escala $[0,1]$ a la escala $\{ 0, \dots, 255\}$. Luego, se procede a fraccionar la matriz en un conjunto de $m \; n$ submatrices mediante la función $matsplitter(.)$ de R, la cual recibe como entradas la matriz a fraccionar, la cantidad de renglones por submatriz, $k=\mu ' / m$ y la cantidad de columnas,  $h=\nu ' / n$. $matsplitter( \period )$ entregará una lista de $m \times n$ elementos. Los elementos $1$ a $n$ de la lista consistirán en las primeras $n$ submatrices superiores de la matriz, los elementos $n +1$ a $2n$ consistirán en las segundas $n$ submatrices superiores. Así sucesivamente, hasta llegar a las $n$ submatrices inferiores, ennumeradas $n \; m-n+1$ a $m \; n$. En el supuesto de que cada submatriz representara un único valor numérico (o arreglo $1 \times 1$) dentro de una matriz $m \times n$; entendemos que este tipo de ordenamiento es de clase \textit{rowwise} (o por renglón), ya que se va llenando renglón por renglón, empezando por los renglones de arriba y continuando hacia abajo. Cada renglón se llena de izquierda a derecha. El otro tipo común de ordenamiento es \textit{columnwise}, o por columna\footnotetext{Arreglo por columna, o \textit{columnwise} donde se llenan las columnas de izquierda a derecha, cada columna se llena de arriba a abajo}. Conociendo esto, podemos calcular la luminosidad promedio de cada elemento del output de $matsplitter( \period )$. Dicho conjunto de luminosidades puede sintetizarse en un vector de dimensión $m \; n$. 
+Posteriormente, se convierte la matriz de la escala $[0,1]$ a la escala $\{ 0, \dots, 255\}$. Luego, se fracciona la matriz en un conjunto de $m \; n$ submatrices mediante la función $matsplitter(.)$ de R, la cual recibe como entradas la matriz a fraccionar, la cantidad de renglones por submatriz, $k=\mu ' / m$ y la cantidad de columnas,  $h=\nu ' / n$. $matsplitter( \period )$ entregará una lista de $m \times n$ elementos. Los elementos $1$ a $n$ de la lista consistirán en las primeras $n$ submatrices superiores de la matriz, los elementos $n +1$ a $2n$ consistirán en las segundas $n$ submatrices superiores. Así sucesivamente, hasta llegar a las $n$ submatrices inferiores, ennumeradas $n \; m-n+1$ a $m \; n$. Entendemos que este tipo de ordenamiento es de clase \textit{rowwise} (o por renglón), ya que se va llenando renglón por renglón, empezando por los renglones de arriba y continuando hacia abajo. Cada renglón se llena de izquierda a derecha. El otro tipo común de ordenamiento es \textit{columnwise}, o por columna\footnote{Arreglo por columna, o \textit{columnwise} donde se llenan las columnas de izquierda a derecha, cada columna se llena de arriba a abajo}. Conociendo esto, podemos calcular la luminosidad promedio de cada elemento del output de $matsplitter( \period )$. Dicho conjunto de luminosidades puede sintetizarse en un vector de dimensión $m \; n$, bajo la ya mencionada lógica del ordenamiento \textit{rowwise}.
 
 
 \section{Fotomosaicos}\label{sec:photomImplem}
 
 \subsection{Fotomosaicos en blanco y negro}\label{sec:photomImplem_grey}
 
-Posteriormente a reproducir los pasos descritos en la sección \ref{sec:partic}, se procede a convertir la escala del conjunto $\{0, \dots , 255 \}$ a $[0,1]$ dividiendo entre $255$ (ver primer párrafo de la sección referida). Llámese $h$ al vector resultante de extraer estas escalas promedio de las submatrices ordenadas con base en el esquema \textit{rowwise}. Supóngase que las dimensiones de las imágenes que compondrán el fotomosaico son cuadradas, de valor $pi \times pi$. Entonces, generaremos tres arreglos importantes: uno de parámetros de costos, dos de escalas de grises. El primero será uno numérico  $3$-dimensional de tipo $cf \times m \times n$, llámese $Arr3$, con $Arr3[f,i,j]=c_{fij}$, donde el lado derecho es el mismo ponderador de costos de la expresión \eqref{unoM} . Uno de los arreglos con \textit{greyscales} será de dimensión $m \times n$, tendrá por nombre $mp$, por \say{matriz perfecta} el cual es un eufemismo por tratarse de la mejor representación factible de una imagen con las dimensiones que se le entregan; el otro, será un arreglo de $(m \; pi) \times (n \; pi)$ y será $MF$, por \say{matriz final}. Además, se contará con una dotación de $\sum_{f=1}^{cf } u_{f}$ imágenes de solo $cf$ tipos, cada uno denotado mediante $Mg_{f}$ por las iniciales de  \say{matriz de \textit{grayscales}} de la imagen tipo $f$. A continuación se describe el bucle a través de $m \; n$ iteraciones que es la base para llenar los arreglos mencionados. 
+Posterior a reproducir los pasos descritos en la sección \ref{sec:partic}, se procede a convertir la escala del conjunto $\{0, \dots , 255 \}$ a $[0,1]$ dividiendo entre $255$ (ver primer párrafo de la sección referida). Llámese $h$ al vector resultante de extraer estas escalas promedio de las submatrices ordenadas con base en el esquema \textit{rowwise}. Supóngase que las dimensiones de las imágenes que compondrán el fotomosaico son cuadradas, de valor $pi \times pi$. Entonces, generaremos tres arreglos importantes: uno de parámetros de costos, dos de escalas de grises. El primero será uno numérico  $3$-dimensional de tipo $cf \times m \times n$, llámese $Arr3$, con $Arr3[f,i,j]=c_{fij}$, donde el lado derecho es el mismo ponderador de costos de la expresión \eqref{unoM} . Uno de los arreglos con \textit{greyscales} será de dimensión $m \times n$, tendrá por nombre $mp$, por \say{matriz perfecta}; esto es un eufemismo por tratarse de la mejor representación factible de una imagen con las dimensiones que se ingresan como \textit{input}; el otro, será un arreglo de $(m \; pi) \times (n \; pi)$ y será $MF$, por \say{matriz final}. Además, se contará con una dotación de $\sum_{f=1}^{cf } u_{f}$ imágenes de solo $cf$ tipos, cada uno denotado mediante $Mg_{f}$ por las iniciales de  \say{matriz de \textit{grayscales}} de la imagen tipo $f$. A continuación se describe el bucle a través de $m \; n$ iteraciones que es la base para llenar los arreglos mencionados. 
 
 
 
 
 \begin{enumerate}
-\item Tomamos el número de iteración, $k$, y le asignamos su correspondiente coordenada matricial, $(i(k), j(k))$ deducida por el esquema \textit{rowwise} (previamente descrito, ver pseudo-algoritmo del primer paso del \textit{loop} en el capítulo \ref{sec:tspImplem})
+\item Tomamos el número de iteración, $k$, y le asignamos su correspondiente coordenada matricial, $(i(k), j(k))$ deducida por el esquema \textit{rowwise} (previamente descrito).
 
 \item Obtener la escala $[0,1]$ de luminosidad del elemento $(i, j)$, $h_{k}$; es decir, el valor promedio de la correspondiente submatriz. 
 
@@ -555,129 +545,23 @@ Posteriormente a reproducir los pasos descritos en la sección \ref{sec:partic},
 
 \end{enumerate}
 
-Posteriormente, hay que construir un vector que cuantifique las dotaciones disponibles de las $cf$  figuras. Para ello, nos valemos de dos parámetros: uno, $hd$, de 'holgura', que nos dirá qué tantas más de las fichas estrictamente necesarias tendremos. Si $hd=0.1$, tendremos aproximadamente $10\%$ más de las fichas exactamente suficientes.
+La mayoría de módulos en el \textit{open source} perciben el vector de costos de un programa lineal como de una única dimensión; el planteamiento desglosado en el capítulo \ref{chapter:photom} plantea tres dimensiones. Por lo tanto hay que construir un arreglo que desmenuce toda la información en una solo pasando de $Arr3$ a $df3$, la construcción de este arreglo se ve explicada en el apéndice. Con ayuda de esta $df3$ podemos definir el modelo en un objeto de clase \say{lp}, auxiliándonos en el módulo $lpSolve$ del lenguaje $R$. Dicho objeto se basa en (a) un vector de pesos, $ce$, (b) una instrucción de optimización, $io$: \say {minimiza} o \say{maximiza}, (c) una matriz $RM$ de restricciones con dimensiones $re \times (m \;n \;f)$ que representa a las $re$ restricciones existentes sobre las variables (d) un vector de lados derechos, $rh \in \mathbb{R}^{re}$ con el valor contra el cual será contrastada la combinación lineal de $x$, $RM[row,] \cdot x$, (e) un vector de carácteres, $sign$, con el cual la restricción t-ésima será   $RM[row,] \cdot  x \; \say{sign[t]} \; rh_{t}$, con $sign \in \{\say{<} ,\say{\leq}, \say{>},\say{\geq}, \say{=}  \}$.
+
+Posteriormente, hay que construir un vector que cuantifique las dotaciones disponibles de las $cf$  figuras. Para ello, nos valemos de dos parámetros: uno, $hd$, de \say{holgura}, que nos dirá qué tantas más de las fichas estrictamente necesarias tendremos. Si $hd=0.1$, tendremos aproximadamente $10\%$ más de las fichas exactamente suficientes.
 
 Si deséaramos que las disponibilidades de cada ficha fueran uniformes, tendríamos $\ceil{\frac{ m\;n(1-hd)}{cf }}$ imágenes de cada tipo. Sin embargo, para darle mayor variabilidad a estas disponibilidades introducimos $vd$, un parámetro de variabilidad que nos permitirá tener una dotación de la ficha $f$ extraída aleatoriamente de entre todos los enteros en $ u_{f} \in \{  \ceil{\frac{ m\;n(1-hd)}{cf} (1-vd) } , \dots ,   \ceil{\frac{ m\;n(1+hd)}{cf} (1+vd) } \}$. A mayor $vd \in [0,1]$, mayor será la varianza del vector $u$ de disponibilidades. 
 
-Con los pasos 1 a 4 del \textit{loop} y la construcción de $u$ que le es posteriormente descrita se habrán generado los parámetros necesarios para definir el modelo. El siguiente paso radica en reestructurar la información plasmada en el arreglo $Arr3$ en un \textit{data frame}, $df3$ que consiste en los campos: $t, i, j, f, ce$ y cuya forma genérica se muestra a continuación. 
+Con los pasos 1 a 4 del \textit{loop} y la construcción de $u$ que le es posteriormente descrita se habrán generado los parámetros necesarios para definir el modelo. El siguiente paso radica en reestructurar la información plasmada en el arreglo $Arr3$ (de tres dimensiones) en un \textit{data frame}, $df3$ (de dos dimensiones) que consiste en los campos: $t, i, j, f, ce$ \footnote{La forma genérica de dicho arreglo $2$-dimensional se explica y se esboza con mayor detalle en el apéndice} donde cada $t$ se asocia a exactamente una combinación $(i, j, k)$ y a cada terna $(i, j, k)$ le corresponde una sola $t$ (puede pensarse como un mapeo biyectivo). Esto liberará una tarea, permitiéndose que la librería elegida para computar el problema de programación lineal admita los argumentos aportados. 
 
 
-
-\begingroup
-%\setlength{\tabcolsep}{0.75pt} % Default value: 6pt
-\renewcommand{\arraystretch}{0.6} % Default value: 1
-
-\begin{center}
-%\setlength\tabcolsep{1.5pt}
-%\renewcommand{\arraystretch}{1.2}
-
-\begin{tabular}{c*{6}{c}r}
-%\renewcommand{\arraystretch}{1}
-t & f & i & j & costo ($ce$)  \\
-\hline
-1 & 1 & 1 & 1 & A[1,1,1]   \\
-2 & 1 & 1 & 2 & A[1,1,2]   \\
-\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
-n & 1 & 1 & n & A[1,1,n]   \\
-n+1 & 1 & 2 & 1 & A[1,2,1]   \\
-n+2 & 1 & 2 & 2 & A[1,2,2]\\
-%. & . & . & . & .   \\
-\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
-2n & 1 & 2 & n & A[1,2,n]   \\
-%. & . & . & . & .   \\
-%. & . & . & . & .   \\
-\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
-(m-1)n+1 & 1 & m & 1 & A[1,m,1]   \\
-(m-1)n+2  & 1 & m & 2 & A[1,m,2]\\
-%. & . & . & . & .   \\
-\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
-mn & 1 & m & n & A[1,m,n]   \\
-
-
-mn+1 & 2 & 1 & 1 & A[2,1,1]   \\
-mn+2 & 2 & 1 & 2 & A[2,1,2]   \\
-%. & . & . & . & .   \\
-\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
-mn+n & 2 & 1 & n & A[2,1,n]   \\
-mn+n+1 & 2 & 2 & 1 & A[2,2,1]   \\
-mn+n+2 & 2 & 2 & 2 & A[2,2,2]   \\
-%. & . & . & . & .   \\
-\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
-mn+2n & 2 & 2 & n & A[2,2,n]\\
-%. & . & . & . & .   \\
-%. & . & . & . & .   \\
-\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
-mn+(m-1)n+1 & 2 & m & 1 & A[2,m,1]   \\
-mn+(m-1)n+2  & 2 & m & 2 & A[2,m,2]   \\
-%. & . & . & . & .   \\
-\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
-2mn & 2 & m & n & A[2,m,n]   \\
-
-%. & . & . & . & .   \\
-%. & . & . & . & .   \\
-%. & . & . & . & .   \\
-\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
-
-
-(cf-1)mn+1 & cf & 1 & 1 & A[cf,1,1]   \\
-(cf-1)mn+2 & cf & 1 & 2 & A[cf,1,2]  \\
-%. & . & . & . & .   \\
-\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
-
-(cf-1)mn+n & cf & 1 & n & A[cf,1,n]   \\
-(cf-1)mn+n+1 & cf & 2 & 1 & A[cf,2,1]   \\
-(cf-1)mn+n+2 & cf & 2 & 2 & A[cf,2,2]   \\
-%. & . & . & . & .   \\
-\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
-
-(cf-1)mn+2n & cf & 2 & n & A[cf,2,n]   \\
-%. & . & . & . & .   \\
-%. & . & . & . & .   \\
-\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
-
-(cf-1)mn+(m-1)n+1 & cf & m & 1 & A[cf,m,1]   \\
-(cf-1)mn+(m-1)n+2  & cf & m & 2 & A[cf,m,2]   \\
-%. & . & . & . & .   \\
-\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
-
-m\;n\;cf & cf & m & n &  A[cf,m,n]
-\end{tabular}
-\end{center}
-\endgroup
-
-
-Como se muestra, el ordenamiento de $df3$ sigue la jerarquía $f,i,j$. Con ayuda de esta tabla, podemos definir el modelo en un objeto de clase \say{lp}, auxiliándonos en el módulo $lpSolve$ del lenguaje $R$. Dicho objeto se basa en (a) un vector de pesos, $ce$, (b) una instrucción de optimización, $io$: \say {minimiza} o \say{maximiza}, (c) una matriz $RM$ de restricciones con dimensiones $re \times (m \;n \;f)$ que representa a las $re$ restricciones existentes sobre las variables (d) un vector de lados derechos, $rh \in \mathbb{R}^{re}$ con el valor contra el cual será contrastada la combinación lineal de $x$, $RM[row,] \cdot x$, (e) un vector de carácteres, $sign$, con el cual la restricción t-ésima será   $RM[row,] \cdot  x \; \say{sign[t]} \; rh_{t}$, con $sign \in \{\say{<} ,\say{\leq}, \say{>},\say{\geq}, \say{=}  \}$.
-
-La estructura descrita redefine el problema, para este caso, pasando de uno sobre variables de decisión indexadas sobre tres componentes $x_{fij}$ a su análogo $1$-dimensional, $x_{t}$. El ejercicio requiere de una reasignación $(f, i, j) \mapsto t(f, i, j)$ definida por $t=(f-1) \;(m \;n) + m(i-1)+j$ que representa el orden de los renglones que sigue $df3$. Ahora, defínanse en $R$ los parámetros requeridos en el párrafo anterior
-
-
+Si bien el problema no fue restringido a enterez, el resultado es entero y consta únicamente de $0$'s y $1$'s. Si extraemos únicamente los valores $T=\{t | x_{t}=1  \}$ se valida que las $m\;n$ combinaciones $(i,j)$ son cubiertas exactamente una única vez cada una y que cada figura en $F$ se ocupa en una cantidad de ocasiones que no excede su correspondiente límite definido en $u$. Habiendo supuesto que la dimensión de las $cf$ figuras es de $pi \times pi$ y sea $MG_{f} \in \mathbb{R}^{pi \times pi}$ la matriz de \textit{greyscales} de la figura $f$, entonces procedemos a llenar el fotomosaico mediante el siguiente \textit{loop}: a través de $m\;n$ iteraciones hacer lo siguiente únicamente a través de las $\kappa \in T$. 
 
 \begin{enumerate}
-%[label=(\alph*)]
+\item Extraemos el $\kappa$-ésimo vector-renglón.$S_{\kappa}=dfSel[\kappa, ]$. Esto implica una $(i, j, f)$ correspondiente. 
 
-\item $ce=df3[\say{costo}]$
-\item $io=\say{min}$
-\item Restricciones $RM \in \mathbb{R}^{re \times m \; n \; cf}$ con $re=cf+m\;n$, los primeros $cf$ renglones representando a las restricciones de disponibilidad de las fichas que hay, y las restricciones restantes representando el correcto llenado de cada celda genérica $(i, j)$. La matriz consta únicamente de valores $0$ y $1$. Los $1$'s se asignan facilmente conociendo, con la ayuda de la asginación $t( \period )$ qué posiciones corresponden a cada $f$ para el primer conjunto de restricciones; similarmente, para el segundo conjunto de restricciones basta reconocer qué posiciones le corresponden a cada celda $(i,j)$. 
+\item Ahora hay que definir la posición de la figura, $f$ en la matriz final. Definimos el pixel superior izquierdo de la figura $f$ sobre la misma, $MF[rI, cI]$. Sígase que $rI=(  i-1 )pi+1$ y  $cI=( j-1 )pi+1$
 
-\item $rh_{f}=u_{f} \; \forall f \in \{1, \dots , cf\}$
-
-$rh_{t}=1 \;  \forall f \in \{cf+1, \dots , cf+m\;n\}$
-
-\item $sign_{f}=\say{\leq} \; \forall f \in \{1, \dots , cf\}$
-
-$sign_{t}=\say{=} \;  \forall f \in \{cf+1, \dots , cf+m\;n\}$
-
-\end{enumerate}
-
-
-Si bien el problema no fue restringido a enterez, el resultado es entero y consta únicamente de $0$'s y $1$'s. Si extraemos únicamente los valores $T=\{t | x_{t}=1  \}$ en una tabla $dfSel$ con campos $t, f, i, j$ y obtenemos la imagen de función inversa de $t(  \period )$ sobre $T$, se valida que las $m\;n$ combinaciones $(i,j)$ son cubiertas exactamente una única vez cada una y que cada figura en $F$ se ocupa en una cantidad de ocasiones que no excede su correspondiente límite definido en $u$. Habiendo supuesto que la dimensión de las $cf$ figuras es de $pi \times pi$ y sea $MG_{f} \in \mathbb{R}^{pi \times pi}$ la matriz de \textit{greyscales} de la figura $f$, entonces procedemos a llenar el fotomosaico mediante el siguiente \textit{loop}: a través de $m\;n$ iteraciones hacer lo siguiente. 
-
-\begin{enumerate}
-\item Extraemos el $\kappa$-ésimo vector-renglón.$S_{\kappa}=dfSel[\kappa, ]$. Así, obtenemos $S_{\kappa}[\say{t}]=t$, $S_{\kappa}[\say{i}]=i(t)$, $S_{\kappa}[\say{j}]=j(t)$, $S_{\kappa}[\say{f}]=f(t)$, con el renglón, la columna y la figura inferidas de la función inversa de $t(.)$
-
-\item Definimos el extremo superior izquierdo de la imagen $f(t)$ sobre la matriz final, $MF[rI, cI]$. Sígase que $rI(t)=(  i(t)-1 )pi+1$ y  $cI(t)=(  j(t)-1 )pi+1$
-
-\item Luego, se asigna el valor de $MF_{f(t)}$ a la submatriz con el extremo superior izquierdo en $(rI, cI)$; esto es, $MF[\{rI, \dots ,  rI+pi-1 \}, \{cI, \dots ,  cI+pi-1 \}]=MG_{f}$
+\item Sigue definir al resto de la figura que llenará la posición $(i, j)$. Se asigna el valor de $MF_{f}$ a la submatriz de pixeles con el extremo superior izquierdo en $(rI, cI)$; esto es, $MF[\{rI, \dots ,  rI+pi-1 \}, \{cI, \dots ,  cI+pi-1 \}]=MG_{f}$
 
 \end{enumerate}
 
@@ -697,7 +581,7 @@ El siguiente paso es ejecutar los pasos descritos hasta este punto de la secció
 
 
 
-Habiendo seleccionado las imagenes, se procede a reproducir el ejercicio de los fotomosaicos. Al hacerlo con $dp=0 \period 3$ y $vp=0 \period 3$, podemos desplegar la imagen resultante con dimensiones $15 \times 15$ y $20 \times 20$
+Habiendo seleccionado las imagenes, se procede a reproducir el ejercicio de los fotomosaicos. Al hacerlo con $dp=0 \period 3$ y $vp=0 \period 3$, podemos desplegar la imagen resultante con dimensiones $15 \times 15$ y $20 \times 20$ en la figura \ref{fig:dos figurasIn} usando la función $grid.raster( \period )$.
 
  
   \begin{figure}[h]
@@ -725,19 +609,35 @@ Habiendo seleccionado las imagenes, se procede a reproducir el ejercicio de los 
 
 
 
-Para instancias con los parámetros indicados, el problema de $20 \times 20$ fue el más complejo de computar para el desplegado de la imagen mediante $image( \period ) $. En dimensiones más grandes, la función arrojaba errores por sobrepasarse el máximo peso de input (matriz) computable. Sin embargo, una función similar, que acepta parámetros de la misma clase, $display(\period)$ de la librería $EBImage$, logró desplegar el resultado del ejercicio de $25 \times 25$, tal como se muestra a continuación. 
+Para instancias con dimnensiones mayores también hubo despliegues, los cuales se encuentran en \ref{fig:dos 3560}.
 
-\begin{figure}[h]
-  \centering
-   \includegraphics[width=0.4\linewidth]{twittMos25.png}
-  \caption{Soluciones gráficas al problema de los fotomosaicos con $dp=0 \period 3$ y $vp=0 \period 3$; 
-        dimensiones $25 \times 25$ }
-  \label{partes }
+
+
+ \begin{figure}[h]
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{twittMos35.png}
+         \caption{ Dimensiones $35 \times 35$}
+         \label{vfig;partes35}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{twittMos60.png}
+         \caption{ Dimensiones $60 \times 60$}
+         \label{vfig;partes60}
+     \end{subfigure}
+     \hfill
+        \caption{Soluciones gráficas al problema de los fotomosaicos con $dp=0 \period 3$ y $vp=0 \period 3$; 
+        dimensiones $35 \times 35$ y $60 \times 60$
+        }
+        \label{fig:dos 3560}
 \end{figure}
 
 
 
-Claramente el resultado ha mostrado ser, visualmente, eficiente. La matriz $mp$ sirve como referencia para ver cómo se vería la imagen si se deseara desplegar la mejor representación posible de la imagen original contando exactamente con dimensiones de pixel $m \times n$. El resultado se muestra a continuación. 
+Claramente el resultado ha mostrado ser, visualmente, eficiente. La matriz $mp$ sirve como referencia para ver cómo se vería la imagen si se deseara desplegar la mejor representación posible de la imagen original contando exactamente con dimensiones de pixel $m \times n$. El resultado se muestra en figura \ref{fig:dos figurasPerf}. 
 
 
 
@@ -765,9 +665,9 @@ Claramente el resultado ha mostrado ser, visualmente, eficiente. La matriz $mp$ 
 
 
 
-Procedemos a evaluar la complejidad computacional del algoritmo de resolución del programa lineal. Para ello, registramos el tiempo que lleva resolver una determinada imagen conforme se agregan más dimensiones o rectángulos y, por consecuente, más ciudades. 
+Procedemos a evaluar la complejidad computacional del algoritmo de resolución del programa lineal. Para ello, registramos el tiempo que lleva resolver para la función $lp(.)$ una determinada imagen conforme se agregan más dimensiones o rectángulos y, por consecuente, más ciudades. Cabe recalcar que los tiempos registrados contabilizan el esfuerzo del algoritmo de $lp(.)$ y no necesariamnte los procesamientos (que sí son relativamente tardados) para construir las matrices y vectores que definen el problema, así como para desplegar el resultado final.
 
-Las siguientes gráficas y tablas reflejan la relación que tiene la dimensión (suponiendo que hay tantos rectángulos a lo largo como a lo ancho) con el tiempo de cómputo requerido para generar la imagen de Twitter; también, la que hay entre el total de rectángulos (la dimensión al cuadrado) y el tiempo.
+Las gráficas \ref{fig:complejidadfm} y tablas reflejan la relación que tiene la dimensión (suponiendo que hay tantos rectángulos a lo largo como a lo ancho) con el tiempo de cómputo requerido para generar la imagen de Twitter; también, la que hay entre el total de rectángulos (la dimensión al cuadrado) y el tiempo. Vale la pena mencionar que la función $lpSolve$ abortó al llegar a la ejecución de dimensión $60$; sin embargo las gráficas desplegadas y sus estimaciones lineales, cuadráticas y cúbicas dan a entender que la ejecución es cuando menos de orden $3$ en el número de submatrices ingresadas como parámetro objetivo. Esto se explica por las gráficas de \textit{fit} (en particular \ref{fig:complr}), donde es eviente que el comportamiento dista de ser lineal y tiene un ajuste cuadrado extraño (el que tenga su vértice en valores de $rec$ positivos es absolutamente contraintuitivo). No es sino hasta el estimado cúbico que se distingue una relación asociable. 
 
  
 \begin{figure}[h]
@@ -776,26 +676,37 @@ Las siguientes gráficas y tablas reflejan la relación que tiene la dimensión 
          \centering
          \includegraphics[width=\textwidth]{dim_tiempo fm.png}
          \caption{ Dimensión vs tiempo}
+         \label{fig:compld}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{0.4\textwidth}
          \centering
-         \includegraphics[width=\textwidth]{rec_ tiempo fm.png}
+         \includegraphics[width=\textwidth]{rec_tiempo fm.png}
          \caption{ Rectángulos vs tiempo}
+         \label{fig:complr}
      \end{subfigure}
      \hfill
+
+     \caption{Graficaciones tiempos de ejecución}
+     \label{fig:complejidadfm}
+     
 \end{figure}
 
 \begin{center}
-\begin{tabular}{c*{6}{c}r}
+%\begin{tabular}{c*{6}{c}r}
+\begin{tabular}{*{5}{p{2.5cm}}}
 Renglones (= Columnas) & Total mosaicos &   Tiempo de ejecución (s) & Variables & restricciones  \\
 \hline
-15 &  225 & 0.25 & 4500 & 245   \\
-20 &  400 & 0.50 & 8000 & 420\\
-25 &  625 & 1.22 & 12500 & 645 \\
-30 &  900 & 2.93 & 18000 & 920  \\
-35 &  1225 & 6.65 & 24500 & 1245\\ 
-40 &  1600 & 14.65 & 32000 & 1620 \\
+15 &  225 & 0.45 & 4,500 & 245   \\
+20 &  400 & 0.52 & 8,000 & 420\\
+25 &  625 & 1.12 & 12,500 & 645 \\
+30 &  900 & 2.36 & 18,000 & 920  \\
+35 &  1,225 & 4.42 & 24,500 & 1,245\\ 
+40 &  1,600 & 12.12 & 32,000 & 1,620 \\
+45 &  2,025 & 21.28 & 40,500 & 2,045  \\
+50 &  2,500 & 28.29 & 50,000 & 2,520\\ 
+55 &  3,025 & 40.49 & 60,500 & 3,045 \\
+60 &  3,600 & 64.45 & 72,000 & 3,620 \\
 \end{tabular}
 \end{center}
 
@@ -803,7 +714,7 @@ Renglones (= Columnas) & Total mosaicos &   Tiempo de ejecución (s) & Variables
 
  
 
-Una cuestión interesante de abordar es el atributo de escasez de fichas en el problema, el cual se concentra en el vector de parámetros, $u$. Inspeccionando visualmente la imagen original, o bien, incluso a la versión de $mp$ de la misma, se puede observar que todos los contornos de la imagen (alrededor del pajaro) tienen la máxima luminosidad disponible. Esto incluye, naturalmente a los extremos inferior derecho y superior derecho. Sin embargo, al ver el fotomosaico en figura \ref{fig:dos figurasIn}, se observa claramente que las celdas inferiores derechas tienen una luminosidad muy elevada (cercana a $1$), en tanto que la luminosidad de las superiores derechas es alta, pero claramente menor. Esto ocurre porque, si bien pudiera ser deseable que todos los contornos tuvieran el máximo de luminosidad, existe una disponibilidad limitada de la ficha más blanca, así como de todas en general. Por lo tanto, se recurren a otras fichas, lo menos oscuras posibles que minimicen la suma de diferencias cuadráticas de luminosidades para cubrir el contorno del ave sin exceder los recursos existentes. Haciendo uso de los parámetros introducidos y explicados en el presente escrito, podríamos hacer el ejericio sin limitar estos recursos. Basta indicar que $hd=m \; n$, queriendo decir que, si tuviéramos dimensiones $m\times n= 15\times 15$, entonces las fichas disponibles son $15^{2}=225$ y, si asignamos $hd=225$, entonces dispondremos de $22500\%$ más de las fichas estrictamente necesarias. Además, si $vd=0$ las disponibilidades se distribuirán homogéneamente, con lo cual garantizamos que cada tipo de ficha tiene el potencial de llenar todo el fotomosaico con fichas de un solo tipo. Así pues, a continuación se muestra el resultado de hacer $hd=m\;n$ y $vd=0$
+Una cuestión interesante de abordar es el atributo de escasez de fichas en el problema, el cual se concentra en el vector de parámetros, $u$. Inspeccionando visualmente la imagen original, o bien, incluso a la versión de $mp$ de la misma, se puede observar que todos los contornos de la imagen (alrededor del pajaro) tienen la máxima luminosidad disponible. Esto incluye, naturalmente a los extremos inferior derecho y superior derecho. Sin embargo, al ver el fotomosaico en figura \ref{fig:dos figurasIn}, se observa claramente que las celdas inferiores derechas tienen una luminosidad muy elevada (cercana a $1$), en tanto que la luminosidad de las superiores derechas es alta, pero claramente menor. Esto ocurre porque, si bien pudiera ser deseable que todos los contornos tuvieran el máximo de luminosidad, existe una disponibilidad limitada de la ficha más blanca, así como de todas en general. Por lo tanto, se recurre a otras fichas, lo menos oscuras posibles que minimicen la suma de diferencias cuadráticas de luminosidades para cubrir el contorno del ave sin exceder los recursos existentes. Haciendo uso de los parámetros introducidos y explicados en el presente escrito, podríamos hacer el ejercicio sin limitar estos recursos. Basta indicar que $hd=m \; n$, queriendo decir que, si tuviéramos dimensiones $m\times n= 15\times 15$, entonces las fichas disponibles son $15^{2}=225$ y, si asignamos $hd=225$, entonces dispondremos de $22500\%$ más de las fichas estrictamente necesarias. Además, si $vd=0$ las disponibilidades se distribuirán homogéneamente, con lo cual garantizamos que cada tipo de ficha tiene el potencial de llenar todo el fotomosaico con fichas de un solo tipo. Cabe mencionar que esta reparametrización tiene una alternativa: eliminar las restricciones del tipo definido en las expresiones \ref{unoM}. Hacer esto implicaría reducir la dimensionalidad de la matriz de restricciones lo cual inherentemente conlleva ahorros en el cálculo de soluciones; sin embargo no se hará así, porque eso cambiaría drásticamente la estructura del código de la solución computada y podría perderse la sensibilidad del lector sobre la importancia de la holgura de disponibilidades que este escrito busca enfatizar. En \ref{fig:dos figuras} se muestra el resultado de hacer $hd=m\;n$ y $vd=0$.
 
 
   \begin{figure}[h]
@@ -828,14 +739,13 @@ Una cuestión interesante de abordar es el atributo de escasez de fichas en el p
         \label{fig:dos figuras}
 \end{figure}
 
-Claramente, estas imágenes tienen contornos más blancos y los fotomosaicos asemejan más a los resultados de usar los valores de matriz perfecta para \textit{greyscales}, \ref{fig:dos figurasPerf}. Sin embargo, la observación de que no todos los $20$ tipos de fichas disponibles se están empleando, lo cual es indicador de que la imagen carece de manera importante de variedad en escalas de intensidad lumínica, nos podría hacer perder interés en esta instancia específica del problema.
+Claramente, estas imágenes tienen contornos más blancos y los fotomosaicos se asemejan a los resultados de usar los valores de matriz perfecta para \textit{greyscales}, \ref{fig:dos figurasPerf}, puesto que el costo total de diferencias de luminosidades promedio (valor de la función objetivo) se reduce al las restricciones. Sin embargo, la observación de que no todos los $20$ tipos de fichas disponibles se están empleando, lo cual es indicador de que la imagen carece de manera importante de variedad en escalas de intensidad lumínica, nos podría hacer perder interés en esta instancia específica del problema.
 
 
 
 \subsection{Fotomosaicos a color}
 
-
-En el capítulo de planteamiento del problema de los fotomosaicos se explicaba que para la aplicación a color el concepto en términos de programación lineal es idéntico y los únicos retos puntuales son: la elección de variedad de fichas a elegir, ya que representan una dimensión superior al del escala de grises en magnitud cúbica; el particionamiento de las $mn$ submatrices en tres dimensiones (es decir, lo que hace la previamente referida función $matsplitter(.)$ de $R$) y el posicionamiento del resultado final en un arreglo de tres dimensiones. Sobre todo esta primera diferencia hace que no sea tan trivial el problema de reproducir el ejercicio de los fotomosaicos con cualquier imagen. Se trabaja entonces partiendo de una imagen relativamente limitada en cuanto a colores, digase la bandera de México, y a raíz de eso, selecciónense los colores a ocupar. La propuesta iniciada de la foto enfocada de una flor con fondo mesurado en la figura \ref{fig:cuatro figuras fl_bl}  se extiende a otros colores perceptibles en la bandera nacional: rojo, verde, café; complementariamente añádese un rosa y un anaranjado para verificar que el algoritmo acierte al reservar su uso, ya que a simple vista no figuran como colores en la el símbolo patrio. A continucación la foto a reproducir.
+En el capítulo de planteamiento del problema de los fotomosaicos se explicaba que para la aplicación a color el concepto en términos de programación lineal es idéntico y los únicos retos puntuales son: la elección de variedad de fichas a elegir, ya que éstas representan una dimensión superior al del escala de grises en proporciones cúbicas; el particionamiento de las $mn$ submatrices en tres dimensiones (es decir, lo que hace la previamente referida función $matsplitter(.)$ de $R$) y el posicionamiento del resultado final en un arreglo de tres dimensiones. Sobre todo esta primera diferencia hace que no sea tan trivial el problema de reproducir el ejercicio de los fotomosaicos con cualquier imagen. Se trabaja entonces partiendo de una imagen relativamente limitada en cuanto a colores, digase la bandera de México, y a raíz de eso, selecciónense los colores a ocupar. La propuesta iniciada de la foto enfocada de una flor con fondo mesurado en la figura \ref{fig:cuatro figuras fl_bl}  se extiende a otros colores perceptibles en la bandera nacional: rojo, verde, café; complementariamente añádese un rosa y un anaranjado para verificar que el algoritmo acierte al reservar su uso, ya que a simple vista no parecieran figurar como colores en el símbolo patrio. A continuación, en \ref{fig:mex_flag}, la foto a reproducir.
 
 
 
@@ -843,10 +753,10 @@ En el capítulo de planteamiento del problema de los fotomosaicos se explicaba q
   \centering
    \includegraphics[width=0.7\linewidth]{mex_flaga.png}
   \caption{ Imagen objetivo: bandera de la República Mexicana  }
-  \label{catal}
+  \label{fig:mex_flag}
 \end{figure}
 
-A continuación se desglosan dos conjuntos de imágenes de flores y sus respectivos colores dominantes generados de reproducir el algoritmo $kmeans$ con $k=2$
+En \ref{fig:flores fichas} y \ref{fig:colores fichas} respectivamente, se desglosan dos conjuntos de imágenes de flores y sus respectivos colores dominantes generados de reproducir el algoritmo $kmeans$ con $k=2$
 
 
 
@@ -932,7 +842,7 @@ A continuación se desglosan dos conjuntos de imágenes de flores y sus respecti
 
 
 
-Habiendo seleccionado la imagen a computar y las fichas, se procede a generar el algoritmo de fotomosaico. Vale la pena sugerir empezar con dimensiones pequeñas, diganse $m$ y $n$ con $n>m$ ya que la bandera tiene una forma horizontal. Así pues, sea $m=15$ y $n=20$ y posteriormente $m=20$ y $n=30$ se generan los resultados siguiente. 
+Habiendo seleccionado la imagen a computar y las fichas, se procede a generar el algoritmo de fotomosaico. Vale la pena sugerir empezar con dimensiones pequeñas, diganse $m$ y $n$ con $n>m$ ya que la bandera tiene una forma horizontal. Así pues, sea $m=15$ y $n=20$ y posteriormente $m=20$ y $n=30$ se generan los resultados de \ref{fig:res colflor}. 
 
 
 
@@ -944,21 +854,21 @@ Habiendo seleccionado la imagen a computar y las fichas, se procede a generar el
          \centering
          \includegraphics[width=\textwidth]{MexMosCol20.png}
          \caption{ Dimensiones $15 \times 20$ }
-         \label{fig:fig_vertot}
+         \label{fig:mx_20_15}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{0.4\textwidth}
          \centering
          \includegraphics[width=\textwidth]{MexMosCol30.png}
          \caption{  Dimensiones $20 \times 30$ }
-         \label{fig:fig_rotot}
+         \label{fig:mx_30_20}
      \end{subfigure}
     \caption{Resultado de fotomosaicos a color: bandera de la república mexicana a base de flores}
-     \label{fig:cuatro figuras fl_bl}
+     \label{fig:res colflor}
 \end{figure}
 
 
-La imagen se ha computado con éxito. Como se preveía, las asignaciones están concentradas principalmente en los tres colores especificados que integran la bandera (verde, blanco, rojo y café); al computar el caso de  $20 \times 30$ se observa que las flores anaranjas están desplegadas en $3$ ocasiones por el motivo de los contornos de la imagen cuyas submatrices tienen centroides en el hiperplano $RGB$ ubicado entre el verde de la encina, el laurel y el nopal y el café del águila. El rosa se aleja de las posibilidades de ser seleccionado en la medida de que es un color distante de los que componen la bandera.
+La imagen se ha computado con éxito. Como se preveía, las asignaciones están concentradas principalmente en los tres colores especificados que integran la bandera (verde, blanco, rojo y café); al computar el caso de  $20 \times 30$ se observa que las flores naranjas están desplegadas en $3$ ocasiones por el motivo de los contornos de la imagen cuyas submatrices tienen centroides en el hiperplano $RGB$ ubicado entre el verde de la encina, el laurel y el nopal y el café del águila. El rosa se aleja de las posibilidades de ser seleccionado en la medida de que es un color distante de los que componen la bandera.
 
 
 
@@ -967,7 +877,7 @@ La imagen se ha computado con éxito. Como se preveía, las asignaciones están 
 \subsection{Arte con el agente viajero, caso Twitter}
 
 
-Tras haber seguido los pasos de la sección \ref{sec:partic} lo siguiente consiste en convertir la escala del conjunto $\{0, \dots, 255\}$ a la escala $\{0, \dots , \gamma \}$, empleando la ecuación, ec. \eqref{oscG} desglosada en la sección  \ref{sec:tspDescrip} de la presente tesina. Así pues, obtenemos un vector de dimensión $m \; n$, llámese $g$. Para el primer ejercicio, asígnese $\gamma=7$. Bajo esta $\gamma$, las escalas primera a treintaiseisava de luminosidad coinciden con la escala $7$ en oscuridad (o siete \say{ciudades}). Las siguientes luminosidades (por orden) corresponden a seis ciudades; sucesivamente, hasta llegar a la escala 255, que corresponde a cero ciudades. Es obvio que situar más puntos, o ubicar más aristas que conecten éstos en un rectángulo generará una mayor oscuridad en el mismo, de ahí que se considere a $\gamma$ como una escala de oscuridad. Lo siguiente consta en ubicar las ciudades en el plano $x-y$, haciendo un loop a través de las $m \; n$ matrices. 
+Tras haber seguido los pasos de la sección \ref{sec:partic} lo siguiente consiste en convertir la escala del conjunto $\{0, \dots, 255\}$ a la escala $\{0, \dots , \gamma \}$, empleando la ecuación \eqref{oscG} desglosada en la sección  \ref{sec:tspDescrip} de la presente tesina. Así pues, obtenemos un vector de dimensión $m \; n$, llámese $g$. Para el primer ejercicio, asígnese $\gamma=7$. Bajo esta $\gamma$, las escalas primera a treintaiseisava de luminosidad coinciden con la escala $7$ en oscuridad (o siete \say{ciudades}). Las siguientes luminosidades (por orden) corresponden a seis ciudades; sucesivamente, hasta llegar a la escala 255, que corresponde a cero ciudades. Es obvio que situar más puntos, o ubicar más aristas que conecten éstos en un rectángulo generará una mayor oscuridad en el mismo, de ahí que se considere a $\gamma$ como una escala de oscuridad. Lo siguiente consta en ubicar las ciudades en el plano $x-y$, haciendo un loop a través de las $m \; n$ matrices. 
 
 
 \begin{enumerate}
@@ -989,7 +899,7 @@ $
 
 \end{enumerate}
 
- Al iterar este proceso las $m \; n$ veces, se obtienen las $\sum_{k=1}^{m \; n } g_{k}=\tau$ \footnotetext{esta es una expresión equivalente a la ecuación ec.\eqref{totalCiudades}  , pero en la versión que mapea $(i,j) \rightarrow k(i,j)$ }  ciudades objetivo y podemos resolver el TSP sobre éstas. Los resultados de escribir todas las ciudades como puntos bajo los ejercicios con $15 \times 15$ rectángulos y ($608$ ciudades) y con $50 \times 50$ ($5807$ ciudades) se desglosan a continuación. 
+ Al iterar este proceso las $m \; n$ veces, se obtienen las $\sum_{k=1}^{m \; n } g_{k}=\tau$ \footnote{esta es una expresión equivalente a la ecuación ec.\eqref{totalCiudades}  , pero en la versión que mapea $(i,j) \rightarrow k(i,j)$ }  ciudades objetivo y podemos resolver el TSP sobre éstas. Los resultados de escribir todas las ciudades como puntos bajo los ejercicios con $15 \times 15$ rectángulos y ($608$ ciudades) y con $50 \times 50$ ($5807$ ciudades) se desglosan en la imágen que se nombra \say{puntillismo}, \ref{fig:tw puntillismo}, por su similitud con la técnica artística que despuntó de manera importante en Francia a inicios del siglo XX y consiste en generar una obra con puntos diminutos. 
 
 
 \begin{figure}[h]
@@ -1009,13 +919,13 @@ $
      \end{subfigure}
      \hfill
         \caption{Gráfica de los puntos sobre el cuadrante $x-y$}
-        \label{fig:dos figuras}
+        \label{fig:tw puntillismo}
 \end{figure}
  
  
 
  
- Existe un tipo de archivo cuya extensión es \say{.tsp}. Éste se basa en el conjunto de ciudades sobre el que se ha de resolver una instancia del problema lineal. Dicha solución puede procederse mediante distintos métodos o heurísticas y puede realizarse mediante distintos \textit{softwares}, algunos de los cuales son R, Python, Java y Concorde. En aras de practicidad, y en vista de que hasta el momento la construcción de los rectángulos y las ciudades se ha llevado a cabo con R, se usará este lenguaje para manipular tanto objetos como archivos de tipo TSP. Para este efecto se usará la librería homónima cuya función, $ETSP( \period )$ debe su nombre a \textit{Euclidean TSP} y convierte el \textit{data frame} de $2$ columnas (una por coordenada) y $\tau$ renglones (uno por ciudades) en un problema del agente viajero. El \textit{Euclidean} obedece a que, en otros potenciales ejercicios del agente viajero, las coordenadas podrían ser de otra métrica sobre un espacio normado o incluso, coordenadas terrestres. La función encargada de resolver un etsp es $solveTSP(\period)$. Si bien se le puede ingresar el método o algoritmo a emplear como entrada de la función, el que se usa por \textit{default} es el algoritmo de inserción arbitraria con refinamiento de tipo \textit{two opt}. El tipo de datos del \textit{output} es doble: uno es de la clase \textit{tour} y otro es entero. La versión como entero consiste en el orden de las ciudades que se anidan para construir el \textit{tour}. Con ello se puede graficar la solución con ayuda de $ggplot( \period )$. Los resultados con fv$15 \times 15$ y $50 \times 50$ son los siguientes. 
+ Existe un tipo de archivo cuya extensión es \say{.tsp}. Éste se basa en el conjunto de ciudades sobre el que se ha de resolver una instancia del problema lineal. Dicha solución puede procederse mediante distintos métodos o heurísticas y puede realizarse mediante diversos \textit{softwares}, algunos de los cuales son R, Python, Java y Concorde. En aras de practicidad, y en vista de que hasta el momento la construcción de los rectángulos y las ciudades se ha llevado a cabo con R, se usará este lenguaje para manipular tanto objetos como archivos de tipo TSP. Para este efecto se usará la librería homónima cuya función, $ETSP( \period )$ debe su nombre a \textit{Euclidean TSP} y convierte el \textit{data frame} de $2$ columnas (una por coordenada) y $\tau$ renglones (uno por ciudades) en un problema del agente viajero. El \textit{Euclidean} obedece a que, en otros potenciales ejercicios del agente viajero, las coordenadas podrían ser de otra métrica sobre un espacio normado o incluso, coordenadas terrestres. La función encargada de resolver un etsp es $solveTSP(\period)$. Si bien se le puede ingresar el método o algoritmo a emplear como entrada de la función, el que se usa por \textit{default} es el algoritmo de inserción arbitraria con refinamiento de tipo \textit{two opt}. El tipo de datos del \textit{output} es doble: uno es de la clase \textit{tour} y otro es entero. La versión como entero consiste en el orden de las ciudades que se anidan para construir el \textit{tour}. Con ello se puede graficar la solución con ayuda de $ggplot( \period )$. Los resultados con $15 \times 15$ y $50 \times 50$ se despliegan en \ref{fig:solve tsp}. 
  
  
   \begin{figure}[h]
@@ -1035,7 +945,7 @@ $
      \end{subfigure}
      \hfill
         \caption{Gráfica de las líneas uniendo a los puntos de manera eficiente sobre el cuadrante $x-y$}
-        \label{fig:dos figuras}
+        \label{fig:solve tsp}
 \end{figure}
 
 
@@ -1065,40 +975,44 @@ Las siguientes gráficas reflejan la relación que tiene la dimensión (suponien
      \hfill
 \end{figure}
  
-La siguiente es la tabla asociada a la gráfica anterior. Vale la pena mencionar que la columna de restricciones supone la técnica de reducción de restricciones a los subtours de Miller-Tucker-Zemlin que asumen que son $n^{2}$ y no $2^{n}$ de estas restricciones
+La siguiente es la tabla asociada a la gráfica anterior. Vale la pena mencionar que la columna de restricciones supone la técnica de reducción de restricciones a los subtours de Miller-Tucker-Zemlin que asume que son $n^{2}$ y no $2^{n}$ de estas restricciones
  
 \begin{center}
-\begin{tabular}{c*{6}{c}r}
+%\begin{tabular}{c*{6}{c}r}
+\begin{tabular}{*{5}{p{2cm}}}
 Renglones (= Columnas) & Total ciudades &   Tiempo de ejecución (s) & Variables & restricciones  \\
 \hline
-10 &  286 & 0.00 & 81796 & 82368   \\
-15 &  608 & 0.03 & 369664 & 370880\\
-20 &  1051 & 0.25 & 1104601 & 1106703 \\
-25 &  1670 & 1.35 & 2788900 & 2792240  \\
-30 &  2284 & 4.65 & 5216656 & 5221224\\ 
-35 &  3058 & 10.26 & 9351364 & 9357480 \\
-40 &  3894 & 28.77 & 15163236 & 15171024   \\
-45 &  4723 & 57.33 & 22306729 & 22316175\\
-50 &  5807 & 139.93 & 33721249 & 33732863 \\
-55 &  7360 & 283.53 & 54169600 & 54184320  \\
-60 &  8271 & 310.83 & 68409441 & 68425983\\ 
-65 &  9616 & 586.88 & 92467456 & 92486688 \\
-70 &  10987 & 744.08 & 120714169 & 120736143 \\
+10 &  286 & 0.00 & 81,796 & 82,368   \\
+15 &  608 & 0.04 & 369,664 & 370,880\\
+20 &  1,051 & 0.16 & 1,104,601 & 1,106,703 \\
+25 &  1,670 & 0.83 & 27,889,00 & 2,792,240  \\
+30 &  2,284 & 2.46 & 52,166,56 & 5,221,224\\ 
+35 &  3,058 & 5.83 & 9,351,364 & 9,357,480 \\
+40 &  3,894 & 15.67 & 15,163,236 & 15,171,024   \\
+45 &  4,723 & 29.56 & 22,306,729 & 22,316,175\\
+50 &  5,807 & 61.31 & 33,721,249 & 33,732,863 \\
+55 &  7,360 & 182.34 & 54,169,600 & 54,184,320  \\
+60 &  8,271 & 221.77 & 68,409,441 & 68,425,983\\ 
+65 &  9,616 & 309.78 & 92,467,456 & 92,486,688 \\
+70 &  10,987 & 433.37 & 120,714,169 & 120,736,143 \\
+75 &  13,149 & 1096.58 &  172,896,201 & N/A \\
 \end{tabular}
 \end{center}
 
 
-Una cuestión que vale la pena abordar es la relativa a si el algoritmo programado es capaz de reproducir imágenes de un grado más elevado de complejidad, o se limita a ser aplicable solo a imágenes sin relieve, ni dimensión, ni variedad de colores. Para este efecto buscaré reproducir una foto mía en mi escritorio de casa, la foto tendrá por nombre “\textit{home office}” y es la siguiente
+
+
+Una cuestión que vale la pena abordar es la relativa a si el algoritmo programado es capaz de reproducir imágenes de un grado más elevado de complejidad, o se limita a ser aplicable solo a imágenes sin relieve, ni dimensión, ni variedad de colores. Para este efecto buscaré reproducir una foto mía en mi escritorio de casa, la foto tendrá por nombre “\textit{home office}” y es la \ref{fig:smile}.
 
 
 \begin{figure} [h]
   \centering
    \includegraphics[width=0.7\linewidth]{j_smile.png}
   \caption{Catálogo de imágenes seleccionadas para el fotomosaico  }
-  \label{catal}
+  \label{fig:smile}
 \end{figure}
 
-Lo que sigue es reproducir la imagen. Para esto, se hizo uso de un truco: atenuar los colores más claros. Es decir, a partir de un parámetro determinado de escala de luminosidad en adelante se aclarará la escala al máximo valor posible, es decir, 1. Para esta imagen el parámetro elegido es de 0.70.  Esto permitió que la imagen resultara más distinguible, sobre todo en lo que concierne a las facciones faciales: cara, ojos, boca y al implemento electrónico que se tiene sobre las orejas (audífonos). La razón de este recurso puede aclararse si se muestra el resultado de ejecutar el programa sin hacer esta modificación de la luminosidad. Ambos resultados se muestran en los dos pares de imágenes siguientes. 
+Lo que sigue es reproducir la imagen. Para esto, se hizo uso de un truco: atenuar los colores más claros. Es decir, a partir de un parámetro determinado de escala de luminosidad en adelante se aclarará la escala al máximo valor posible, es decir, 1. Para esta imagen el parámetro elegido es de 0.70.  Esto permitió que la imagen resultara más distinguible, sobre todo en lo que concierne a las facciones faciales: cara, ojos, boca y al implemento electrónico que se tiene sobre las orejas (audífonos). La razón de este recurso puede aclararse si se muestra el resultado de ejecutar el programa sin hacer esta modificación de la luminosidad. Ambos resultados se muestran en los dos pares de imágenes indexados como  \ref{fig:autorretrato Solve0} y \ref{fig:autorretrato Solve1}, respectivamente.
 
 
  \begin{figure}[h]
@@ -1107,16 +1021,20 @@ Lo que sigue es reproducir la imagen. Para esto, se hizo uso de un truco: atenua
          \centering
          \includegraphics[width=\textwidth]{j_tspSmile.png}
          \caption{Ciudades o puntillismo con imagen \textit{home office}: 9768 ciudades}
-         \label{fig:fig15m}
+         \label{fig:smile00}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{0.4\textwidth}
          \centering
          \includegraphics[width=\textwidth]{j_citSmile.png}
-         \caption{TSP con imagen textit{home office}: 9768 ciudades}
-         \label{fig:fig20m}
+         \caption{TSP con imagen \textit{home office}: 9768 ciudades}
+         \label{fig:smile01}
      \end{subfigure}
      \hfill
+
+    \caption{Puntillismo y TSP para autorretrato (sin agudizar brillos) }
+    \label{fig:autorretrato Solve0}
+     
 \end{figure}
 
 
@@ -1126,20 +1044,144 @@ Lo que sigue es reproducir la imagen. Para esto, se hizo uso de un truco: atenua
          \centering
          \includegraphics[width=\textwidth]{j_citSmile_s.png}
          \caption{Ciudades o puntillismo con imagen \textit{home office} atenuada: 8726 ciudades}
-         \label{fig:fig15m}
+         \label{fig:smile10}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{0.4\textwidth}
          \centering
          \includegraphics[width=\textwidth]{j_tspSmile_s.jpeg}
          \caption{TSP con imagen \textit{home office} atenuada: 8726 ciudades}
-         \label{fig:fig20m}
+         \label{fig:smile11}
      \end{subfigure}
      \hfill
+
+    \caption{Puntillismo y TSP para autorretrato (agudizado brillos) }
+    \label{fig:autorretrato Solve1}
 \end{figure}
 
+\chapter{Apéndice}
+
+\section{Adecuando largo y ancho de pixeles para adapatarse a parámetros ingresados}
+
+Para la regla de asignación consistente en hacer la $\mu'$ múliplo de $m$ y $nu$ múltiplo de $n$ se requiere que la cantidad de renglones de la nueva matriz acotada sea $0$ módulo $m$ y, la cantidad de columnas, $0$ módulo $n$. Si bien puede haber más de una combinación renglón $\times$ columna consistente con las propiedades mencionadas, para nuestra regla de recortar la matriz mayor se escogerá una nueva dimensión $\mu' \times \nu'$ que corresponda al máximo valor factible que no exceda $\mu \times \nu$.  
+
+\begin{equation} \label{dimensiones} 
+DIM = \{ (\mu', \nu') = (max(a), max(b)) | 0=a mod(m), 0=b mod(n), a \in [0,\mu] \cap \mathbb{N},  b \in [0,\nu] \cap \mathbb{N} \}
+\end{equation}
 
 
+Es trivial notar que se requiere que $m \leq \mu$ y  $n \leq \nu$. El acotamiento arriba expresado se realiza de la manera más simétrica posible. Esto es, si $\mu' < \mu$, se recortarán $\epsilon= \floor{   \frac{1}{2}(\mu - \mu') }$ renglones por arriba y $\delta = (\mu - \mu ')- \epsilon$ renglones por abajo . Así, se tendrá $\epsilon - \delta \in \{0, 1 \}$ ($0$ si $\frac{1}{2}(\mu - \mu')$ es par, $1$ e.o.c), lo cual quiere decir que, en el peor caso, se recortará un pixel más por un lado que por otro. Análogamente, si $\nu' < \nu$, se recortarán $\rho= \floor{   \frac{1}{2}(\nu - \nu') }$ columnas por la izquierda y $\sigma = (\nu - \nu ')- \rho$ por la derecha (siendo también la diferencia de, a lo mucho, uno). 
+
+\section{Reduciendo dimensionalidad del vector de costos}
+
+La forma genérica que ayuda a convertir el arreglo $3$-dimensional de costos en los fotomosaicos en uno de $2$ se muestra a continuación
+
+
+\begingroup
+%\setlength{\tabcolsep}{0.75pt} % Default value: 6pt
+\renewcommand{\arraystretch}{0.6} % Default value: 1
+
+\begin{center}
+%\setlength\tabcolsep{1.5pt}
+%\renewcommand{\arraystretch}{1.2}
+
+\begin{tabular}{c*{6}{c}r}
+%\renewcommand{\arraystretch}{1}
+t & f & i & j & costo ($ce$)  \\
+\hline
+1 & 1 & 1 & 1 & A[1,1,1]   \\
+2 & 1 & 1 & 2 & A[1,1,2]   \\
+\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
+n & 1 & 1 & n & A[1,1,n]   \\
+n+1 & 1 & 2 & 1 & A[1,2,1]   \\
+n+2 & 1 & 2 & 2 & A[1,2,2]\\
+%. & . & . & . & .   \\
+\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
+2n & 1 & 2 & n & A[1,2,n]   \\
+%. & . & . & . & .   \\
+%. & . & . & . & .   \\
+\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
+(m-1)n+1 & 1 & m & 1 & A[1,m,1]   \\
+(m-1)n+2  & 1 & m & 2 & A[1,m,2]\\
+%. & . & . & . & .   \\
+\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
+mn & 1 & m & n & A[1,m,n]   \\
+
+
+mn+1 & 2 & 1 & 1 & A[2,1,1]   \\
+mn+2 & 2 & 1 & 2 & A[2,1,2]   \\
+%. & . & . & . & .   \\
+\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
+mn+n & 2 & 1 & n & A[2,1,n]   \\
+mn+n+1 & 2 & 2 & 1 & A[2,2,1]   \\
+mn+n+2 & 2 & 2 & 2 & A[2,2,2]   \\
+%. & . & . & . & .   \\
+\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
+mn+2n & 2 & 2 & n & A[2,2,n]\\
+%. & . & . & . & .   \\
+%. & . & . & . & .   \\
+\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
+mn+(m-1)n+1 & 2 & m & 1 & A[2,m,1]   \\
+mn+(m-1)n+2  & 2 & m & 2 & A[2,m,2]   \\
+%. & . & . & . & .   \\
+\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
+2mn & 2 & m & n & A[2,m,n]   \\
+
+%. & . & . & . & .   \\
+%. & . & . & . & .   \\
+%. & . & . & . & .   \\
+\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
+
+
+(cf-1)mn+1 & cf & 1 & 1 & A[cf,1,1]   \\
+(cf-1)mn+2 & cf & 1 & 2 & A[cf,1,2]  \\
+%. & . & . & . & .   \\
+\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
+
+(cf-1)mn+n & cf & 1 & n & A[cf,1,n]   \\
+(cf-1)mn+n+1 & cf & 2 & 1 & A[cf,2,1]   \\
+(cf-1)mn+n+2 & cf & 2 & 2 & A[cf,2,2]   \\
+%. & . & . & . & .   \\
+\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
+
+(cf-1)mn+2n & cf & 2 & n & A[cf,2,n]   \\
+%. & . & . & . & .   \\
+%. & . & . & . & .   \\
+\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
+
+(cf-1)mn+(m-1)n+1 & cf & m & 1 & A[cf,m,1]   \\
+(cf-1)mn+(m-1)n+2  & cf & m & 2 & A[cf,m,2]   \\
+%. & . & . & . & .   \\
+\vdots  & \vdots  & \vdots  & \vdots  & \vdots    \\
+
+m\;n\;cf & cf & m & n &  A[cf,m,n]
+\end{tabular}
+\end{center}
+\endgroup
+
+
+Como se muestra, el ordenamiento de $df3$ sigue la jerarquía $f,i,j$. 
+
+La estructura descrita redefine el problema, para este caso, pasando de uno sobre variables de decisión indexadas sobre tres componentes $x_{fij}$ a su análogo $1$-dimensional, $x_{t}$. El ejercicio requiere de una reasignación $(f, i, j) \mapsto t(f, i, j)$ definida por $t=(f-1) \;(m \;n) + m(i-1)+j$ que representa el orden de los renglones que sigue $df3$. Ahora, defínanse en $R$ los parámetros requeridos en el párrafo anterior
+
+
+
+\begin{enumerate}
+%[label=(\alph*)]
+
+\item $ce=df3[\say{costo}]$
+\item $io=\say{min}$
+\item Restricciones $RM \in \mathbb{R}^{re \times m \; n \; cf}$ con $re=cf+m\;n$, los primeros $cf$ renglones representando a las restricciones de disponibilidad de las fichas que hay, y las restricciones restantes representando el correcto llenado de cada celda genérica $(i, j)$. La matriz consta únicamente de valores $0$ y $1$. Los $1$'s se asignan facilmente conociendo, con la ayuda de la asginación $t( \period )$ qué posiciones corresponden a cada $f$ para el primer conjunto de restricciones; similarmente, para el segundo conjunto de restricciones basta reconocer qué posiciones le corresponden a cada celda $(i,j)$. 
+
+\item $rh_{f}=u_{f} \; \forall f \in \{1, \dots , cf\}$
+
+$rh_{t}=1 \;  \forall f \in \{cf+1, \dots , cf+m\;n\}$
+
+\item $sign_{f}=\say{\leq} \; \forall f \in \{1, \dots , cf\}$
+
+$sign_{t}=\say{=} \;  \forall f \in \{cf+1, \dots , cf+m\;n\}$
+
+\end{enumerate}
 
 %\chapter*{Bibliografía}
 
