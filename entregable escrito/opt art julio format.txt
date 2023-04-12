@@ -16,6 +16,7 @@
 \usepackage{breakurl} % To break URLs
 \usepackage{graphicx}
 \usepackage{dirtytalk}
+\usepackage{caption}
 
 \newcommand\floor[1]{\lfloor#1\rfloor}
 \newcommand\ceil[1]{\lceil#1\rceil}
@@ -522,7 +523,7 @@ En este apartado se describirá cómo se procede para formular y computar los do
 El siguiente paso consiste en usar las dimensiones de pixeles, $m$ y $n$, para delimitar el tamaño de la matriz tal que se permita generar una partición de la misma en submatrices que sea factible; es decir, que sean submatrices de dimensiones idénticas y que, posicionadas estratégicamente, generen la matriz grande (o matriz total). Para ello pasamos de $(\mu, \nu)$ a $(\mu', \nu')$\footnote{Véase más detalle sobre las propiedades de la regla de asignación para generar esta transformación en apéndice}.
 
 
-Posteriormente, se convierte la matriz de la escala $[0,1]$ a la escala $\{ 0, \dots, 255\}$. Luego, se fracciona la matriz en un conjunto de $m \; n$ submatrices mediante la función $matsplitter(.)$ de R, la cual recibe como entradas la matriz a fraccionar, la cantidad de renglones por submatriz, $k=\mu ' / m$ y la cantidad de columnas,  $h=\nu ' / n$. $matsplitter( \period )$ entregará una lista de $m \times n$ elementos. Los elementos $1$ a $n$ de la lista consistirán en las primeras $n$ submatrices superiores de la matriz, los elementos $n +1$ a $2n$ consistirán en las segundas $n$ submatrices superiores. Así sucesivamente, hasta llegar a las $n$ submatrices inferiores, ennumeradas $n \; m-n+1$ a $m \; n$. Entendemos que este tipo de ordenamiento es de clase \textit{rowwise} (o por renglón), ya que se va llenando renglón por renglón, empezando por los renglones de arriba y continuando hacia abajo. Cada renglón se llena de izquierda a derecha. El otro tipo común de ordenamiento es \textit{columnwise}, o por columna\footnote{Arreglo por columna, o \textit{columnwise} donde se llenan las columnas de izquierda a derecha, cada columna se llena de arriba a abajo}. Conociendo esto, podemos calcular la luminosidad promedio de cada elemento del output de $matsplitter( \period )$. Dicho conjunto de luminosidades puede sintetizarse en un vector de dimensión $m \; n$, bajo la ya mencionada lógica del ordenamiento \textit{rowwise}.
+Posteriormente, se convierte la matriz de la escala $[0,1]$ a la escala $\{ 0, \dots, 255\}$. Luego, se fracciona la matriz en un conjunto de $m \; n$ submatrices mediante la función $matsplitter(.)$ de R, la cual recibe como entradas la matriz a fraccionar, la cantidad de renglones por submatriz, $k=\mu ' / m$ y la cantidad de columnas,  $h=\nu ' / n$. $matsplitter( \period )$ entregará una lista de $m \times n$ elementos. Los elementos $1$ a $n$ de la lista consistirán en las primeras $n$ submatrices superiores de la matriz, los elementos $n +1$ a $2n$ consistirán en las segundas $n$ submatrices superiores. Así sucesivamente, hasta llegar a las $n$ submatrices inferiores, ennumeradas $n \; m-n+1$ a $m \; n$. Entendemos que este tipo de ordenamiento es de clase \textit{rowwise} (o por renglón), ya que se va llenando renglón por renglón, empezando por los renglones de arriba y continuando hacia abajo. Cada renglón se llena de izquierda a derecha. El otro tipo común de ordenamiento es \textit{columnwise}, o por columna\footnote{Arreglo fpor columna, o \textit{columnwise} donde se llenan las columnas de izquierda a derecha, cada columna se llena de arriba a abajo}. Conociendo esto, podemos calcular la luminosidad promedio de cada elemento del output de $matsplitter( \period )$. Dicho conjunto de luminosidades puede sintetizarse en un vector de dimensión $m \; n$, bajo la ya mencionada lógica del ordenamiento \textit{rowwise}.
 
 
 \section{Fotomosaicos}\label{sec:photomImplem}
@@ -874,7 +875,7 @@ La imagen se ha computado con éxito. Como se preveía, las asignaciones están 
 
 \section{Arte con el agente viajero}\label{sec:tspImplem}
 
-\subsection{Arte con el agente viajero, caso Twitter}
+\subsection{Arte con el agente viajero, caso Twitter}\label{ssec:tspImplem tw}
 
 
 Tras haber seguido los pasos de la sección \ref{sec:partic} lo siguiente consiste en convertir la escala del conjunto $\{0, \dots, 255\}$ a la escala $\{0, \dots , \gamma \}$, empleando la ecuación \eqref{oscG} desglosada en la sección  \ref{sec:tspDescrip} de la presente tesina. Así pues, obtenemos un vector de dimensión $m \; n$, llámese $g$. Para el primer ejercicio, asígnese $\gamma=7$. Bajo esta $\gamma$, las escalas primera a treintaiseisava de luminosidad coinciden con la escala $7$ en oscuridad (o siete \say{ciudades}). Las siguientes luminosidades (por orden) corresponden a seis ciudades; sucesivamente, hasta llegar a la escala 255, que corresponde a cero ciudades. Es obvio que situar más puntos, o ubicar más aristas que conecten éstos en un rectángulo generará una mayor oscuridad en el mismo, de ahí que se considere a $\gamma$ como una escala de oscuridad. Lo siguiente consta en ubicar las ciudades en el plano $x-y$, haciendo un loop a través de las $m \; n$ matrices. 
@@ -899,7 +900,7 @@ $
 
 \end{enumerate}
 
- Al iterar este proceso las $m \; n$ veces, se obtienen las $\sum_{k=1}^{m \; n } g_{k}=\tau$ \footnote{esta es una expresión equivalente a la ecuación ec.\eqref{totalCiudades}  , pero en la versión que mapea $(i,j) \rightarrow k(i,j)$ }  ciudades objetivo y podemos resolver el TSP sobre éstas. Los resultados de escribir todas las ciudades como puntos bajo los ejercicios con $15 \times 15$ rectángulos y ($608$ ciudades) y con $50 \times 50$ ($5807$ ciudades) se desglosan en la imágen que se nombra \say{puntillismo}, \ref{fig:tw puntillismo}, por su similitud con la técnica artística que despuntó de manera importante en Francia a inicios del siglo XX y consiste en generar una obra con puntos diminutos. 
+ Al iterar este proceso las $m \; n$ veces, se obtienen las $\sum_{k=1}^{m \; n } g_{k}=\tau$ \footnote{esta es una expresión equivalente a la ecuación ec.\eqref{totalCiudades}  , pero en la versión que mapea $(i,j) \rightarrow k(i,j)$ }  ciudades objetivo y podemos resolver el TSP sobre éstas. Los resultados de escribir todas las ciudades como puntos bajo los ejercicios con $15 \times 15$ rectángulos y ($606$ ciudades) y con $50 \times 50$ ($5,765$ ciudades) se desglosan en la imágen que se nombra \say{puntillismo}, \ref{fig:tw puntillismo}, por su similitud con la técnica artística que despuntó de manera importante en Francia a inicios del siglo XX y consiste en generar una obra con puntos diminutos. 
 
 
 \begin{figure}[h]
@@ -907,14 +908,14 @@ $
      \begin{subfigure}[b]{0.4\textwidth}
          \centering
          \includegraphics[width=\textwidth]{twitt15.png}
-         \caption{ $15 \times 15$ rectángulos o $608$ ciudades}
+         \caption{ $15 \times 15$ rectángulos o $606$ ciudades}
          \label{fig:fig15}
-     \end{subfigure}
+     \end{subfigure}zz
      \hfill
      \begin{subfigure}[b]{0.4\textwidth}
          \centering
          \includegraphics[width=\textwidth]{twitt50.png}
-         \caption{$50 \times 50$ rectángulos o $5807$ ciudades}
+         \caption{$50 \times 50$ rectángulos o $5,765$ ciudades}
          \label{fig:fig50}
      \end{subfigure}
      \hfill
@@ -933,14 +934,14 @@ $
      \begin{subfigure}[b]{0.4\textwidth}
          \centering
          \includegraphics[width=\textwidth]{twittRes15.png}
-         \caption{ $15 \times 15$ rectángulos o $608$ ciudades; solución vía TSP}
+         \caption{ $15 \times 15$ rectángulos o $606$ ciudades; solución vía TSP}
          \label{fig:fig15r}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{0.4\textwidth}
          \centering
          \includegraphics[width=\textwidth]{twittRes50.png}
-         \caption{$50 \times 50$ rectángulos o $5807$ ciudades; solución vía TSP}
+         \caption{$50 \times 50$ rectángulos o $5,765$ ciudades; solución vía TSP}
          \label{fig:fig50r}
      \end{subfigure}
      \hfill
@@ -948,34 +949,77 @@ $
         \label{fig:solve tsp}
 \end{figure}
 
+En el punto 3 de los pasos del instructivo en la subsección \ref{ssec:tspImplem tw} se describe la lógica de la distribución de ciudades \say{uniforme} propuesta. Sin embargo, alternativamente se puede evaluar el resultado de aleatorizar las coordenadas de puntos del rectángulo, respetando las escalas de color definidas por submatriz (y por lo tanto, manteniendo el número de ciudades). Para ello se ocupó la función de distribución uniforme desarrollada por $R$, $runif(.)$ dos veces por rectángulo: una vez para la dimensión $x$ y otra para la dimensión $y$.  Los resultados de puntillismo y conexión de ciudades para dimensiones $15$ y $50$ con $606$ y $5,765$ ciudades respectivamente se despliegan en los conjuntos de imágenes \ref{fig:tw puntillismo rdm}  y  \ref{fig:solve tsp rdm}. 
+
+
+\begin{figure}[h]
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{twittRdm15.png}
+         \caption{ $15 \times 15$ rectángulos o $606$ ciudades, ejercicio aleatorio}
+         \label{fig:figrdm15}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{twittRdm50.png}
+         \caption{$50 \times 50$ rectángulos o $5,765$ ciudades, ejercicio aleatorio}
+         \label{fig:figrdm50}
+     \end{subfigure}
+     \hfill
+        \caption{Gráfica de los puntos sobre el cuadrante $x-y$, ejercicio aleatorio}
+        \label{fig:tw puntillismo rdm}
+\end{figure}
+ 
+ 
+
+ 
+  \begin{figure}[h]
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{twittResRdm15.png}
+         \caption{ $15 \times 15$ rectángulos o $606$ ciudades, ejercicio aleatorio; solución vía TSP}
+         \label{fig:fig15r_rdm}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{twittResRdm50.png}
+         \caption{$50 \times 50$ rectángulos o $5,765$ ciudades, ejercicio aleatorio; solución vía TSP}
+         \label{fig:fig50r_rdm}
+     \end{subfigure}
+     \hfill
+        \caption{Gráfica de las líneas uniendo a los puntos de manera eficiente sobre el cuadrante $x-y$, ejercicio aleatorio}
+        \label{fig:solve tsp rdm}
+\end{figure}
+
+
+El nivel de detalle en la dimensión $50$ da pie a que la calidad y propiedades de los ejercicios sean visualmente similares entre los casos de distribución \say{uniforme} regida por $kmeans$ frente al de distribución aleatoria (contrastar imagen \ref{fig:fig50r} contra \ref{fig:fig50r_rdm}). La diferencia importante se detecta al comparar ambos tipos de planteamientos con dimensión $15$: se observa cómo la conexión entre puntos en el caso aleatorio no tiene una forma visiblemente tan bien definida; es decir, no es trivial deducir que se trata de una silueta de un pájaro, cosa que en el caso \say{uniforme} sí se observa de forma más evidente (contrastar imagen \ref{fig:fig15r} contra \ref{fig:fig15r_rdm}).
+
+Finalmente, como se ve en \ref{fig:tw_tsp_85} el ejercicio se hace extensivo a la versión más grande que se logró correr del $TSP$ con $85$ rectángulos y $15,311$ ciudades.
+
+\begin{figure} [h]
+  \centering
+   \includegraphics[width=0.7\linewidth]{twittRes85.png}
+  \caption{  $85 \times 85$ rectángulos o $15,311$ ciudades; solución vía TSP }
+  \label{fig:tw_tsp_85}
+\end{figure}
 
 
 \subsection{Arte con el agente viajero, complejidad y exploración de instancias más complejas}
 
 
-Un siguiente paso interesante consiste en evaluar la potencia computacional del solver del tsp en $R$ que se ha ocupado (módulo \textit{tsp}, función $solve_TSP(.)$ ) al registrar el tiempo que lleva resolver una determinada imagen conforme se agregan más dimensiones o rectángulos y, por consecuente, más ciudades. 
-Las siguientes gráficas reflejan la relación que tiene la dimensión (suponiendo que hay tantos rectángulos a lo largo como a lo ancho) con el número de ciudades en la imagen de Twitter; asimismo describen la relación del número de ciudades con el tiempo de solución del tsp; claramente esta relación es de una complejidad superior a la lineal. 
+Un siguiente paso interesante consiste en evaluar la potencia computacional del solver del tsp en $R$ que se ha ocupado (módulo \textit{tsp}, función $solve_TSP(.)$ ) al registrar el tiempo que lleva resolver una determinada imagen conforme se agregan más dimensiones o rectángulos y, naturalmente, más ciudades. 
 
+
+
+%La siguiente es la tabla asociada a la gráfica anterior. Vale la pena mencionar que la columna de restricciones supone la técnica de reducción de restricciones a los subtours de Miller-Tucker-Zemlin que asume que son $n^{2}$ y no $2^{n}$ de estas restricciones
+
+
+La tabla \ref{tbl: tiempo tsp} asocia la dimensión única (rectángulos a lo largo igualan a los que hay a lo ancho) con el número de ciudades en la imagen de Twitter; asimismo describe la relación del número de ciudades con el tiempo de solución del tsp; claramente esta relación es de una complejidad superior a la lineal. Vale la pena mencionar que la columna de restricciones supone la técnica de reducción de restricciones a los subtours de Miller-Tucker-Zemlin que asume que son $n^{2}$ y no $2^{n}$ de estas restricciones
  
- \begin{figure}[h]
-     \centering
-     \begin{subfigure}[b]{0.4\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{dim_cit.png}
-         \caption{ Dimensión: no. ciudades}
-         %\label{fig:fig15}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.4\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{cit_tiemp.png}
-         \caption{ no. ciudades vs tiempo}
-         %\label{fig:fig50}
-     \end{subfigure}
-     \hfill
-\end{figure}
- 
-La siguiente es la tabla asociada a la gráfica anterior. Vale la pena mencionar que la columna de restricciones supone la técnica de reducción de restricciones a los subtours de Miller-Tucker-Zemlin que asume que son $n^{2}$ y no $2^{n}$ de estas restricciones
  
 \begin{center}
 %\begin{tabular}{c*{6}{c}r}
@@ -983,23 +1027,77 @@ La siguiente es la tabla asociada a la gráfica anterior. Vale la pena mencionar
 Renglones (= Columnas) & Total ciudades &   Tiempo de ejecución (s) & Variables & restricciones  \\
 \hline
 10 &  286 & 0.00 & 81,796 & 82,368   \\
-15 &  608 & 0.04 & 369,664 & 370,880\\
+15 &  606 & 0.04 & 369,664 & 370,880\\
 20 &  1,051 & 0.16 & 1,104,601 & 1,106,703 \\
 25 &  1,670 & 0.83 & 27,889,00 & 2,792,240  \\
 30 &  2,284 & 2.46 & 52,166,56 & 5,221,224\\ 
 35 &  3,058 & 5.83 & 9,351,364 & 9,357,480 \\
 40 &  3,894 & 15.67 & 15,163,236 & 15,171,024   \\
 45 &  4,723 & 29.56 & 22,306,729 & 22,316,175\\
-50 &  5,807 & 61.31 & 33,721,249 & 33,732,863 \\
+50 &  5,765 & 61.31 & 33,721,249 & 33,732,863 \\
 55 &  7,360 & 182.34 & 54,169,600 & 54,184,320  \\
 60 &  8,271 & 221.77 & 68,409,441 & 68,425,983\\ 
 65 &  9,616 & 309.78 & 92,467,456 & 92,486,688 \\
 70 &  10,987 & 433.37 & 120,714,169 & 120,736,143 \\
-75 &  13,149 & 1096.58 &  172,896,201 & N/A \\
+75 &  13,149 & 1096.58 &  172,896,201  & 172,922,499 \\
+80 &  15,327 & 2268.22 &  234,916,929 & 234,947,583 \\
+85 &  15,311 & 1922.58 &  234,426,721 & 234,457,343 \\
 \end{tabular}
+\label{tbl: tiempo tsp}
+%\caption{Tiempos de ejecucion de la función solve_TSP(.) a las instancias definidas por la dimensión}
+\captionof{table}{Tiempos de ejecucion de la función $solve_TSP(.)$ a las instancias definidas por la dimensión}
 \end{center}
 
 
+Algo que resalta a la vista de observar la tabla de arriba es que el número de ciudades crece respecto a la dimensión a tasas crecientes en una curva \say{suave}  hasta antes de pasar de $80$ a $85$; vale la pena observar la gráfica en \ref{fig:dim_cit} para concluir que es en este intervalo donde ésta empieza a manifestar quiebres. Éstos podrían deberse a que en la medida de que el largo y ancho en submatrices de la imagen se aproximan a los pixeles reales de la misma van a existir transiciones de dimensiones donde algunos pixeles reciben asignaciones de \textit{greyscales} mayores en tanto que otros disminuyen. En el balance, a pesar de que se tienen más rectángulos, serán más los rectángulos que reducen su métrica de oscuridad que aquellos que la aumentan. Esto al grado de que en algunas transiciones se disminuya el total de ciudades resultante (la gráfica muestra cómo eso ocurre tres veces en el rango analizado). Otra de las consideraciones es que, tal como se explica en el apartado de partición de en submatrices, \ref{sec:partic}, la dimensión original se va recortando a lo largo y a lo ancho de tal manera que ambas sean divisibles entre el \textit{input} entregado. Esto da lugar a que las matrices objetivo difieran en dimensión. La dimensión original de la imagen de Twitter es de $450 \times 550$ en tanto que para ajustarse a dimensiones $80$ y a $85$ se tuvo que pasar a $400 \times 480$  y $425 \times 510$ respectivamente. Por consiguiente las submatrices tienen formas, oscuridades y estructuras distintas dando lugar a ciudades con cardinalidades poco predecibles.
+
+
+\begin{figure} [h]
+  \centering
+   \includegraphics[width=0.7\linewidth]{dimension ciudades.png}
+  \caption{ Dimensión vs ciudades generadas. Rangos donde se reduce la cantidad de ciudades se resalta en amarillo}
+  \label{fig:dim_cit}
+\end{figure}
+
+
+
+%Las siguientes gráficas reflejan la relación que tiene la dimensión (suponiendo que hay tantos rectángulos a lo largo como a lo ancho) con el número de ciudades en la imagen de Twitter; asimismo describen la relación del número de ciudades con el tiempo de solución del tsp; claramente esta relación es de una complejidad superior a la lineal. 
+
+Similar a lo realizado  en el capítulo de implementación para fotomosaicos, \ref{sec:photomImplem_grey}, se reproducen las gráficas asociadas a la tabla anterior en \ref{fig:complejidadtsp}. Se añaden los correspondietes ajustes polinomiales. A diferencia de el caso de los fotomosaicos donde bastaban los ajustes cúbicos, en este ejercicio fue hasta llegar a los ajustes de orden $6$ y $4$ para dimensión y rectángulos respectivamente, que se logró un ajuste suave, consistente e intuitivo.
+
+
+\begin{figure}[h]
+    \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{dim_tiempo tsp.png}
+         \caption{ Dimensión vs tiempo}
+         \label{fig:compld_tsp}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{rec_tiempo tsp.png}
+         \caption{ Rectángulos vs tiempo}
+         \label{fig:complr_tsp}
+     \end{subfigure}
+     \hfill
+
+     \caption{Graficaciones tiempos de ejecución}
+     \label{fig:complejidadtsp}
+     
+\end{figure}
+
+ 
+Sin embargo existe un componente que vale la pena precisar si lo que se busca es comparar el tiempo de ejecución de las instancias de programación lineal genérico vs el del módulo que trabaja el TSP. Y es que el problema aquí versa sobre  las ciudades distribuidas sobre los rectángulos (y sus correspondientes distancias mutuas) y no sobre el número de rectángulos en sí. Adicionalmente, se puede decir que los primeros crecen polinomialmente en función de las segundas. Interesa por lo tanto conocer el comportamiento del tiempo de ejecución conforme crecen las ciudades. La gráfica demuestra cómo, similar al caso de la relación rectángulos vs tiempo, basta el polinomio de grado $4$ para estimar una relación en ciudades vs tiempo. 
+
+
+\begin{figure} [h]
+  \centering
+   \includegraphics[width=0.7\linewidth]{cit_tiemp.png}
+  \caption{Relación ciudades vs tiempo tsp  }
+  \label{fig:cit_t}
+\end{figure}
 
 
 Una cuestión que vale la pena abordar es la relativa a si el algoritmo programado es capaz de reproducir imágenes de un grado más elevado de complejidad, o se limita a ser aplicable solo a imágenes sin relieve, ni dimensión, ni variedad de colores. Para este efecto buscaré reproducir una foto mía en mi escritorio de casa, la foto tendrá por nombre “\textit{home office}” y es la \ref{fig:smile}.
@@ -1008,7 +1106,7 @@ Una cuestión que vale la pena abordar es la relativa a si el algoritmo programa
 \begin{figure} [h]
   \centering
    \includegraphics[width=0.7\linewidth]{j_smile.png}
-  \caption{Catálogo de imágenes seleccionadas para el fotomosaico  }
+  \caption{Selfie en pandemia }
   \label{fig:smile}
 \end{figure}
 
