@@ -271,7 +271,7 @@ Las variaciones de esta clase de problemas extendidas a más dimensiones pueden 
 
 \section{Fotomosaicos: concepto y contexto histórico}\label{sec:phm_grey}
 
-En el área del \textit{marketing} han abundado técnicas de \textit{advertising} que consisten fen reproducir con elevada similaridad una imagen de interés conformada por un conjunto de imágenes  o grupos de pixeles. Un fotomosaico ---o mosaico fotográfico--- es una imagen dividida en secciones (las cuales, con el conocimiento adquirido en este documento pueden entenderse como submatrices) donde cada sección se reemplaza por otra imagen que se le asocia por algún criterio de similaridad. Para construir un fotomosaico, se requieren tres insumos: una foto objetivo, un \textit{set} de fotos a usar para una dada subsección y un \textit{software}-lógica que ejecute la tarea. La idea del fotomosaico tiene una historia reciente en el ámbito de la computación, cuando en fechas similares dos personajes implementaron lógicas y softwares con los cuales podía llevarse a cabo esta tarea. En 1993 Joseph Francis, diseñador, desarrolló lo propio trabajando en el departamento de animación por computadora de la agencia de publicidad R/Greenberg. Por otra parte, en 1995. Robert Silvers, como estudiante de ingeniería en el MIT, desarrolló una lógica que asumiría proyección e importante audiencia cuando se construyó la imagen de la Princesa Diana como parte de una edición para el sexoagésimo aniversario de la revista LIFE (portada de la misma), haciendo extensivo su desarrollo a un algoritmo \textit{software} cuya patente registró años más tarde. 
+En el área del \textit{marketing} han abundado técnicas de \textit{advertising} que consisten fen reproducir con elevada similaridad una imagen de interés conformada por un conjunto de imágenes  o grupos de pixeles. Un fotomosaico ---o mosaico fotográfico--- es una imagen dividida en secciones (las cuales, con el conocimiento adquirido en este documento pueden entenderse como submatrices) donde cada sección se reemplaza por otra imagen que se le asocia por algún criterio de similaridad. Para construir un fotomosaico, se requieren tres insumos: una foto objetivo, un \textit{set} de fotos a usar para una dada subsección y un \textit{software}-lógica que ejecute la tarea. La idea del fotomosaico tiene una historia reciente en el ámbito de la computación, cuando en fechas similares dos personajes implementaron lógicas y softwares con los cuales podía llevarse a cabo esta tarea. En 1993 Joseph Francis, diseñador, desarrolló lo propio trabajando en el departamento de animación por computadora de la agencia de publicidad R/Greenberg. Por otra parte, en 1995. Robert Silvers, como estudiante de ingeniería en el MIT, desarrolló una lógica que asumiría proyección e importante audiencia cuando se construyó la imagen de la actriz Marilyn Monroe a partir de portadas de la revista TIME como parte de una edición para el sexoagésimo aniversario de la revista LIFE (portada de la misma), haciendo extensivo su desarrollo a un algoritmo \textit{software} cuya patente registró años más tarde. 
 
 
  \begin{figure}[h]
@@ -279,12 +279,12 @@ En el área del \textit{marketing} han abundado técnicas de \textit{advertising
      \begin{subfigure}[b]{0.4\textwidth}
          \centering
          \includegraphics[width=\textwidth]{silvers ladydi.png}
-         \caption{Lady Di formulada como conjunto de revisas TIME; portada de aniversario $60$. Por Robert Silvers, primera implementación relevante de algoritmo patentado.}
+         \caption{Marilyn Monroe formulada como conjunto de revisas LIFE; portada de aniversario $60$. Por Robert Silvers, primera implementación relevante de algoritmo patentado.}
      \end{subfigure}
      \hfill
 \end{figure}
 
-El programa desarrollado por Silver se se vio reflejado en réditos económicos para él, principalmente en el medio del \textit{marketing}. Sin embargo en los años sucesivos se implementaron lógicas que desarrollaban fotomosaicos. Por dar dos ejemplos, en el campo informático del \textit{open source}, lenguajes como \textit{R} y python han generado módulos que permiten generar fotomosaicos con los tres tipos de insumos ya mencionados; y todo esto, como da a entender el adjetivo de \textit{open source}, por un costo cero para el usuario. La NASA, asimismo, en 2014 generó un fotomosaico de una vista del planeta tierra conformada por más de $36,000$ fotos de personas tomándose \textit{selfies} totalizadas en $3.2$ mil millones de pixeles (o giga-pixeles) como parte de un programa orientado a concientizar sobre el cambio climático.
+El programa desarrollado por Silver se se vio reflejado en réditos económicos para él, principalmente en el medio del \textit{marketing}. Sin embargo en los años sucesivos se implementaron lógicas que desarrollaban fotomosaicos. Por dar dos ejemplos, en el campo informático del \textit{open source}, lenguajes como \textit{R} y python han desarrollado módulos que permiten generar fotomosaicos con los tres tipos de insumos ya mencionados; y todo esto, como da a entender el adjetivo de \textit{open source}, por un costo cero para el usuario. La NASA, asimismo, en 2014 generó un fotomosaico de una vista del planeta tierra conformada por más de $36,000$ fotos de personas tomándose \textit{selfies} totalizadas en $3.2$ mil millones de pixeles (o giga-pixeles) como parte de un programa orientado a concientizar sobre el cambio climático.
 
 \section{Fotomosaicos en escalas de grises}\label{sec:phm_grey}
 
@@ -630,7 +630,7 @@ Para instancias con dimnensiones mayores también hubo despliegues, los cuales s
          \label{vfig;partes60}
      \end{subfigure}
      \hfill
-        \caption{Soluciones gráficas al problema de los fotomosaicos con $dp=0 \period 3$ y $vp=0 \period 3$; 
+        \caption{Soluciones gráficas al problema de los fotomosaicos con c; 
         dimensiones $35 \times 35$ y $60 \times 60$
         }
         \label{fig:dos 3560}
@@ -741,6 +741,50 @@ Una cuestión interesante de abordar es el atributo de escasez de fichas en el p
 \end{figure}
 
 Claramente, estas imágenes tienen contornos más blancos y los fotomosaicos se asemejan a los resultados de usar los valores de matriz perfecta para \textit{greyscales}, \ref{fig:dos figurasPerf}, puesto que el costo total de diferencias de luminosidades promedio (valor de la función objetivo) se reduce al las restricciones. Sin embargo, la observación de que no todos los $20$ tipos de fichas disponibles se están empleando, lo cual es indicador de que la imagen carece de manera importante de variedad en escalas de intensidad lumínica, nos podría hacer perder interés en esta instancia específica del problema.
+
+Finalmente, consideramos que vale la pena explorar la posibilidad de construir una imagen más elaborada, con mayor relieve y color que el logo de Twitter. Para ello, se propuso reproducir el ejercicio de los fotomosaicos con una imagen caricaturizada del connotado científico británico, Isaac Newton. 
+
+
+
+\begin{figure} [h]
+  \centering
+   \includegraphics[width=0.7\linewidth]{newton_app2.png}
+  \caption{Fotomosaico de Isaac Newton  }
+  \label{new_or}
+\end{figure}
+
+En ejercicos anteriores ya se demostró que el algoritmo computado para este trabajo soporta composiciones de imágenes de hasta 60 por 60. Por ello, se optó por una asignación poco por debajo de ese límite, de $50 \times 50$. Reproduciendo de nueva cuenta la escala de gris del promedio en cada rectángulo, se genera el resultado de la matriz objetivo
+
+
+\begin{figure} [h]
+  \centering
+   \includegraphics[width=0.7\linewidth]{newton degradado.jpeg}
+  \caption{Fotomosaico de Isaac Newton, matriz perfecta $50 \times 50$ }
+  \label{new_obj}
+\end{figure}
+
+Se tienen dos resultados de nueva cuenta, de forma similar a como se trabajó con la imagen del pájaro. Un ejercicio con holgura en las dotaciones de fichas y otro ejercicio que exige variabilidad en las asignaciones de fichas sin importar que exista una ficha geométricamente más cercana a la mayoría de rectángulos en el espacio de grises. 
+
+
+  \begin{figure}[h]
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Newton_v50full.jpeg}
+         \caption{Fotomosaico Newton: $20$ tipos de figuras,  Disposiciones no limitadas}
+         \label{fig:figp50n_h}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Newton_v50.jpeg}
+         \caption{Fotomosaico Newton: $20$ tipos de figuras,  Disposiciones limitadas}
+         \label{fig:figp50n_ch}
+     \end{subfigure}
+     \hfill
+        \caption{Soluciones gráficas al problema de los fotomosaicos con dimensiones $50 \times 50$: Versión con holgura de  $dp=m\;n$ y $vp=0$; y sin holgura de  $dp=0 \period 3$ y $vp=0 \period 3$ }
+        \label{fig:dos figuras}
+\end{figure}
 
 
 
@@ -871,6 +915,94 @@ Habiendo seleccionado la imagen a computar y las fichas, se procede a generar el
 
 La imagen se ha computado con éxito. Como se preveía, las asignaciones están concentradas principalmente en los tres colores especificados que integran la bandera (verde, blanco, rojo y café); al computar el caso de  $20 \times 30$ se observa que las flores naranjas están desplegadas en $3$ ocasiones por el motivo de los contornos de la imagen cuyas submatrices tienen centroides en el hiperplano $RGB$ ubicado entre el verde de la encina, el laurel y el nopal y el café del águila. El rosa se aleja de las posibilidades de ser seleccionado en la medida de que es un color distante de los que componen la bandera.
 
+Extiéndase el ejemplo de la visualización de Isaac Newton a la versión a color. Las versiones degradadas de la imagen original, en sus versiones de $40 \times 40$ se presentan a continuación, con dos despliegues que con facilidad son fácilmente identificables
+
+
+
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{newton_col_degra_30.jpg}
+         \caption{ Dimensiones $30 \times 30$ }
+         \label{fig:new_obj_30}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{newton_col_degra_40.JPG}
+         \caption{  Dimensiones $40 \times 40$ }
+         \label{fig:new_obj_30}
+     \end{subfigure}
+    \caption{Resultado de arreglos objetivos, versión Newton}
+     \label{fig:res colflor}
+\end{figure}
+
+El primer ejercicio se realiza con la instancia de $30 \times 30$ con las mismas flores que \ref{fig:flores fichas} y los resultados se muestran en \ref{fig:new_30bs}
+
+
+\begin{figure} [h]
+  \centering
+   \includegraphics[width=0.7\linewidth]{Newton_v30_bsc.JPG}
+  \caption{ Imagen objetivo: Newton en dimensiones $30 \times 30$  }
+  \label{fig:new_30bs}
+\end{figure}
+
+
+Con algo de imaginación se puede identificar que el desarrollo de esta instancia da un buen resultado. Ajusta el verde de la hoja de manzana con el verde, el rojo de la manzana con las flores rojas y naranajas y las flores cafés se posicionan en donde iría el pelo castaño del personaje. Sin embargo, no deja de ser un ejercicio limitado ya que la variedad disponible es de solo seis colores. De tal manera que se amplió la gama de flores de seis a veinte y se generaron las correspondientes ejecuciones: la de máxima holgura y la de la variación forzada en los parámetros. 
+
+
+
+
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Newton_v40_bsc_v2.JPG}
+         \caption{ Dimensiones $40 \times 40$ }
+         \label{fig:new_obj_30}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Newton_v40_bsc_v3.JPG}
+         \caption{  Dimensiones $40 \times 40$ }
+         \label{fig:new_obj_30}
+     \end{subfigure}
+    \caption{Resultado de arreglos objetivos, versión Newton}
+     \label{fig:res colflor}
+\end{figure}
+
+
+
+Se observa en los resultados que ambos ejercicios ocupan una mayor variedad de fichas que las instancias anteriores de Newton. Sin embargo, resulta interesante cómo en el primer ejercicio el algoritmo identificó el color del pétalo con las flores grises más que con las propias verdes claras ya mostradas. Esto se debe a que el pixel \say{promedio}, es decir, el gris, se encuentra cercano a muchos colores, entre ellos el verde. El segundo ejercicio tuvo como resultado una seriación de colores variados plasmados en el fondo que originalmente es color blanco. El hecho de que se colocaran yuxtapuestas bajo un patrón horizontal siendo que no existe similaridad con el blanco de algunos de estos colores (rosa, azul, vino) es un indicativo de que estas imágenes se ocuparon ahí como recurso buscando que se cumpliera la asignación de todos los colores en similar cuantía. Si bien el resultado es imperfecto, sí es visualmente atractivo e interesante en cuanto a problema artístico y de programación. Además, mostrando la imagen objetivo y el resultado sí es factible relacionar que una imagen es un intento de replicar creativamente a la otra. El resultado en general sí puede considerarse exitoso puesto que sí se generaron imágenes que sí parecen replicar a la imagen objetivo. 
+
+\subsection{Fotomosaicos con librería de R}
+
+En el capítulo 3 se menciona que existen módulos o librerías de lenguaje de programación \textit{Open Source} con los cuales se pueden reproducir ejercicios con imágenes. Tal es el caso de R, que hace uso de su librería \textit{composeMosaicFromImageRandomOptim} para generar la imagen objetivo con tres insumos mínimos: imagen objetivo, conjunto (folder) de imágenes a colocar y nombre del archivo jpg a crear como resultado. A diferencia del algoritmo que se desarrolló en este trabajo, esta librería se fija como objetivo usar tantas imágenes como sea posible. Además, iterativamente se ejecuta una acción sobre cada subrectángulo, aleatoriamente elegido, que consiste en asignarle una etiqueta mediante un algoritmo de clasificación supervisada llamado \say{vecinos más cercanos}. Vale la pena rescatar que este algoritmo procesa cada pixel de la imagen que se le dé, siendo esta una tarea compleja en imagenes de más de $400$ pixeles por dimensión. De manera que tuvo que hacerse el ejercicio de reducción de dimensionalidad desarrollado anteriormente de agrupar un conjunto de pixeles y asignarles su color promedio. Haciendo esto, el algoritmo logra computarse rápidamente, generando imágenes tales como se muestra a continuación. 
+
+
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{finalfile1 v30i.jpg}
+         \caption{ Dimensiones $30 \times 30$ }
+         \label{fig:mx_20_15}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{finalfile1 - v35i.jpg}
+         \caption{  Dimensiones $35 \times 35$ }
+         \label{fig:mx_30_20}
+     \end{subfigure}
+    \caption{Resultado de fotomosaicos a color: bandera de la república mexicana a base de flores}
+     \label{fig:res colflor}
+\end{figure}
+
+
+Vale la pena notar que este algoritmo se fija como objetivo desplegar la mayor variedad posible de fichas haciendo que en la misma se haga uso de los colores naranja y rosa, que tienen poca relación con la bandera de México. Además la asignación es, como dice el nombre aleatoria, por lo cual sucesivas reproducciones del mismo código darán un resultado diferente.
 
 
 \section{Arte con el agente viajero}\label{sec:tspImplem}
@@ -910,7 +1042,7 @@ $
          \includegraphics[width=\textwidth]{twitt15.png}
          \caption{ $15 \times 15$ rectángulos o $606$ ciudades}
          \label{fig:fig15}
-     \end{subfigure}zz
+     \end{subfigure}
      \hfill
      \begin{subfigure}[b]{0.4\textwidth}
          \centering
