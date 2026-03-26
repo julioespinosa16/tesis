@@ -1,0 +1,970 @@
+\documentclass[10pt, aspectratio=169]{beamer}
+
+% --- Paquetes ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish, es-tabla]{babel}
+\usepackage{amsmath, amsfonts, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs, tabularx}
+\usepackage{algorithm, algpseudocode}
+\usepackage{tikz}
+\usetikzlibrary{positioning, shapes.geometric, arrows.meta}
+
+% --- Tema y Colores ITAM ---
+\usetheme{metropolis}
+\definecolor{ITAMgreen}{HTML}{004A44} 
+\definecolor{ITAMgold}{HTML}{D4AF37}  
+\definecolor{OptArtOrange}{HTML}{CC5500} % Este es el naranja que "pesa" visualmente
+
+
+\setbeamercolor{alerted text}{fg=OptArtOrange}
+
+% --- Colores ITAM y Opt-Art (Configuración Maestra) ---
+\definecolor{ITAMgreen}{HTML}{004A44} 
+\definecolor{ITAMgold}{HTML}{D4AF37}  
+\definecolor{OptArtOrange}{HTML}{CC5500} % El naranja de la tesis
+
+
+
+% --- Colores ITAM y Opt-Art (Configuración Maestra) ---
+\definecolor{ITAMgreen}{HTML}{004A44} 
+\definecolor{ITAMgold}{HTML}{D4AF37}  
+\definecolor{OptArtOrange}{HTML}{CC5500} % Definición única y clara
+
+\setbeamercolor{palette primary}{bg=ITAMgreen, fg=white}
+\setbeamercolor{progress bar}{fg=ITAMgold, bg=ITAMgreen!50!white}
+\setbeamercolor{frametitle}{bg=ITAMgreen, fg=white}
+
+% ESTA ES LA LÍNEA CLAVE: Unificamos el color de todos los \alert
+\setbeamercolor{alerted text}{fg=OptArtOrange}
+
+\setbeamercolor{palette primary}{bg=ITAMgreen, fg=white}
+\setbeamercolor{progress bar}{fg=ITAMgold, bg=ITAMgreen!50!white}
+\setbeamercolor{frametitle}{bg=ITAMgreen, fg=white}
+
+% ESTO ES LO QUE ESTABA FALLANDO: Forzamos el naranja para los \alert
+\setbeamercolor{alerted text}{fg=OptArtOrange}
+
+\setbeamercolor{palette primary}{bg=ITAMgreen, fg=white}
+\setbeamercolor{progress bar}{fg=ITAMgold, bg=ITAMgreen!50!white}
+\setbeamercolor{alerted text}{fg=ITAMgold}
+\setbeamercolor{frametitle}{bg=ITAMgreen, fg=white}
+
+
+
+\definecolor{OptArtOrange}{HTML}{CC5500}
+
+
+% --- Configuración de Fuentes (CORREGIDO: Compatible con pdfLaTeX) ---
+\usefonttheme{professionalfonts}
+\usepackage[sfdefault, scaled=.85]{FiraSans} % Carga la fuente correctamente sin basura visual
+\usepackage[italic]{mathastext} % Para que las mates sigan el estilo del texto
+
+% --- Metadatos ---
+\title{Opt-Art. Foto-mosaicos: optimización en el arte}
+\subtitle{Fundamentos algorítmicos de optimización en arte visual  }
+\author{\textbf{Julio César Espinosa León}}
+\institute{\small Licenciatura en Matemáticas Aplicadas \\ Instituto Tecnológico Autónomo de México (ITAM)}
+\date{Marzo 2025}
+% Eliminamos \titlegraphic para evitar el traslape
+
+% --- Inicio del Documento ---
+\begin{document}
+
+% --- Slide 1: Portada (Logo corregido con TikZ) ---
+{
+\usebackgroundtemplate{
+\tikz\node[opacity=0.10] {\includegraphics[width=\paperwidth, height=\paperheight]{j_tspSmile_s.jpeg}};}
+\begin{frame}[plain]
+    % Colocación manual del logo en la esquina superior derecha
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[anchor=north east, inner sep=0.5cm] at (current page.north east) {
+            \includegraphics[height=1.5cm]{itam_logo.png}
+        };
+    \end{tikzpicture}
+
+    \maketitle
+    
+    \begin{center}
+        \vfill
+        \textbf{\textcolor{ITAMgreen}{"Donde el rigor del dato encuentra la calidez de la estética".}}
+    \end{center}
+\end{frame}
+}
+
+% --- Slide 2: Introducción (CORREGIDA - Opción 1: Más impacto) ---
+\begin{frame}{Introducción: Un paradigma de la programación lineal}
+    \begin{columns}[T]
+        \begin{column}{0.6\textwidth}
+            \begin{itemize}
+                \item \textbf{Paradigma Tradicional:} Minimizar costos, tiempos, distancias. (Logística, Finanzas).
+                \item \textbf{Paradigma a trabajar (Opt-Art):} Maximizar fidelidad visual, coherencia y estética.
+            \end{itemize}
+            \vspace{0.8cm} % Aumentamos un poco el espacio aquí
+            \textbf{Los dos pilares de este proyecto:}
+            \begin{enumerate}
+                \item \textbf{Asignación:} Fotomosaicos (Problema de Transporte).
+                \item \textbf{Secuenciación:} TSP-Art (Problema del Agente Viajero).
+            \end{enumerate}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \centering
+            % --- CAMBIOS AQUÍ ---
+            \vspace{1.0cm} % Bajamos un poco para centrarla visualmente con el bloque de arriba
+            {\Large\bfseries\alert{"No estamos ahorrando dinero; estamos optimizando la belleza."}}
+            % --------------------
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+% --- Slide 3: La Premisa Fundamental (Homologada con Slide 4) ---
+\begin{frame}{La Premisa Fundamental: La Imagen como Matriz}
+
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            Para un optimizador, una imagen \textbf{no es ``arte''}, es un arreglo de datos estructurado.
+
+            \vspace{0.4cm}
+
+            \begin{itemize}
+                \item \textbf{Escala de grises ($\mathbb{R}^{1}$):} Matriz $A_{ij} \in [0, 255]$ que codifica luminancia.
+                \item \textbf{Color RGB ($\mathbb{R}^{3}$):} Tensor $A_{ijk} \in [0, 255]^3$ donde cada píxel es un vector en el espacio cromático.
+            \end{itemize}
+
+            \vspace{0.8cm}
+            \small\textit{(En otras palabras: eliminamos el misticismo del ``arte'', alineando todo a números optimizables.)}
+        \end{column}
+
+        \begin{column}{0.52\textwidth}
+            \centering
+            % Representación de la malla de píxeles
+            \begin{tikzpicture}[scale=0.85] 
+                \draw[step=1cm, gray!30, very thin] (0,0) grid (5,5);
+
+                % Valores de intensidad (Gradiente real)
+                \node at (0.5,4.5) {\footnotesize 247}; \node at (1.5,4.5) {\footnotesize 198}; 
+                \node at (2.5,4.5) {\footnotesize 142}; \node at (3.5,4.5) {\footnotesize 89};  \node at (4.5,4.5) {\footnotesize 34};
+                \node at (0.5,3.5) {\footnotesize 210}; \node at (1.5,3.5) {\footnotesize 165}; 
+                \node at (2.5,3.5) {\footnotesize 108}; \node at (3.5,3.5) {\footnotesize 72};  \node at (4.5,3.5) {\footnotesize 19};
+                \node at (0.5,2.5) {\footnotesize 168}; \node at (1.5,2.5) {\footnotesize 124}; 
+                \node at (2.5,2.5) {\footnotesize 81};  \node at (3.5,2.5) {\footnotesize 45};  \node at (4.5,2.5) {\footnotesize 12};
+                \node at (0.5,1.5) {\footnotesize 112}; \node at (1.5,1.5) {\footnotesize 78};  
+                \node at (2.5,1.5) {\footnotesize 52};  \node at (3.5,1.5) {\footnotesize 31};  \node at (4.5,1.5) {\footnotesize 8};
+                \node at (0.5,0.5) {\footnotesize 67};  \node at (1.5,0.5) {\footnotesize 41};  
+                \node at (2.5,0.5) {\footnotesize 22};  \node at (3.5,0.5) {\footnotesize 9};   \node at (4.5,0.5) {\footnotesize 0};
+
+                \node[left, ITAMgreen, font=\scriptsize] at (0,4.5) {$i=1$};
+                \node[above, ITAMgreen, font=\scriptsize] at (0.5,5) {$j=1$};
+                \node[below right, gray!60, font=\tiny] at (5,0) {zoom a región de imagen real};
+            \end{tikzpicture}
+            
+            \vspace{0.8cm} % Espacio suficiente para no "asfixiar" la matriz
+            
+            \alert{\Large\bfseries "No hay arte: sólo un poliedro de alta dimensionalidad en $\mathbb{R}^{m \times n \times c}$ que podemos optimizar."}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% --- Slide 4: Marco Teórico (Corregida: Contraste de Integralidad) ---
+\begin{frame}{Marco Teórico: La Pesadilla de la Integralidad}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \begin{block}{1. Relajación Lineal (PL)}
+                \small
+                \begin{equation*}
+                    \begin{aligned}
+                        & \min \quad c^\top x \\
+                        & \text{s. a.} \quad Ax = b \\
+                        & \quad \quad \quad \mathbf{x \ge 0} 
+                    \end{aligned}
+                \end{equation*}
+            \end{block}
+            \begin{itemize}
+                \item \footnotesize \textbf{Complejidad:} Polinomial (Simplex/Punto Interior).
+                \item \footnotesize \textbf{Dominio:} Espacio continuo (Poliedro convexo).
+            \end{itemize}
+        \end{column}
+
+        \begin{column}{0.48\textwidth}
+            \begin{block}{2. Programación Entera (PLE)}
+                \small
+                \begin{equation*}
+                    \begin{aligned}
+                        & \min \quad c^\top x \\
+                        & \text{s. a.} \quad Ax = b \\
+                        & \quad \quad \quad \mathbf{x \in \mathbb{Z}_{+}^n} 
+                    \end{aligned}
+                \end{equation*}
+            \end{block}
+            \begin{itemize}
+                \item \footnotesize \textbf{Complejidad:} NP-Duro.
+                \item \footnotesize \textbf{Reto:} Búsqueda en espacios discretos.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item El \textbf{Integrality Gap} es la distancia entre el óptimo relajado y el óptimo entero.
+        \item En problemas de gran escala ($n > 10,000$), algoritmos como \textit{Branch and Bound} se vuelven computacionalmente prohibitivos.
+    \end{itemize}
+
+    \centering
+    \vspace{0.6cm}
+    {\Large\bfseries\alert{"La discreción es el enemigo de la velocidad... a menos que conozcas la estructura".}}
+\end{frame}
+
+
+% --- Slide 5: El "As" bajo la manga (Versión con Kerning Corregido) ---
+\begin{frame}{El ``As'' bajo la manga: Unimodularidad Total (TU)}
+
+    \begin{columns}[T]
+        % Columna 1: El fundamento técnico
+        \begin{column}{0.55\textwidth}
+            \begin{definition}[Unimodularidad Total]
+                \small Una matriz $A$ es TU si el determinante de \textbf{toda} submatriz cuadrada pertenece al conjunto $\{-1, 0, 1\}$.
+            \end{definition}
+
+            \vspace{0.3cm}
+
+            \begin{theorem}
+                \small Si $A$ es totalmente unimodular y $b$ es un vector entero, todos los vértices del poliedro $\{x \mid Ax=b, x \ge 0\}$ son enteros.
+            \end{theorem}
+
+            \vspace{0.5cm}
+            \textbf{Consecuencia para el proyecto:}
+            \begin{itemize}
+                \item El algoritmo Simplex resuelve directamente la instancia entera.
+                \item Eliminamos el costo exponencial de \textit{Branch \& Bound}.
+                \item Viabilidad para decenas de miles de variables.
+            \end{itemize}
+        \end{column}
+
+        % Columna 2: Visualización y Sentencia
+        \begin{column}{0.42\textwidth}
+            \centering
+            \includegraphics[width=0.9\textwidth]{simplex_plot.png}
+            
+            \vspace{1.0cm} 
+
+            % Corregido: Uso de `` y '' para kerning óptimo con la C mayúscula
+            \alert{\Large\bfseries ``Cuando la estructura es perfecta, la relajación lineal es la solución exacta.''}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% --- Sección 2 ---
+\section{Sección 2: Fotomosaicos y Arquitectura de Datos}
+
+% --- Slide 6: Fotomosaicos (Modelo con dimensiones m x n) ---
+\begin{frame}{Fotomosaicos: El Modelo de Asignación Global}
+
+    \begin{columns}[T]
+        % Columna 1: El modelo con sumatorias explícitas
+        \begin{column}{0.55\textwidth}
+            Dada una imagen objetivo discretizada en una malla de $m \times n$ celdas y un catálogo $F$:
+            
+            \begin{block}{Minimización de Distancia Global}
+                \small
+                \begin{equation*}
+                    \min \sum_{f \in F} \sum_{i=1}^{m} \sum_{j=1}^{n} d(b_f, \beta_{ij})^2 \, x_{fij}
+                \end{equation*}
+            \end{block}
+            
+            \textbf{Sujeto a:}
+            \begin{itemize}
+                \item \footnotesize $\sum_{f \in F} x_{fij} = 1, \quad \forall i, j$ \hfill \textit{(Cobertura)}
+                \item \footnotesize $\sum_{i,j} x_{fij} \le u_f, \quad \forall f \in F$ \hfill \textit{(Inventario)}
+                \item \footnotesize $x_{fij} \in \{0, 1\}$ \hfill \textit{(Asignación)}
+            \end{itemize}
+        \end{column}
+
+        % Columna 2: Espacios Métricos y Sentencia
+        \begin{column}{0.42\textwidth}
+            \textbf{Robustez del modelo:}
+            \vspace{0.2cm}
+            \small
+            La métrica $d$ opera en un espacio normado $\mathbb{R}^k$ según la representación:
+            \begin{itemize}
+                \item \textbf{Grises ($k=1$):} Distancia absoluta en luminancia.
+                \item \textbf{Color ($k=3$):} Norma euclidiana en RGB o CIELAB.
+                \item \textbf{Impresión ($k=4$):} Espacio CMYK.
+            \end{itemize}
+
+            \vspace{1.0cm}
+
+            % Homologado con comillas tipográficas y color naranja Opt-Art
+            \alert{\Large\bfseries ``Buscamos el mínimo global, no el vecino más cercano.''}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+% --- Slide 7: Ingeniería de Datos (Sin conflictos de compilación) ---
+\begin{frame}{Ingeniería de Datos: Cuantización y Dimensionalidad}
+
+    \begin{columns}[T]
+        % Columna 1: El reto de la dimensionalidad
+        \begin{column}{0.55\textwidth}
+            \textbf{Discretización del espectro:}
+            \begin{itemize}
+                \item \textbf{Escala de Grises ($\mathbb{R}^1$):} Un muestreo con paso $\Delta = 0.05$ genera solo \textbf{20 niveles}, suficientes para la percepción humana.
+                \item \textbf{Espacio RGB ($\mathbb{R}^3$):} Una malla equivalente de $20 \times 20 \times 20$ implica \textbf{8,000 estados}, volviendo el modelo de asignación global computacionalmente denso.
+            \end{itemize}
+
+            \vspace{0.4cm}
+            \textbf{Cuantización Vectorial (K-means):}
+            \begin{itemize}
+                \item Se aplica $k=2$ sobre cada mosaico del catálogo.
+                \item El objetivo es extraer el \textbf{centroide dominante} ($b_f$), eliminando el ruido cromático de fondos o bordes.
+                \item Se contrasta el color representativo de la ficha (flor en este caso) vs. el de la región objetivo.
+            \end{itemize}
+        \end{column}
+
+        % Columna 2: Diagrama simple y frase de impacto
+        \begin{column}{0.42\textwidth}
+            \centering
+            
+            % Gráfico TikZ ultra-simple (sin comandos aleatorios)
+            \begin{tikzpicture}[scale=0.9]
+                \draw[->, thick, gray] (0,0) -- (3,0) node[right] {\tiny R};
+                \draw[->, thick, gray] (0,0) -- (0,3) node[above] {\tiny G};
+                
+                % Representación de clusters
+                \draw[fill=ITAMgreen!40, draw=ITAMgreen] (1,2) circle (0.6cm);
+                \draw[fill=gray!20, draw=gray] (2.2,0.8) circle (0.3cm);
+                
+                % Centroide dominante
+                \node[circle, fill=ITAMgold, inner sep=2pt, label=above:{\scriptsize $b_f$}] at (1,2) {};
+            \end{tikzpicture}
+
+            \vspace{1.2cm}
+
+            % Frase homologada con comillas inteligentes
+            \alert{\Large\bfseries ``Filtrando el ruido para encontrar el alma cromática del mosaico.''}
+        \end{column}
+    \end{columns}
+\end{frame}
+% --- Slide 8: La Carpintería Algorítmica (Mapeo eta y lpSolve) ---
+\begin{frame}{La Carpintería Algorítmica: Mapeo $\eta$ y Sparsidad}
+
+    \begin{columns}[T]
+        % Columna 1: El Algoritmo con la eta griega
+        \begin{column}{0.55\textwidth}
+            ¿Cómo procesar un tensor 3D de costos ($C_{fij}$) en un solucionador lineal estándar?
+            
+            \vspace{0.2cm}
+            \textbf{Vectorización Row-wise (Mapeo $\eta$):}
+            \begin{algorithm}[H]
+                \small
+                \floatname{algorithm}{Algoritmo}
+                \begin{algorithmic}[1]
+                    % --- AQUÍ ESTÁ EL CAMBIO DE LA ETA GRIEGA ---
+                    \Procedure{Mapeo$\eta$}{$f, i, j, m, n$}
+                        \State $t \gets (f - 1) \cdot (mn) + (i-1) \cdot n + j$
+                        \State \Return $t$
+                    \EndProcedure
+                \end{algorithmic}
+            \end{algorithm}
+            \footnotesize Este mapeo biyectivo transforma el tensor de costos en un vector compatible con la función objetivo $c^\top x$ del modelo.
+        \end{column}
+
+        % Columna 2: Implementación en R
+        \begin{column}{0.42\textwidth}
+            \textbf{Arquitectura en R:}
+            \begin{itemize}
+                \item \textbf{Solucionador:} Uso de la librería \texttt{lpSolve} para optimización lineal masiva.
+                \item \textbf{Estructura Sparse:} La matriz de restricciones resultante es altamente rala.
+                \item \textbf{Escalabilidad:} Permite manejar más de \textbf{72,000 variables} con 16 GB de RAM.
+            \end{itemize}
+
+            \vspace{1.0cm}
+
+            % Frase homologada en naranja Opt-Art
+            \alert{\Large\bfseries ``La eficiencia vive en los ceros de la matriz.''}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+% --- Slide 9: Resultado Maestro I (Bandera de México) ---
+\begin{frame}{Resultado Maestro I: La Bandera de México}
+    \begin{columns}[T]
+        % Columna de la Imagen (70% - El peso visual)
+        \begin{column}{0.70\textwidth}
+            \centering
+            \vspace{0.1cm}
+            \includegraphics[width=0.95\textwidth, height=0.78\textheight, keepaspectratio]{MexMosCol20.png}
+        \end{column}
+
+        % Columna Técnica y Cita (30% - El equilibrio)
+        \begin{column}{0.30\textwidth}
+            \vspace{0.4cm}
+            \textbf{\small Ficha Técnica:}
+            \begin{itemize}
+                \item \footnotesize \textbf{Malla:} $60 \times 90$
+                \item \footnotesize \textbf{Catálogo:} Flores
+                \item \footnotesize \textbf{Tiempo:} 78 s
+                \item \footnotesize \textbf{Error:} 4.2\%
+            \end{itemize}
+            
+            \vfill % Empuja la frase hacia la base de la slide
+
+            \begin{flushleft}
+
+
+                \alert{\Large\bfseries %
+                    ``Nuestra identidad florece cuando el Simplex asigna cada pétalo en su lugar óptimo.''%
+                    }
+                
+            \end{flushleft}
+            \vspace{0.8cm}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+% --- Sección 3 ---
+\section{Sección 3: TSP-Art y la Línea Continua}
+
+
+
+
+
+
+
+% --- Slide 10: TSP-Art - Stippling (Homologada y sin errores) ---
+\begin{frame}{TSP-Art: De la Matriz a la Ciudad (Stippling)}
+    \begin{columns}[T]
+        % Columna 1: El Desafío (Texto con comillas inteligentes)
+        \begin{column}{0.45\textwidth}
+            \textbf{El Desafío:} Convertir oscuridad en densidad de puntos.
+            \vspace{0.4cm}
+            \begin{itemize}
+                % Smart quotes para ciudades
+                \item La imagen se convierte en una nube de $\tau$ nodos (``ciudades'').
+                \item La probabilidad de colocar un nodo es proporcional a la intensidad local $\beta_{ij}$.
+            \end{itemize}
+        \end{column}
+
+        % Columna 2: Visualización y Catchy Phrase
+        \begin{column}{0.53\textwidth}
+            \centering
+            % Re-ubicamos el logo con keepaspectratio para que no se deforme
+            \includegraphics[width=\textwidth, height=0.65\textheight, keepaspectratio]{twitt15.png}
+            
+            \vfill % Empuja la frase a la base para equilibrio visual
+
+            \begin{flushleft}
+                % Usamos el formato \alert que ahora es naranja CC5500
+                \alert{\Large\bfseries ``Transformando la luz en un mapa de destinos obligatorios.''}
+            \end{flushleft}
+            \vspace{0.8cm}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+
+
+
+
+
+
+
+% --- Slide 11: Preprocesamiento Inteligente (K-means en Grids) ---
+\begin{frame}{Preprocesamiento Inteligente: K-means en Grids}
+    \begin{columns}[T]
+        % Columna 1: Explicación técnica
+        \begin{column}{0.5\textwidth}
+            ¿Cómo distribuimos los puntos eficientemente?
+            \vspace{0.4cm}
+            \begin{itemize}
+                \item \textbf{Aleatorio (\texttt{runif}):} Genera aglomeraciones caóticas y huecos visuales (ruido de Poisson).
+                \item \textbf{K-means Local:}
+                \begin{enumerate}
+                    \item Se proyecta un grid denso ($11 \times 11$) de candidatos en cada región.
+                    \item K-means selecciona los $g_{ij}$ centroides óptimos.
+                \end{enumerate}
+            \end{itemize}
+            \vspace{0.3cm}
+            \small Maximiza la separación entre puntos y garantiza una \textbf{cobertura visual uniforme}.
+        \end{column}
+
+        % Columna 2: Comparación Visual y Cita
+        \begin{column}{0.5\textwidth}
+            \centering
+            % Diagrama Aleatorio
+            \begin{tikzpicture}[scale=0.6]
+                \draw[step=2cm,gray!30,thin] (0,0) grid (4,4);
+                \foreach \x in {0,2} \foreach \y in {0,2} {
+                    \foreach \i in {1,...,10} \fill[red!60] (\x+0.2+1.6*rnd, \y+0.2+1.6*rnd) circle (0.06);
+                }
+                \node at (2,-0.6) {\footnotesize Aleatorio (\texttt{runif})};
+            \end{tikzpicture}
+            \hspace{0.4cm}
+            % Diagrama K-means
+            \begin{tikzpicture}[scale=0.6]
+                \draw[step=2cm,gray!30,thin] (0,0) grid (4,4);
+                \foreach \x in {0.5,1.5,2.5,3.5} \foreach \y in {0.5,1.5,2.5,3.5} \fill[ITAMgreen] (\x, \y) circle (0.09);
+                \node at (2,-0.6) {\footnotesize K-means (Regular)};
+            \end{tikzpicture}
+
+            \vfill % Empuja la frase hacia abajo para balancear
+
+            \begin{flushleft}
+                \alert{\Large\bfseries ``Geometría controlada para un trazo sin caos.''}
+            \end{flushleft}
+            \vspace{0.6cm}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% --- Slide 12: El Motor del TSP (Teoría vs. Heurística) ---
+\begin{frame}{El Motor del TSP: Rigor Teórico vs. Eficiencia Heurística}
+
+    \begin{columns}[T]
+        % Columna 1: El límite de la teoría (MTZ)
+        \begin{column}{0.5\textwidth}
+            \textbf{Modelo Teórico (MTZ):}
+            \small Eliminación de \textit{subtours} mediante variables de orden $u_i$.
+            \begin{equation*}
+                u_i - u_j + (\tau-1) x_{ij} \le \tau-2 \quad \forall i \neq j
+            \end{equation*}
+            
+            \begin{itemize}
+                \item \textbf{Complejidad:} Genera $O(\tau^2)$ restricciones.
+                \item \textbf{Limitación:} Computacionalmente intratable para $\tau > 15,000$ ciudades.
+            \end{itemize}
+        \end{column}
+
+        % Columna 2: La potencia de la heurística
+        \begin{column}{0.48\textwidth}
+            \textbf{Implementación Práctica:}
+            \begin{enumerate}
+                \item \textbf{Inicialización:} Inserción Arbitraria para obtener una solución inicial factible.
+                \item \textbf{Refinamiento:} Algoritmo \textbf{2-opt} para optimización local.
+            \end{enumerate}
+            \vspace{0.4cm}
+            \small Este enfoque transforma un problema NP-Duro en un proceso convergente de alta velocidad.
+        \end{column}
+    \end{columns}
+
+    \vfill % Balanceo vertical
+
+    \begin{flushleft}
+        % Catchy phrase: Naranja unificado, comillas inteligentes y tono profesional
+        \alert{\Large\bfseries ``La teoría garantiza la validez del tour; la heurística esculpe su belleza.''}
+    \end{flushleft}
+    \vspace{0.6cm}
+\end{frame}
+
+
+% --- Slide 13: El Arte de Desanudar: El Efecto 2-opt ---
+\begin{frame}{El Arte de Desanudar: El Efecto 2-opt}
+    \begin{columns}[T]
+        % Columna 1: Fundamento Geométrico
+        \begin{column}{0.5\textwidth}
+            El algoritmo \textbf{2-opt} intercambia dos aristas existentes por dos nuevas siempre que el costo total disminuya.
+            
+            \vspace{0.4cm}
+            \begin{itemize}
+                \item Se fundamenta en la \textbf{Desigualdad Triangular} euclidiana: ``descruzar'' aristas siempre acorta la ruta total.
+                \item Elimina el ruido visual de las intersecciones, ``peinando'' el trazo de forma iterativa.
+                \item \textbf{Costo:} $O(\tau^2)$ por iteración, logrando convergencia rápida hacia óptimos locales de alta calidad.
+            \end{itemize}
+        \end{column}
+
+        % Columna 2: Diagrama TikZ y Sentencia
+        \begin{column}{0.5\textwidth}
+            \centering
+            \begin{tikzpicture}[scale=0.85, transform shape]
+                % Coordenadas
+                \coordinate (A) at (0, 3); \coordinate (B) at (3, 3);
+                \coordinate (C) at (3, 0); \coordinate (D) at (0, 0);
+
+                % Nodos
+                \foreach \n/\pos/\label in {A/above left/A, B/above right/B, C/below right/C, D/below left/D}
+                    \node[circle, draw=black, fill=ITAMgold, inner sep=2pt, label=\pos:\textbf{\label}] (\n) at (\n) {};
+
+                % Trayecto con CRUCE (Rojo)
+                \draw[red!80!black, thick] (A) -- node[pos=0.6, left, font=\tiny] {Cruce} (C);
+                \draw[red!80!black, thick] (B) -- (D);
+
+                % Trayecto OPTIMIZADO (Verde ITAM)
+                \draw[ITAMgreen, ultra thick, dashed] (A) -- node[above, font=\tiny] {Mejora} (B);
+                \draw[ITAMgreen, ultra thick, dashed] (D) -- (C);
+
+                % Símbolo de transformación
+                \node[font=\Huge, ITAMgreen] at (1.5, 1.5) {$\implies$};
+
+                % Bloque Matemático
+                \node[draw=ITAMgreen, fill=white, align=center, below=0.8cm of D, anchor=north west, font=\scriptsize] at (-0.4,0) {
+                    \textbf{Eficiencia Geométrica:}\\
+                    \textcolor{ITAMgreen}{$d(A,B) + d(C,D)$} $<$ \textcolor{red!80!black}{$d(A,C) + d(B,D)$}
+                };
+            \end{tikzpicture}
+            
+            \vfill 
+
+            % Catchy Phrase: Homologada en formato y profundidad
+            \begin{flushleft}
+                \alert{\Large\bfseries ``En el plano euclidiano, la limpieza visual es la firma de la eficiencia métrica.''}
+            \end{flushleft}
+            \vspace{0.4cm}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% --- Slide 14: Resultado Maestro II (Logo de Twitter) ---
+\begin{frame}[plain]{Resultado Maestro II: El Logo de Twitter (Fidelidad)}
+    \begin{columns}[T]
+        % Columna del Logo (Ajustada para reducir el gap)
+        \begin{column}{0.62\textwidth}
+            \centering
+            \vspace{0.1cm}
+            \includegraphics[width=0.98\textwidth, height=0.78\textheight, keepaspectratio]{twittRes85.png}
+        \end{column}
+
+        % Columna Técnica y Cita (Acercada al centro)
+        \begin{column}{0.35\textwidth}
+            \vspace{0.5cm}
+            \textbf{\small Ficha Técnica:}
+            \begin{itemize}
+                \item \footnotesize \textbf{Malla:} $85 \times 85$
+                \item \footnotesize \textbf{Ciudades ($\tau$):} \textbf{15,311}
+                \item \footnotesize \textbf{Tiempo:} 2,100 s
+                \item \footnotesize \textbf{Reto:} Densidad en bordes negros.
+            \end{itemize}
+            
+            \vfill % Equilibrio vertical entre datos y frase
+
+            \begin{flushleft}
+                % Catchy phrase: Formato Large, negrita, comillas inteligentes y color de alerta
+                \alert{\Large\bfseries ``Quince mil decisiones para sintetizar la complejidad en la pureza de un solo trazo.''}
+            \end{flushleft}
+            \vspace{0.8cm}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+
+
+% --- Slide 15: Análisis de Precisión (Isaac Newton - Fotomosaico) ---
+\begin{frame}{Análisis de Precisión: Isaac Newton}
+    \begin{columns}[T]
+        % Columna Izquierda: Imagen del Mosaico
+        \begin{column}{0.65\textwidth}
+            \centering
+            \vspace{0.1cm}
+            \includegraphics[width=0.95\textwidth, height=0.72\textheight, keepaspectratio]{Newton_v50full.jpeg}
+        \end{column}
+
+        % Columna Derecha: Análisis y Frase de Impacto
+        \begin{column}{0.33\textwidth}
+            \vspace{0.4cm}
+            \textbf{\small Capacidad del Modelo:}
+            \begin{itemize}
+                \item \footnotesize \textbf{Mosaico Social:} Uso de $cf \approx 500$ imágenes de Instagram.
+                \item \footnotesize \textbf{Textura Visual:} Aprovechamiento de la varianza cromática.
+                \item \footnotesize \textbf{Error Residual:} $< 5\%$, manteniendo la legibilidad.
+            \end{itemize}
+            
+            \vfill 
+
+            \begin{flushleft}
+                \alert{\Large\bfseries ``La luz de Newton se descompone en instantes: una sinergia entre la teoría corpuscular y la asignación global óptima.''}
+            \end{flushleft}
+            \vspace{0.8cm}
+        \end{column}
+    \end{columns}
+
+    % --- NOTA TÉCNICA AL PIÉ (Aumentada y Alineada al Horizonte del 15) ---
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[anchor=south west, xshift=0.5cm, yshift=0.25cm] at (current page.south west) {
+            % Subimos a \scriptsize para ese 30% extra de visibilidad
+            \scriptsize \textcolor{gray!85}{%
+                Métrica de Error Residual: $\epsilon_{res} = \frac{\sum_{i,j} d(\beta_{ij}, b_{f})^2}{Z_{max}} \times 100$
+            }
+        };
+    \end{tikzpicture}
+\end{frame}
+
+
+% --- Sección 4 ---
+\section{Sección 4: Análisis Riguroso y Cierre}
+
+
+% --- Slide 16: Validación Rigurosa (Sensibilidad y Quiebres) ---
+\begin{frame}{Validación Rigurosa: Sensibilidad y Quiebres}
+    \begin{columns}[T]
+        % Columna 1: Teoría y Observaciones (45%)
+        \begin{column}{0.45\textwidth}
+            \vspace{0.3cm}
+            \textbf{Análisis de Complejidad:}
+            \begin{itemize}
+                \item El tiempo de cómputo no es estrictamente monótono; presenta \textbf{quiebres} (descensos locales) cuando la malla se alinea modularmente con la imagen.
+            \end{itemize}
+            
+            \vspace{0.2cm}
+            \textbf{Comportamiento de la Gráfica:}
+            \begin{itemize}
+                \item \small Se observa una tendencia exponencial ($O(n^k)$) que se ve interrumpida por fluctuaciones de eficiencia.
+            \end{itemize}
+        \end{column}
+
+        % Columna 2: Gráfica y Conclusión (53%)
+        \begin{column}{0.53\textwidth}
+            \centering
+            % Restringimos altura para evitar traslape con el frametitle
+            \vspace{-0.1cm} 
+            \includegraphics[width=\textwidth, height=0.65\textheight, keepaspectratio]{dim_tiempo tsp.png}
+            
+            \vfill % Empuja la frase a la base de forma armónica
+
+            \begin{flushleft}
+                \alert{\Large\bfseries ``Más resolución no siempre significa más trabajo''}
+            \end{flushleft}
+            \vspace{0.4cm}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+
+
+% --- Slide 17: Benchmarking (La Cota de Held-Karp) ---
+\begin{frame}{Benchmarking: La Cota de Held-Karp}
+    \begin{columns}[T]
+        % Columna 1: Contexto Teórico (48%)
+        \begin{column}{0.48\textwidth}
+            \textbf{Validación de la Calidad Heurística:}
+            \vspace{0.3cm}
+            \begin{itemize}
+                \item Comparamos el tour obtenido ($z_{heur}$) contra la \textbf{Cota de Held-Karp ($z_{HK}$)}, que representa el óptimo de la relajación lineal del TSP.
+                \item En instancias euclidianas, el óptimo entero $z^*$ suele estar a menos del 1\% de $z_{HK}$.
+            \end{itemize}
+            \vspace{0.4cm}
+            \small La cercanía a esta cota inferior garantiza que nuestras soluciones son casi óptimas en términos globales.
+        \end{column}
+
+        % Columna 2: Resultados Cuantitativos (48%)
+        \begin{column}{0.48\textwidth}
+            \begin{table}
+                \centering
+                \small
+                \begin{tabular}{l c r}
+                    \toprule
+                    \textbf{Instancia} & \textbf{Nodos ($\tau$)} & \textbf{Gap vs $z_{HK}$} \\
+                    \midrule
+                    Logo Twitter & 15,311 & $\approx 1.10 \times z_{HK}$ \\
+                    Newton & $\approx 9,200$ & $\approx 1.08 \times z_{HK}$ \\
+                    Autorretrato & $\approx 8,200$ & $\approx 1.09 \times z_{HK}$ \\
+                    \bottomrule
+                \end{tabular}
+                \caption*{Comparativa de eficiencia relativa.}
+            \end{table}
+        \end{column}
+    \end{columns}
+
+    \vfill % Balanceo vertical
+
+    \begin{flushleft}
+        % Frase homologada: Naranja, negrita y comillas académicas
+        \alert{\Large\bfseries ``Rozando el límite de lo posible: la eficiencia heurística frente al rigor de la cota inferior.''}
+    \end{flushleft}
+    \vspace{0.4cm}
+\end{frame}
+
+
+% --- Slide 18: El Retrato Final (Autorretrato) ---
+\begin{frame}{El Retrato Final: Hackeando la Percepción}
+    \begin{columns}[T]
+        % Columna 1: Stippling
+        \begin{column}{0.48\textwidth}
+            \centering
+            \includegraphics[width=0.85\textwidth, height=0.6\textheight, keepaspectratio]{j_citSmile_s.png}
+            \vspace{0.2cm}
+            \\ \small \textbf{Stippling con Atenuación}
+        \end{column}
+
+        % Columna 2: Tour Final
+        \begin{column}{0.48\textwidth}
+            \centering
+            \includegraphics[width=0.85\textwidth, height=0.6\textheight, keepaspectratio]{j_tspSmile_s.jpeg}
+            \vspace{0.2cm}
+            \\ \small \textbf{Tour Final (TSP)}
+        \end{column}
+    \end{columns}
+
+    \vspace{0.4cm}
+    \textbf{Técnica:} \textit{Hard Thresholding} ($\psi > 0.70$) para filtrar altas frecuencias de luminancia y eliminar ruido visual en facciones críticas.
+
+    \vfill
+
+    \begin{flushleft}
+        % Catchy phrase homologada
+        \alert{\Large\bfseries ``A veces, para ver con claridad, el algoritmo debe aprender a ignorar el brillo.''}
+    \end{flushleft}
+    \vspace{0.4cm}
+\end{frame}
+
+
+% --- Slide 19: Conclusiones y Futuro (Versión Balanceada) ---
+\begin{frame}{Conclusiones: La Geometría de la Percepción}
+    \begin{columns}[T]
+        % Columna Izquierda: Integración Perceptual y Gestalt (48%)
+        \begin{column}{0.48\textwidth}
+            \textbf{Integración Perceptual y Gestalt:}
+            \begin{itemize}
+                \item \small El sistema visual actúa como un \textbf{filtro de paso bajo}: ignora las altas frecuencias (bordes de teselas o puntos) para rescatar la señal de baja frecuencia (imagen global).
+                \item \small \textbf{En Fotomosaicos:} Las leyes de \textbf{Semejanza y Proximidad} funden las fotos de Instagram en regiones cromáticas continuas, priorizando el ``todo'' sobre las partes.
+                \item \small \textbf{En TSP-Art:} Las leyes de \textbf{Cierre y Continuidad} permiten que una trayectoria única sea interpretada como una silueta con volumen.
+            \end{itemize}
+        \end{column}
+
+        % Columna Derecha: Futuro y Frase (48% - Con el nuevo punto CMYK)
+        \begin{column}{0.48\textwidth}
+            \textbf{Líneas de Trabajo Futuro:}
+            \begin{itemize}
+                \item \small Despliegue de la librería \texttt{OptArtR} para la democratización de estos modelos.
+                \item \small Extensión al espacio cromático sustractivo \textbf{CMYK} para la optimización de procesos de impresión física y artes gráficas.
+            \end{itemize}
+            
+            \vfill % Empuja la frase a la base para equilibrio visual
+
+            \begin{flushleft}
+                \alert{\Large\bfseries ``La optimización matemática culmina donde la interpretación humana comienza.''}
+            \end{flushleft}
+            \vspace{0.4cm}
+        \end{column}
+    \end{columns}
+\end{frame}
+% --- Slide 20: Cierre y Preguntas ---
+\begin{frame}[plain]
+    \begin{center}
+        \vspace{0.8cm}
+        % Logo del ITAM como sello de calidad
+        \includegraphics[height=1.8cm]{itam_logo.png} 
+        
+        \vfill
+        
+        % Título de cierre en el verde institucional
+        \huge \textbf{\textcolor{ITAMgreen}{¡Gracias!}}
+        
+        \vfill
+        
+        % Frase de cierre: La tesis resumida en una sentencia
+        \alert{\Large\bfseries ``La belleza es un objetivo legítimo y cuantificable \\ de las matemáticas.''}
+        
+        \vfill
+        
+        % Datos del autor (Alineación limpia)
+        \small
+        \textbf{Julio César Espinosa León} \\
+        \scriptsize Licenciatura en Matemáticas Aplicadas \\
+        \textcolor{gray}{Instituto Tecnológico Autónomo de México}
+        
+        \vspace{0.8cm}
+    \end{center}
+\end{frame}
+
+% --- Sección 5: Anexos ---
+\appendix
+\section{Anexos}
+
+% --- Slide 21: Bibliografía Principal (Optimizada para una sola lámina) ---
+\begin{frame}{Bibliografía Principal}
+    % Reducimos el tamaño de fuente a footnotesize para que quepa todo
+    \begin{footnotesize}
+    \begin{thebibliography}{99}
+        % Ajustamos el espacio entre referencias para ganar verticalidad
+        \setlength{\itemsep}{0pt}
+        
+        \bibitem{bosch2006} Bosch, R. (2006). Opt Art. \textit{Math Horizons}, 14(1), 6–9.
+        \bibitem{silvers1997} Silvers, R. (1997). \textit{Photomosaics}. Henry Holt and Company.
+        \bibitem{possani2012} Possani, E. (2012). Puentes, agentes viajeros y mosaicos: modelando usando gráficas y programación lineal. ITAM.
+        \bibitem{nilsson2003} Nilsson, C. (2003). \textit{Heuristics for the Traveling Salesman Problem}. Linköping University.
+        \bibitem{hillier2015} Hillier, F. S., \& Lieberman, G. J. (2015). \textit{Introduction to Operations Research} (10ma ed.). McGraw-Hill.
+        \bibitem{desrochers1991} Desrochers, M., \& Laporte, G. (1991). Improvements and extensions to the Miller-Tucker-Zemlin subtour elimination constraints. \textit{Operations Research Letters}, 10(1), 27–36.
+        \bibitem{chong2021} Chong, B. (2021). K-means clustering algorithm: a brief review. \textit{Academic Journal of Computing \& Information Science}, 4.
+        \bibitem{aqilburney2014} Aqil Burney, S. M. (2014). K-Means Cluster Analysis for Image Segmentation. University of Karachi.
+        \bibitem{castaneda2005} Castañeda, W. (2005). \textit{Color}. Universidad de Caldas.
+        \bibitem{bosch2004} Bosch, R. (2004). Constructing Domino Portraits. Oberlin College.
+    \end{thebibliography}
+    \end{footnotesize}
+\end{frame}
+
+% --- Slide 23: Anexo MatSplitter ---
+\begin{frame}{Anexo A: Algoritmo de Partición Modular}
+    \begin{algorithm}[H]
+        \floatname{algorithm}{Algoritmo A1}
+        \caption{Partición modular simétrica (\texttt{matsplitter})}
+        \begin{algorithmic}[1]
+            \Procedure{MatSplitter}{MatrizOriginal, m, n}
+            \State $\mu \gets \text{nrow(MatrizOriginal)},\ \nu \gets \text{ncol(MatrizOriginal)}$
+            \State $\mu' \gets \mu - (\mu \mod m)$ \Comment{Ajuste de filas}
+            \State $\nu' \gets \nu - (\nu \mod n)$ \Comment{Ajuste de columnas}
+            \State MatrizRecortada $\gets$ MatrizOriginal$[1:\mu', 1:\nu']$
+            \State $k \gets \mu'/m,\ h \gets \nu'/n$ \Comment{Dimensiones del tile}
+            \State ListaRectángulos $\gets$ Dividir(MatrizRecortada, k, h)
+            \State \Return ListaRectángulos
+            \EndProcedure
+        \end{algorithmic}
+    \end{algorithm}
+    Garantiza bloques íntegros y evita sesgos de luminosidad en los bordes.
+\end{frame}
+
+% --- Slide 24: Anexo B: Extensión a Dominós de Bosch ---
+\begin{frame}{Anexo B: Extensión a Dominós de Bosch}
+    \textbf{El Reto:} Cubrir la región de la imagen mediante fichas de dominó ($2 \times 1$).
+    
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item Se modela como un problema de \textbf{Emparejamiento Perfecto} en una gráfica de rejilla.
+        \item Requiere la introducción de variables binarias de orientación: $x_{ij}^H$ (horizontal) y $x_{ij}^V$ (vertical).
+    \end{itemize}
+
+    \begin{block}{Restricción de Cobertura}
+        Cada celda $(i,j)$ debe ser cubierta por exactamente una mitad de una ficha:
+        \begin{equation*}
+            x_{ij}^H + x_{i,j-1}^H + x_{ij}^V + x_{i-1,j}^V = 1
+        \end{equation*}
+    \end{block}
+
+    \vspace{0.3cm}
+    \small El mapeo vectorial $\eta$ desarrollado en esta tesis es lo suficientemente robusto para manejar la expansión dimensional de este espacio de variables.
+
+    \vfill
+
+    \vspace{0.4cm}
+\end{frame}
+
+
+% --- Slide 25: Anexo Tabla Completa ---
+\begin{frame}[plain]{Anexo C: Resultados Cuantitativos Completos}
+    \begin{table}[ht]
+        \centering
+        \small
+        % Se usa tabularx para que la tabla ocupe el ancho de la diapositiva
+        % La columna X permite que el texto largo se ajuste automáticamente
+        \begin{tabularx}{\textwidth}{@{} l c c c l X @{}}
+            \toprule
+            \textbf{Caso} & \textbf{Malla} & \textbf{$\tau$/celdas} & \textbf{Tiempo (s)} & \textbf{Métrica clave} & \textbf{Reto principal} \\
+            \midrule
+            Fotomosaico genérico & $60 \times 60$ & 3,600 & 64 & Error 3.9\% & Diversidad $vd$ \\
+            Bandera México & $60 \times 90$ & 5,400 & 78 & Error 4.2\% & Flores por color \\
+            Logo Twitter/X & $85 \times 85$ & 15,311 & 2,100 & $1.10 \times z_{HK}$ & Densidad bordes \\
+            Newton & $60 \times 80$ & $\approx$ 9,200 & 980 & Cruces $< 6\%$ & Curvas suaves \\
+            Autorretrato & $120 \times 90$ & $\approx$ 8,200 & 550 & Legibilidad facciones & Atenuación brillos \\
+            \bottomrule
+        \end{tabularx}
+    \end{table}
+    % NOTA: Se eliminó la imagen redundante que no existía en la carpeta.
+    % La tabla generada por LaTeX es suficiente y más nítida.
+\end{frame}
+
+\end{document}
