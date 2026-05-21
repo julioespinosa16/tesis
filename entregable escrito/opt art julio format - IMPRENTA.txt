@@ -100,7 +100,7 @@
 
 % Pueden modificar el tamaño del logo cambiando la escala
 
-\textbf{\LARGE Foto-mosaicos: optimización en el arte}\\[2em]
+\textbf{\LARGE FOTOMOSAICOS: OPTIMIZACIÓN EN EL ARTE}\\[2em]
 
 \textsc{\large Tesina}\\[1em]
 
@@ -121,7 +121,7 @@
 \end{center}
 
 \vspace*{\fill}
-\textsc{Ciudad de México \hspace*{\fill} 2025}
+\textsc{Ciudad de México \hspace*{\fill} 2026}
 
 \end{titlepage}
 
@@ -135,7 +135,7 @@
 \begingroup
 
 \noindent
-«Con fundamento en los artículos 21 y 27 de la Ley Federal del Derecho de Autor y como titular de los derechos moral y patrimonial de la obra titulada ``\textbf{Foto-mosaicos: optimización en el arte}'', otorgo de manera gratuita y permanente al Instituto Tecnológico Autónomo de México y a la Biblioteca Raúl Bailléres Jr., la autorización para que fijen la obra en cualquier medio, incluido el electrónico, y la divulguen entre sus usuarios, profesores, estudiantes o terceras personas, sin que pueda percibir por tal divulgación una contraprestación.»
+``Con fundamento en los artículos 21 y 27 de la Ley Federal del Derecho de Autor y como titular de los derechos moral y patrimonial de la obra titulada ``\textbf{FOTOMOSAICOS: OPTIMIZACIÓN EN EL ARTE}'', otorgo de manera gratuita y permanente al Instituto Tecnológico Autónomo de México y a la Biblioteca Raúl Bailléres Jr., la autorización para que fijen la obra en cualquier medio, incluido el electrónico, y la divulguen entre sus usuarios, profesores, estudiantes o terceras personas, sin que pueda percibir por tal divulgación una contraprestación.''
 
 % Asegúrense de cambiar el título de su tesis en el párrafo anterior
 
@@ -163,9 +163,23 @@
 \pagestyle{plain}
 \frontmatter
 
-\chapter*{}
+\chapter*{} % Página en blanco sin título de capítulo
 \begin{flushright}
-\textit{A mis padres, \\por su apoyo, dedicación, paciencia y amor.}
+\vspace*{4cm} % Ajuste para que el texto no quede tan arriba
+\textit{A mi mística madre y a mi padre, de energía implacable, \\ 
+por su dedicación, su apoyo, su (infinita) paciencia y amor; \\ 
+por todo lo incondicional, desde darme la vida hasta guiarme a través de la misma. \\ 
+\vspace{0.5cm}
+A Pepe, \\ 
+hermano y compañero, \\ 
+por las sonrisas, la música y su serena calidez. \\ 
+\vspace{0.5cm}
+A mi bella Sary, \\ 
+el amor de mi vida, mi soporte, mi luz, mi dulzura... \\ 
+\vspace{0.5cm}
+A mis amigos, primos, tíos, todos aquellos \\ 
+que se saben en mi corazón, \\ 
+y cuyos fotogramas compondrían el fotomosaico más vital de todos.}
 \end{flushright}
 
 %----------------------------------------------------------------------------------------
@@ -174,9 +188,19 @@
 
 \chapter*{Agradecimientos}
 
-\noindent Quiero agradecer a todas las personas que me acompañaron durante este camino 
+\noindent Quiero agradecer a todas las personas que me acompañaron durante este trayecto.
 
-Al Dr. Edgar Possani, por sumarse al trabajo y apoyarme con tanta paciencia.
+Al \textbf{Dr. Edgar Possani}, por sumarse al trabajo y apoyarme; por mostrarse paciente, abierto a guiarme en este largo ---en tiempo y contenido--- proyecto.
+
+A los profesores \textbf{Andreas, Lucía y Vlad}, por aceptar ser mis sínodos y robustecer este trabajo con sus agudas apreciaciones.
+
+A mis padres, \textbf{Fili} y \textbf{Emma}, por impulsarme desde el principio, por motivarme a seguir este proceso que sella un paso necesario en mi ya recorrida vida profesional. Agradezco a Dios por tenerlos siempre.
+
+A \textbf{Sary}, por aparecerse tras el inicio de este proyecto; quién diría que teníamos ya una vida hecha, y otra muy larga por vivir.
+
+A \textbf{Pepe}, mi flamante compañero, por su enorme ejemplo de serenidad, juegos, por ser mi primer y último amigo.
+
+A toda mi familia: tíos, primos, amigos que considero hermanos. Y a los que ya no están. A todos, gracias.
 
 %----------------------------------------------------------------------------------------
 %	TABLA DE CONTENIDOS
@@ -206,7 +230,6 @@ Al Dr. Edgar Possani, por sumarse al trabajo y apoyarme con tanta paciencia.
 \include{Chapters/4.Resultados}
 
 \include{Chapters/5.Conclusion}
-
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAFÍA
 %----------------------------------------------------------------------------------------
@@ -1692,12 +1715,16 @@ $sign_{t}=\say{=} \;  \forall f \in \{cf+1, \dots , cf+m\;n\}$
 \begin{table}[p]
 \centering
 \small
-\label{ed}
 \begin{tabular}{c}
-\textit{Foto-mosaicos }\\ 
-\textit{y optimización para el arte (Opt-Art)}\\ escrito por Julio César Espinosa León,\\ se terminó de imprimir en marzo de 2025\\ en los talleres de Tesis Martínez.\\ República de Cuba 99, colonia Centro,\\ Ciudad de México.
+\textit{Fotomosaicos: }\\ 
+\textit{Optimización en el Arte} \\escrito por Julio César Espinosa León, \\
+se terminó de imprimir en mayo de 2026 \\
+en los talleres de Imprenta Digital. \\
+Medicina 56, colonia Copilco Universidad, \\
+Ciudad de México.
 \end{tabular}
 \end{table}
+
 
 % Si lo prefieren, avisen a su taller que esta página ya la incluyeron ustedes para que no les impriman las que ellos usan. Lo recomiendo ampliamente
 
