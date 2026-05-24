@@ -12,6 +12,10 @@
 \usetikzlibrary{positioning, shapes.geometric, arrows.meta}
 \usepackage{comment}
 
+\usepackage{booktabs}   % Necesario para \toprule, \midrule, etc.
+\usepackage[utf8]{inputenc}
+\usepackage{tcolorbox}  % Alternativa más estable que mdframed para Beamer
+
 
 
 % --- Tema y Colores ITAM ---
@@ -654,6 +658,10 @@
         
     \end{columns}
 \end{frame}
+
+
+
+
 % --- Slide 10: Resultados: Sensibilidad ante la Escala y Disponibilidad ---
 \begin{frame}{Resultados: Mosaico de Twitter y Análisis de Disponibilidad}
     \vspace{-0.2cm}
@@ -700,15 +708,112 @@
 
     \begin{block}{Interpretación Teórica del Motor de Optimización}
         \scriptsize
-        La comparación reveals la sensibilidad del algoritmo ante el vector $u$, usando $hd$ (holgura de inventario) y $vd$ (variabilidad de distribución):
+        La comparación revela la sensibilidad del algoritmo ante el vector $u$, usando $hd$ (holgura de inventario) y $vd$ (variabilidad de distribución):
         \begin{itemize}
-            \item \textbf{Efecto de Escasez (2):} Al agotarse las fichas blancas puras, el modelo se ve forzado a usar grises claros en el contorno superior.
-            \item \textbf{Liberación de Recursos (3):} Al parametrizar la holgura total, el error cuadrático disminuye \textbf{20 veces}, logrando la pureza en los fondos pero sacrificando la variedad del catálogo utilizado.
+            \item \textbf{Efecto de Escasez (2):} Al agotarse las fichas blancas puras, el modelo se ve forzado a usar grises claros en los contornos.
+            \item \textbf{Liberación de Recursos (3):} Al parametrizar la holgura total, el error cuadrático disminuye \textbf{20 veces}, logrando la pureza en los fondos a cambio de menos variedad del catálogo utilizado.
         \end{itemize}
     \end{block}
     
     \vspace{0.1cm}
 \end{frame}
+
+
+
+
+
+% --- Slide 15: Cuantización Vectorial: Extracción del Color Dominante ---
+\begin{frame}{Cuantización Vectorial: Extracción del Color Dominante}
+    \vspace{-0.1cm}
+
+    \begin{columns}[T, onlytextwidth]
+        % Columna 1: Sustento Matemático (0.37) - Con Diagrama Geométrico de Voronoi
+        \begin{column}{0.37\textwidth}
+            \vspace{0.2cm} % Despegue inicial alineado con el de la derecha
+            
+            \textbf{Reducción de Varianza Local:} \\
+            \footnotesize Para transformar el catálogo en vectores $\mathbf{b}_f \in \mathbb{R}^3$, se aplica el algoritmo \textit{$K$-means} de forma local.
+            
+            \vfill % Distribuye el espacio eficientemente
+            
+            \begin{block}{Aislamiento del Fondo ($k = 2$)}
+                \vspace{0.1cm}
+                \scriptsize
+                Un hiperparámetro fijo en $k=2$ aísla el ruido de sombras o follaje, extrayendo con precisión el \textbf{centroide cromático dominante} de los pétalos.
+                \vspace{0.1cm}
+            \end{block}
+
+            \vfill % Empuja el cierre hacia el límite inferior de la slide
+            
+            \footnotesize
+            La cuantización genera una paleta compacta y homogénea para el cálculo de distancias.
+            
+            \vspace{0.15cm} % Margen controlado previo al diagrama
+            
+            % DIAGRAMA TIKZ: Representación geométrica de la separación k=2 en RGB
+            \centering
+            \begin{tikzpicture}[scale=0.6, every node/.style={transform shape}]
+                % Ejes del espacio RGB
+                \draw[->, thick, gray!60] (0,0) -- (3,0) node[right, gray] {\tiny R};
+                \draw[->, thick, gray!60] (0,0) -- (0,2.5) node[above, gray] {\tiny G};
+                
+                % Región de Sombra / Fondo (Cluster secundario)
+                \draw[dashed, fill=gray!15, draw=gray!40] (2.4,0.6) circle (0.35cm);
+                \node[gray] at (2.4,0.6) {\tiny $\bullet$};
+                
+                % Región del Pétalo / Color Dominante (Cluster principal)
+                \draw[thick, fill=ITAMgreen!20, draw=ITAMgreen] (1.1,1.6) circle (0.65cm);
+                
+                % Centroide b_f resaltado institucionalmente
+                \node[circle, fill=ITAMgreen, inner sep=1.8pt] (bf) at (1.1,1.6) {};
+                \node[above right=-1pt of bf, font=\scriptsize] {$\mathbf{b}_f$};
+                
+                % Nota aclaratoria dentro del plano
+                \node[anchor=west, text=gray] at (1.8,1.8) {\tiny $k=2$};
+            \end{tikzpicture}
+            
+            \vspace{0.1cm} % Evita que toque el borde inferior de la diapositiva
+        \end{column}
+
+        % Columna 2: Matriz Comparativa Segmentada (0.60) - Intacta y Simétrica
+        \begin{column}{0.60\textwidth}
+            \centering
+            \textbf{\scriptsize Mapeo del Catálogo: Textura vs. Centroide $\mathbf{b}_f$} \\
+            \vspace{0.3cm}
+            
+            \renewcommand{\arraystretch}{0.3} 
+            \begin{tabular}{ccc}
+                % Bloque 1: Primeras 3 Flores
+                \includegraphics[width=0.18\textwidth, height=0.18\textwidth]{fl_blancas.png} &
+                \includegraphics[width=0.18\textwidth, height=0.18\textwidth]{fl_rojo.png} &
+                \includegraphics[width=0.18\textwidth, height=0.18\textwidth]{fl_verde.png} \\
+                \vspace{0.05cm} \\
+                % Bloque 1: Primeros 3 Colores
+                \includegraphics[width=0.18\textwidth, height=0.09\textwidth]{fl_1px.png} &
+                \includegraphics[width=0.18\textwidth, height=0.09\textwidth]{fl_ro_k2.png} &
+                \includegraphics[width=0.18\textwidth, height=0.09\textwidth]{fl_ve_k2.png} \\
+                
+                \vspace{0.3cm} \\ 
+                
+                % Bloque 2: Siguientes 3 Flores
+                \includegraphics[width=0.18\textwidth, height=0.18\textwidth]{fl_zcafes.png} &
+                \includegraphics[width=0.18\textwidth, height=0.18\textwidth]{fl_znaranja.png} &
+                \includegraphics[width=0.18\textwidth, height=0.18\textwidth]{fl_zrosa.png} \\
+                \vspace{0.05cm} \\
+                % Bloque 2: Siguientes 3 Colores
+                \includegraphics[width=0.18\textwidth, height=0.09\textwidth]{fl_ca_k2.png} &
+                \includegraphics[width=0.18\textwidth, height=0.09\textwidth]{fl_na_k2.png} &
+                \includegraphics[width=0.18\textwidth, height=0.09\textwidth]{fl_ros_k2.png} \\
+            \end{tabular}
+            
+            \vspace{0.25cm}
+            \tiny \textcolor{gray}{Línea superior de cada bloque: Ficha original ($f \in F$).\\ Línea inferior: Vector representativo extraído ($k=2$).}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+
 
 
 % --- Slide 10: Resultado Maestro: La Bandera de México ---
@@ -1043,83 +1148,100 @@
     \end{tikzpicture}
 \end{frame}
 
+
+
+
+
+
+
+
 % --- Sección 4 ---
 \section{Sección 4: Análisis Riguroso y Cierre}
 
-% --- Slide 16: Análisis de Complejidad: El Costo de la Dimensión ---
-\begin{frame}{Análisis de Complejidad: El Costo de la Dimensión}
-    \begin{columns}[T]
-        % Columna 1: Rigor de la Complejidad (46%)
-        \begin{column}{0.46\textwidth}
-            \vspace{0.3cm}
-            \textbf{Complejidad Empírica:}
-            \begin{itemize}
-                \item \textbf{Potencias:} El tiempo de ejecución exhibe una tendencia polinomial de orden superior:
-                \begin{equation*}
-                    T(n) \approx O(n^k) \quad \text{con } 4 \le k \le 6
-                \end{equation*} % <--- AQUÍ FALTABA ESTE CIERRE
-            \end{itemize} % <--- AHORA EL ITEMIZE SE CIERRA BIEN
-            
-            \vspace{0.2cm}
-            \begin{block}{Observación sobre Modularidad}
-                \footnotesize Existen descensos locales o \textbf{quiebres} en la curva. Estos no contradicen la tendencia global; ocurren como consecuencia de los recortes de la imagen realizados en el algoritmo \textit{MatSplitter}. Dichos recortes permiten que rectángulos de idénticos tamaños compongan la imagen total pero pueden causar pérdida de información, repercutiendo en los tiempos de cómputo.
-            \end{block}
-        \end{column}
 
-        % Columna 2: Gráfica y Sentencia (52%)
-        \begin{column}{0.52\textwidth}
+
+
+
+% --- Slide 16: Análisis de Desempeño: Fotomosaico vs. TSP ---
+\begin{frame}{Análisis de Desempeño: Escalabilidad y Complejidad}
+    \vspace{0.2cm} % Espacio de seguridad para no tocar el header verde
+    
+    \begin{columns}[T, onlytextwidth]
+        
+        % COLUMNA 1: Fotomosaicos
+        \begin{column}{0.48\textwidth}
             \centering
-            \vspace{-0.1cm} 
-            \includegraphics[width=\textwidth, height=0.65\textheight, keepaspectratio]{dim_tiempo tsp.png}
+            \textbf{\scriptsize 1. Fotomosaicos (Asignación LP)} \\
             
-            \vfill 
-
-            \begin{flushleft}
-                \alert{\Large\bfseries ``La escala dicta el esfuerzo en la optimización.''}
-            \end{flushleft}
-            \vspace{0.4cm}
-        \end{column}
-    \end{columns}
-\end{frame}
-
-
-
-% --- Slide 17: Benchmarking (La Cota de Held-Karp) ---
-\begin{frame}{Benchmarking: La Cota de Held-Karp}
-    \begin{columns}[T]
-        % Columna 1: Contexto Teórico (48%)
-        \begin{column}{0.48\textwidth}
-            \textbf{Validación de la Calidad Heurística:}
-            \vspace{0.3cm}
-            \begin{itemize}
-                \item Comparamos el tour obtenido ($z_{heur}$) contra la \textbf{Cota de Held-Karp ($z_{HK}$)}, que representa el óptimo de la relajación lineal del TSP.
-                \item En instancias euclidianas, el óptimo entero $z^*$ suele estar a menos del 1\% de $z_{HK}$.
-            \end{itemize}
-            \vspace{0.4cm}
-            \small La cercanía a esta cota inferior garantiza que nuestras soluciones son casi óptimas en términos globales.
-        \end{column}
-
-        % Columna 2: Resultados Cuantitativos (48%)
-        \begin{column}{0.48\textwidth}
-            \begin{table}
+            % Contenedor de altura fija para que la tabla no desplace la gráfica
+            \begin{minipage}[t][2.2cm][t]{\textwidth}
                 \centering
-                \small
-                \begin{tabular}{l c r}
+                \renewcommand{\arraystretch}{0.8}
+                \begin{tabular}{c c c r}
                     \toprule
-                    \textbf{Instancia} & \textbf{Nodos ($\tau$)} & \textbf{Gap vs $z_{HK}$} \\
+                    \tiny $m \times n$ & \tiny Variables & \tiny Restr. & \tiny \textbf{Tiempo} \\
                     \midrule
-                    Logo Twitter & 15,311 & $\approx 1.10 \times z_{HK}$ \\
-                    Autorretrato & $\approx 8,200$ & $\approx 1.09 \times z_{HK}$ \\
+                    \tiny 20 & \tiny 8,000 & \tiny 420 & \tiny 0.52s \\
+                    \tiny 40 & \tiny 32,000 & \tiny 1,620 & \tiny 12.12s \\
+                    \tiny 60 & \tiny 72,000 & \tiny 3,620 & \tiny \textbf{64.45s} \\
                     \bottomrule
                 \end{tabular}
-                \caption*{Comparativa de eficiencia relativa.}
-            \end{table}
+            \end{minipage}
+
+            \vspace{0.25cm} % <--- Incrementado para bajar la gráfica y dar aire a la tabla
+            % Altura forzada idéntica para alineación horizontal
+            \includegraphics[width=0.85\textwidth, height=0.22\textheight, keepaspectratio]{{dim_tiempo fm.png}}
+            
+            \vspace{0.2cm}
+            % height incrementado a 1.5cm para dar más tamaño al óvalo de insight
+            \begin{tcolorbox}[colback=gray!10, colframe=ITAMgreen, boxrule=0.5pt, arc=2pt, left=2pt, right=2pt, top=3pt, bottom=3pt, height=1.5cm]
+                \tiny \textbf{Crecimiento controlado:} orden de complejidad cuadrático - cúbico. Modelo \textbf{eficiente} para mallas densas ($>3$k celdas) por la estructura matricial de las restricciones. .
+            \end{tcolorbox}
         \end{column}
+
+        % COLUMNA 2: TSP
+        \begin{column}{0.48\textwidth}
+            \centering
+            \textbf{\scriptsize 2. TSP-Art (Ruta Heurística)} \\
+
+            % Contenedor de altura fija idéntico al de la izquierda
+            \begin{minipage}[t][2.2cm][t]{\textwidth}
+                \centering
+                \renewcommand{\arraystretch}{0.8}
+                \begin{tabular}{c c c r}
+                    \toprule
+                    \tiny Dim. & \tiny Ciudades & \tiny Variables & \tiny \textbf{Tiempo} \\
+                    \midrule
+                    \tiny 20 & \tiny 1,051 & \tiny 1.1M & \tiny 0.16s \\
+                    \tiny 40 & \tiny 3,894 & \tiny 15.1M & \tiny 15.67s \\
+                    \tiny 60 & \tiny 8,271 & \tiny 68.4M & \tiny 221.77s \\
+                    \tiny 85 & \tiny 15,311 & \tiny 234.4M & \tiny \textbf{1,922s} \\
+                    \bottomrule
+                \end{tabular}
+            \end{minipage}
+
+            \vspace{0.25cm} % <--- Incrementado para corregir la superposición con la tabla TSP
+            % Altura forzada idéntica para alineación horizontal
+            \includegraphics[width=0.85\textwidth, height=0.22\textheight, keepaspectratio]{{dim_tiempo tsp.png}}
+            
+            \vspace{0.2cm}
+            % height incrementado a 1.5cm para dar más tamaño al óvalo de insight
+            \begin{tcolorbox}[colback=gray!10, colframe=red!50, boxrule=0.5pt, arc=2pt, left=2pt, right=2pt, top=3pt, bottom=3pt, height=1.5cm]
+                \tiny \textbf{Problema complejo:} Explosión combinatoria. A partir de 15k nodos, el espacio supera las 230M lo cual lo vuelve inmanejable sin uso de heurísticas (inserción arbitraria + 2-opt).
+            \end{tcolorbox}
+        \end{column}
+        
     \end{columns}
 
-    \vfill % Balanceo vertical
-    \vspace{0.4cm}
+    \vspace{0.2cm}
+    \begin{block}{Conclusión de Desempeño}
+        \scriptsize
+        Mientras el \textbf{Fotomosaico} opera en un dominio polinomial manejable, el \textbf{TSP-Art} presenta el reto de escalabilidad. 
+    \end{block}
 \end{frame}
+
+
+
 
 
 % --- Slide 18: El Retrato Final (Autorretrato) ---
@@ -1143,9 +1265,65 @@
     \end{columns}
 
     \vspace{0.4cm}
-    \textbf{Técnica:} \textit{Hard Thresholding} ($\psi > 0.70$) para filtrar altas frecuencias de luminancia y eliminar ruido visual en facciones críticas.
+    \textbf{Técnica:} \textit{Hard Thresholding} ($\psi > 0.70$) para filtrar altas frecuencias de luminancia y eliminar ruido visual en facciones críticas. Resultado: mapa de $9.7 k$ ciudades.
 
 \end{frame}
+
+
+
+
+
+% --- Slide 16: Flujo Metodológico: El Caso de Isaac Newton ---
+\begin{frame}{Flujo Metodológico: El Caso de Isaac Newton}
+    \vspace{0.1cm}
+
+    \begin{columns}[T, onlytextwidth]
+        % Columna 1: Matriz de Evidencia Visual (65%)
+        \begin{column}{0.65\textwidth}
+            \centering
+            \renewcommand{\arraystretch}{0.2} % Control estricto del espacio vertical
+            \begin{tabular}{cc}
+                % Fila 1: Origen vs Discretización
+                \includegraphics[width=0.45\textwidth, height=0.32\textheight]{newton_app2.png} &
+                \includegraphics[width=0.45\textwidth, height=0.32\textheight]{newton_col_degra_40.JPG} \\
+                \tiny \textcolor{gray}{a) Ilustración original} & \tiny \textcolor{gray}{b) Segmentación (\textit{MatSplitter})} \\
+                
+                \vspace{0.2cm} \\ % Separador entre bloques
+                
+                % Fila 2: Grafo TSP vs Mosaico Final
+                \includegraphics[width=0.45\textwidth, height=0.32\textheight]{newton_cities.jpeg} &
+                \includegraphics[width=0.45\textwidth, height=0.32\textheight]{Newton_v40_bsc_v2.JPG} \\
+                \tiny \textcolor{gray}{c) Red de ciudades TSP} & \tiny \textcolor{gray}{d) Reconstrucción final en mosaico} \\
+            \end{tabular}
+        \end{column}
+
+        % Columna 2: Hitos del Proceso (32%)
+        \begin{column}{0.32\textwidth}
+            \vspace{0.4cm}
+            \textbf{Pasos de Optimización:}
+            
+            \vspace{0.3cm}
+            \begin{itemize}
+                \setlength{\itemsep}{0.4em}
+                \scriptsize
+                \item[\textbf{1.}] \textbf{Descomposición:} \\ Determinar pixel promedio por rectángulo.
+                \item[\textbf{2.}] \textbf{Asignación (Fotomosaico):} \\ Solución del emparejamiento con cotas de inventario.
+                \item[\textbf{3.}] \textbf{Georreferenciación (TSP):} \\ Generar mapa de puntos en función de intensidad por rectángulo, conectarlos.
+                                
+              \end{itemize}
+                
+
+            
+            \vfill
+            
+            \begin{tcolorbox}[colback=gray!10, colframe=ITAMgreen, boxrule=0.5pt, arc=2pt, left=3pt, right=3pt, top=3pt, bottom=3pt]
+                \tiny \textbf{Resultado:} Curvas continuas y fidelidad del color.
+            \end{tcolorbox}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
 
 
 
@@ -1324,8 +1502,95 @@
     Garantiza bloques íntegros y evita sesgos de luminosidad en los bordes.
 \end{frame}
 
+
+
+
+
+
+
+% --- Slide 16: Análisis de Complejidad: El Costo de la Dimensión ---
+\begin{frame}{Anexo D: Análisis de Complejidad: El Costo de la Dimensión}
+    \begin{columns}[T]
+        % Columna 1: Rigor de la Complejidad (46%)
+        \begin{column}{0.46\textwidth}
+            \vspace{0.3cm}
+            \textbf{Complejidad Empírica:}
+            \begin{itemize}
+                \item \textbf{Potencias:} El tiempo de ejecución exhibe una tendencia polinomial de orden superior:
+                \begin{equation*}
+                    T(n) \approx O(n^k) \quad \text{con } 4 \le k \le 6
+                \end{equation*} % <--- AQUÍ FALTABA ESTE CIERRE
+            \end{itemize} % <--- AHORA EL ITEMIZE SE CIERRA BIEN
+            
+            \vspace{0.2cm}
+            \begin{block}{Observación sobre Modularidad}
+                \footnotesize Existen descensos locales o \textbf{quiebres} en la curva. Estos no contradicen la tendencia global; ocurren como consecuencia de los recortes de la imagen realizados en el algoritmo \textit{MatSplitter}. Dichos recortes permiten que rectángulos de idénticos tamaños compongan la imagen total pero pueden causar pérdida de información, repercutiendo en los tiempos de cómputo.
+            \end{block}
+        \end{column}
+
+        % Columna 2: Gráfica y Sentencia (52%)
+        \begin{column}{0.52\textwidth}
+            \centering
+            \vspace{-0.1cm} 
+            \includegraphics[width=\textwidth, height=0.65\textheight, keepaspectratio]{dim_tiempo tsp.png}
+            
+            \vfill 
+
+            \vspace{0.4cm}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+
+% --- Slide 17: Benchmarking (La Cota de Held-Karp) ---
+\begin{frame}{Anexo E: Benchmarking: La Cota de Held-Karp}
+    \begin{columns}[T]
+        % Columna 1: Contexto Teórico (48%)
+        \begin{column}{0.48\textwidth}
+            \textbf{Validación de la Calidad Heurística:}
+            \vspace{0.3cm}
+            \begin{itemize}
+                \item Comparamos el tour obtenido ($z_{heur}$) contra la \textbf{Cota de Held-Karp ($z_{HK}$)}, que representa el óptimo de la relajación lineal del TSP.
+                \item En instancias euclidianas, el óptimo entero $z^*$ suele estar a menos del 1\% de $z_{HK}$.
+            \end{itemize}
+            \vspace{0.4cm}
+            \small La cercanía a esta cota inferior garantiza que nuestras soluciones son casi óptimas en términos globales.
+        \end{column}
+
+        % Columna 2: Resultados Cuantitativos (48%)
+        \begin{column}{0.48\textwidth}
+            \begin{table}
+                \centering
+                \small
+                \begin{tabular}{l c r}
+                    \toprule
+                    \textbf{Instancia} & \textbf{Nodos ($\tau$)} & \textbf{Gap vs $z_{HK}$} \\
+                    \midrule
+                    Logo Twitter & 15,311 & $\approx 1.10 \times z_{HK}$ \\
+                    Autorretrato & $\approx 8,200$ & $\approx 1.09 \times z_{HK}$ \\
+                    \bottomrule
+                \end{tabular}
+                \caption*{Comparativa de eficiencia relativa.}
+            \end{table}
+        \end{column}
+    \end{columns}
+
+    \vfill % Balanceo vertical
+    \vspace{0.4cm}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
 % --- Slide 25: Anexo B: Extensión a Dominós de Bosch ---
-\begin{frame}{Anexo D: Extensión a Dominós de Bosch}
+\begin{frame}{Anexo F: Extensión a Dominós de Bosch}
     \textbf{El Reto:} Cubrir la región de la imagen mediante fichas de dominó ($2 \times 1$).
     
     \vspace{0.4cm}
@@ -1347,8 +1612,15 @@
 \end{frame}
 
 
+
+
+
+
+
+
+
 % --- Slide 26: Anexo Tabla Completa ---
-\begin{frame}[plain]{Anexo E: Resultados Cuantitativos Completos}
+\begin{frame}[plain]{Anexo G: Resultados Cuantitativos Completos}
     \begin{table}[ht]
         \centering
         \small
@@ -1375,7 +1647,7 @@
 
 
 % --- Slide 27: Anexo F: Vector de Disponibilidades y Sensibilidad ---
-\begin{frame}{Anexo F: Holgura ($hd$) y Variabilidad ($vd$) en $u$}
+\begin{frame}{Anexo H: Holgura ($hd$) y Variabilidad ($vd$) en $u$}
     \begin{columns}[T, onlytextwidth]
 % Columna 1: Formulación del Vector u (CORREGIDA)
         \begin{column}{0.52\textwidth}
