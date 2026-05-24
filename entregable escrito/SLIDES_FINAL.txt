@@ -10,6 +10,9 @@
 \usepackage{algorithm, algpseudocode}
 \usepackage{tikz}
 \usetikzlibrary{positioning, shapes.geometric, arrows.meta}
+\usepackage{comment}
+
+
 
 % --- Tema y Colores ITAM ---
 \usetheme{metropolis}
@@ -122,7 +125,7 @@
                 \vspace{0.2cm}
                 \textbf{\scriptsize EL RETO DE SELECCIÓN:} \\
                 \vspace{0.1cm}
-                \scriptsize \textit{¿Cómo decidir qué elemento del catálogo encaja en cada posición sin agotar el inventario?}
+                \scriptsize \textit{¿Qué elemento del catálogo encaja en cada posición sin agotar inventario?}
             \end{flushleft}
         \end{column}
         
@@ -274,7 +277,7 @@
             \end{itemize}
 
             \vspace{0.6cm}
-            \footnotesize \textit{Este mapeo convierte la estética visual en un problema de optimización numérica multivariable.}
+            \footnotesize \textit{Este mapeo convierte la estética visual en un problema de optimización numérica.}
         \end{column}
 
         % Columna Derecha: El Mapeo Horizontal
@@ -315,7 +318,7 @@
 
             \vspace{0.8cm}
             \small \alert{\textbf{Mapeo Digital:}} \\
-            \scriptsize Cada escalar $a_{ijk}$ determina la contribución de energía de un canal de color en una coordenada discreta.
+            \scriptsize Cada escalar $a_{ijk}$ determina la contribución de energía de un canal de color en una coordenada.
         \end{column}
     \end{columns}
 \end{frame}
@@ -327,17 +330,16 @@
             \textbf{Definición General:}
             Busca optimizar una función objetivo sujeta a restricciones de igualdad o desigualdad, todas de carácter lineal.
                  
-            \begin{block}{Forma Estándar}
+\begin{block}{Forma Estándar}
                 \small
                 \begin{equation*}
-                    \begin{array}{r@{\quad}lll}
-                        \text{min} & z & = & \displaystyle\sum_{i=1}^{n} c_i x_i \\[0.4cm]
-                        \text{s.a.}  & \displaystyle\sum_{i=1}^{n} a_{ij}x_i & \le & b_j, \quad \forall j \\[0.4cm]
-                                         & \mathbf{x} & \ge & \mathbf{0}
+                    \begin{array}{r@{\quad}llll}
+                        \text{min}  & z & = & \displaystyle\sum_{i=1}^{n} c_i x_i & \\[0.4cm]
+                        \text{s.a.} &   &   & \displaystyle\sum_{i=1}^{n} a_{ij}x_i \le b_j, \quad \forall j & \equiv \quad \mathbf{A}\mathbf{x} \le \mathbf{b} \\[0.4cm]
+                                    &   &   & \mathbf{x} \ge \mathbf{0} & \text{con } \mathbf{A} \in \mathbb{R}^{m \times n}
                     \end{array}
                 \end{equation*}
             \end{block}
-
             
             
             \begin{itemize}
@@ -443,7 +445,7 @@
         \begin{column}{0.38\textwidth}
             \textbf{Relevancia en Opt-Art:}
             \begin{itemize}
-                \item \footnotesize \textbf{Mosaicos:} La matriz de asignación es TU por construcción (transporte).
+                \item \footnotesize \textbf{Mosaicos:} La matriz de asignación es TU por construcción.
                 \item \footnotesize \textbf{Rutas:} Ciertas redes de flujo garantizan integralidad.
                 \item \footnotesize \textbf{Velocidad:} El Simplex resuelve el problema entero directamente.
             \end{itemize}
@@ -462,14 +464,53 @@
 % --- Sección 2 ---
 \section{Sección 2: Fotomosaicos y Arquitectura de Datos}
 % --- Slide 8: Fotomosaicos (Modelo con dimensiones m x n) ---
+
+% --- Slide 11: Planteamiento del Reto: Mosaico de Twitter ---
+\begin{frame}{Planteamiento del Reto: De la Imagen al Mosaico Modular}
+    \begin{columns}[T, onlytextwidth]
+        
+        % Columna de la Imagen (78%)
+        \begin{column}{0.78\textwidth}
+            \centering
+            \vspace*{0.35cm}
+            \includegraphics[width=\textwidth, height=0.80\textheight, keepaspectratio]{twitter_nl.png}
+        \end{column}
+
+        % Columna de Soporte Narrativo (20%)
+        \begin{column}{0.20\textwidth}
+            \vspace{1.2cm}
+            \begin{flushleft}
+                {\color{ITAMgreen}\hrule height 1.5pt}
+                \vspace{0.2cm}
+                \textbf{\small EL OBJETIVO:} \\
+                \vspace{0.15cm}
+                \footnotesize Reconstruir la silueta objetivo subdividiendo el espacio en una malla discreta.
+                
+                \vspace{0.8cm}
+                {\color{ITAMgreen}\hrule height 1.5pt}
+                \vspace{0.2cm}
+                \textbf{\small EL DILEMA:} \\
+                \vspace{0.15cm}
+                \scriptsize ¿Cómo emparejar cada celda con la mejor ficha del catálogo minimizando la distancia tonal sin agotar el inventario?
+            \end{flushleft}
+        \end{column}
+        
+    \end{columns}
+\end{frame}
+
+
+% --- Slide 8: Fotomosaicos (Modelo Global y Estructura Modular) ---
 \begin{frame}{Fotomosaicos: Modelo Global y Estructura Modular}
+    \vspace{0.2cm} % Ajuste inicial para despegar del header
 
     \begin{columns}[T, onlytextwidth]
-        % Columna 1: El Modelo Matemático de Asignación (50%)
-        \begin{column}{0.49\textwidth}
-            Dada una imagen objetivo discretizada en una malla de $m \times n$ celdas y un catálogo $F$:
+        % Columna 1: El Modelo Matemático (52%)
+        \begin{column}{0.52\textwidth}
+            \textbf{\small Formulación del Modelo:} \\
+            \footnotesize Dada una imagen objetivo en una malla de $m \times n$ y un catálogo $F$:
             
-        \begin{block}{Minimización de Distancia Global}
+            \vspace{0.3cm}
+            \begin{block}{Minimización de Distancia Global}
                 \small
                 \begin{equation*}
                     \begin{array}{ll}
@@ -478,19 +519,22 @@
                 \end{equation*}
             \end{block}
             
-            
-            \textbf{s.a.}
-            \begin{itemize}
-                \item \footnotesize $\sum_{f \in F} x_{fij} = 1, \quad \forall i, j$ \hfill \textit{(Cobertura)}
-                \item \footnotesize $\sum_{i,j} x_{fij} \le u_f, \quad \forall f \in F$ \hfill \textit{(Inventario)}
-                \item \footnotesize $x_{fij} \in \{0, 1\}$ \hfill \textit{(Asignación)}
-            \end{itemize}
+            \vspace{0.4cm}
+            \textbf{\small s.a.}
+            \begin{equation*}
+                \renewcommand{\arraystretch}{1.8} % Aire vertical entre restricciones
+                \begin{array}{rll@{\hspace{0.5cm}}l}
+                    \displaystyle\sum_{f \in F} x_{fij} & = 1, & \forall i, j & \textit{(Cobertura)} \\
+                    \displaystyle\sum_{i,j} x_{fij} & \le u_f, & \forall f \in F & \textit{(Inventario)} \\
+                    x_{fij} & \in \{0, 1\} & & \textit{(Asignación)}
+                \end{array}
+            \end{equation*}
         \end{column}
 
-        % Columna 2: Espacios Métricos e Integración de MatSplitter (50%)
-        \begin{column}{0.49\textwidth}
+        % Columna 2: Espacios y MatSplitter (45%)
+        \begin{column}{0.45\textwidth}
             \begin{block}{Robustez: Espacios Métricos ($\mathbb{R}^k$)}
-                \scriptsize
+                \footnotesize
                 La métrica $d$ opera según la representación:
                 \begin{itemize}
                     \item \textbf{Grises ($k=1$):} Distancia de luminancia.
@@ -499,20 +543,29 @@
                 \end{itemize}
             \end{block}
 
+            \vspace{0.5cm} % Espaciado generoso entre bloques
+
             \begin{block}{El Vínculo Universal: \texttt{MatSplitter}}
-                \scriptsize
-                Algoritmo robusto de partición modular que define la topología de la malla $m \times n$.
+                \footnotesize
+                Algoritmo de partición modular que define la topología de la malla $m \times n$.
                 \begin{itemize}
-                    \item \tiny \textbf{Mosaicos:} Segmentación para la inserción de fichas.
-                    \item \tiny \textbf{TSP-Art:} Sub-rectángulos para densidad de \textit{stippling}.
+                    \item \textbf{Mosaicos:} Segmentación para fichas.
+                    \item \textbf{TSP-Art:} Densidad de \textit{stippling}.
                 \end{itemize}
             \end{block}
+            
+            \vfill % Empuja el contenido para balancear el peso visual
         \end{column}
     \end{columns}
+    
+    \vspace{0.3cm} % Respiro final antes del pie de página
 \end{frame}
 
 
 % --- Slide 9: Ingeniería de Datos (Sin conflictos de compilación) ---
+
+\begin{comment}
+
 \begin{frame}{Ingeniería de Datos: Cuantización y Dimensionalidad}
 
     \begin{columns}[T]
@@ -558,6 +611,105 @@
     \end{columns}
 \end{frame}
 
+\end{comment}
+
+
+% --- Slide 9: Ingeniería de Datos: Discretización en Grises ---
+\begin{frame}{Ingeniería de Datos: Discretización en Grises}
+    \begin{columns}[T, onlytextwidth]
+        
+        % Columna 1: Explicación Técnica (45%)
+        \begin{column}{0.45\textwidth}
+            \vspace{0.4cm}
+            \textbf{\small Muestreo del Espectro ($\mathbb{R}^1$):} \\
+            \footnotesize Para garantizar una transición tonal suave sin saturar el modelo, se discretiza el espacio de luminancia:
+            
+            \vspace{0.4cm}
+            \begin{itemize}
+                \item \textbf{Paso de Muestreo:} $\Delta = 0.05$.
+                \item \textbf{Rango:} $[0, 1]$ (Negro absoluto a Blanco).
+                \item \textbf{Niveles:} 20 particiones.
+            \end{itemize}
+
+            \vspace{0.6cm}
+            
+            \begin{block}{Percepción vs. Eficiencia}
+                \scriptsize
+                Un catálogo de \textbf{20 fichas} satisface la continuidad en la percepción visual humana en escala de grises. Una malla equivalente de $20 \times 20 \times 20$ implica \textbf{8,000 fichas}, volviendo el modelo computacionalmente denso.
+            \end{block}
+            
+            \vspace{0.5cm}
+            \textit{\color{gray}\footnotesize El modelo asigna la ficha $f$ cuya luminosidad promedio $\mathbf{b}_f$ minimiza el error local en la malla $(i,j)$.}
+        \end{column}
+
+        % Columna 2: Catálogo Instagram (52%)
+        \begin{column}{0.52\textwidth}
+            \centering
+            \vspace*{0.2cm}
+            \includegraphics[width=\textwidth, height=0.75\textheight, keepaspectratio]{catalogoFin.png}
+            \\[0.2cm]
+            \textbf{\small Catálogo: fotos Instagram} \\
+            \tiny \textcolor{gray}{Ordenamiento de menor a mayor luminosidad (0.05 a 1.0).}
+        \end{column}
+        
+    \end{columns}
+\end{frame}
+% --- Slide 10: Resultados: Sensibilidad ante la Escala y Disponibilidad ---
+\begin{frame}{Resultados: Mosaico de Twitter y Análisis de Disponibilidad}
+    \vspace{-0.2cm}
+
+    \begin{columns}[T, onlytextwidth]
+        % Paso 1: Malla de Entrada (Reducida sutilmente a 29%)
+        \begin{column}{0.29\textwidth}
+            \centering
+            \textbf{\scriptsize 1. Malla de Entrada} \\
+            \vspace{0.2cm}
+            \includegraphics[width=\textwidth, height=0.48\textheight, keepaspectratio]{mp20.png}
+            \vspace{0.2cm}
+            
+            {\scriptsize \color{gray} Entrada del motor: discretización $\beta_{ij}$}
+        \end{column}
+
+        % Paso 2: Solución con Restricción (Ampliada a 34%)
+        \begin{column}{0.34\textwidth}
+            \centering
+            \textbf{\scriptsize 2. Solución Acotada} \\
+            \vspace{0.2cm}
+            \includegraphics[width=\textwidth, height=0.48\textheight, keepaspectratio]{twittMos20.png}
+            \vspace{0.2cm}
+            
+            {\scriptsize \color{gray} Inventario limitado: esquinas grises ($z^* \approx 3\%$)}
+        \end{column}
+
+        % Paso 3: Solución Ideal (Ampliada a 34%)
+        \begin{column}{0.34\textwidth}
+            \centering
+            \textbf{\scriptsize 3. Solución Ideal} \\
+            \vspace{0.2cm}
+            \includegraphics[width=\textwidth, height=0.48\textheight, keepaspectratio]{twittMosPerf20.png}
+            \vspace{0.2cm}
+            
+            {\scriptsize \color{gray} Caso extremo: $hd=m\cdot n$ y $vd=0$ ($z^* \approx 0.15\%$)}
+        \end{column}
+    \end{columns}
+
+    \bigskip 
+    
+    \vfill
+    
+
+    \begin{block}{Interpretación Teórica del Motor de Optimización}
+        \scriptsize
+        La comparación reveals la sensibilidad del algoritmo ante el vector $u$, usando $hd$ (holgura de inventario) y $vd$ (variabilidad de distribución):
+        \begin{itemize}
+            \item \textbf{Efecto de Escasez (2):} Al agotarse las fichas blancas puras, el modelo se ve forzado a usar grises claros en el contorno superior.
+            \item \textbf{Liberación de Recursos (3):} Al parametrizar la holgura total, el error cuadrático disminuye \textbf{20 veces}, logrando la pureza en los fondos pero sacrificando la variedad del catálogo utilizado.
+        \end{itemize}
+    \end{block}
+    
+    \vspace{0.1cm}
+\end{frame}
+
 
 % --- Slide 10: Resultado Maestro: La Bandera de México ---
 \begin{frame}{Resultado Maestro: La Bandera de México}
@@ -601,6 +753,7 @@
         \end{column}
     \end{columns}
 \end{frame}
+
 % --- Sección 3 ---
 \section{Sección 3: TSP-Art y la Línea Continua}
 
@@ -658,7 +811,7 @@
             
             \vspace{0.3cm}
             \textbf{Impacto en la Calidad Visual:}
-            \\ \footnotesize La regularidad del muestreo garantiza una \textbf{textura de puntos homogénea}. Esto evita que el tour final se perciba no como un trazo caótico.
+            \\ \footnotesize La regularidad del muestreo garantiza una \textbf{textura de puntos homogénea}. Esto evita que el tour final se perciba como un trazo fluido (no caótico).
         \end{column}
 
         % Columna 2: Comparación Visual Equitativa (16 puntos c/u)
@@ -687,6 +840,44 @@
         \end{column}
     \end{columns}
 \end{frame}
+
+
+% --- Slide 13: Consecuencias del Muestreo: Trazo Aleatorio vs. Fluido ---
+\begin{frame}{Consecuencias del Muestreo: Trazo Caótico vs. Fluido}
+    \vspace{-0.1cm}
+
+    \begin{columns}[T, onlytextwidth]
+        % Columna izquierda: Trazo Caótico
+        \begin{column}{0.48\textwidth}
+            \centering
+            \textbf{\scriptsize Muestreo Uniforme Crudo (\texttt{runif})} \\
+            \vspace{0.2cm}
+            \includegraphics[width=\textwidth, height=0.50\textheight, keepaspectratio]{twittResRdm15.PNG}
+            \vspace{0.2cm}
+            
+            {\scriptsize \color{gray} Inestabilidad espacial: giros bruscos y acumulación de ruido visual.}
+        \end{column}
+
+        % Columna derecha: Trazo Fluido
+        \begin{column}{0.48\textwidth}
+            \centering
+            \textbf{\scriptsize Optimización Espacial (\texttt{K-means})} \\
+            \vspace{0.2cm}
+            \includegraphics[width=\textwidth, height=0.50\textheight, keepaspectratio]{twittRes15.png}
+            \vspace{0.2cm}
+            
+            {\scriptsize \color{gray} Regularidad topológica: curvas orgánicas y distribución armónica.}
+        \end{column}
+    \end{columns}
+
+    \bigskip % Espacio controlado previo al bloque
+
+    \begin{block}{Sensibilidad Escalar del Algoritmo ($15 \times 15$ vs. Densa)}
+        \scriptsize
+        La diferencia cualitativa es evidente en mallas de baja resolución ($m = n = 15$): el preprocesamiento espacial es indispensable para evitar texturas angulares. No obstante, para instancias de alta densidad ($50 \times 50$), la proximidad de los nodos satura el plano, provocando que ambos métodos tengan despliegues buenos.
+    \end{block}
+\end{frame}
+
 
 % --- Slide 13: El Motor del TSP (Formulación y Heurística) ---
 \begin{frame}{El Motor del TSP: De la Teoría a la Práctica}
